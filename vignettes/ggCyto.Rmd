@@ -1,0 +1,45 @@
+---
+title: "Visualize cytometry data with ggplot2"
+author: "Mike Jiang"
+date: "04/13/2015"
+output: html_document
+---
+
+```{r, echo=FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+
+```{r}
+library(ggCyto)
+data(GvHD)
+fs <- GvHD[1:5]
+
+
+```
+
+## 1d histogram/density
+```{r}
+# histogram for raw flow data
+autoplot(fs, aes(x = `FL1-H`)) + geom_histogram()
+
+# add transformation
+autoplot(fs, aes(x = `FL1-H`)) + geom_histogram() + scale_x_log10()
+
+# change the border colors 
+autoplot(fs, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_log10()
+
+# change the bin width
+autoplot(fs, aes(x = `FL1-H`)) + geom_histogram(colour = "white", binwidth = 5/100) + scale_x_log10()
+```
+
+## 2d scatter
+```{r}
+#transform the data
+fs <- transform(fs, estimateLogicle(fs[[1]], colnames(fs)[-c(1:2)]))
+
+autoplot(fs, aes(x = `FL1-H`, y =  `FL2-H`)) + geom_density2d()
+
+```
+
