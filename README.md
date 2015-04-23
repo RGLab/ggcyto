@@ -7,9 +7,9 @@ data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 ```
 
-### Overloaded `fority` S3 method makes `ggplot` to be fully aware of `Cytometry` data
+### Overloaded `fortify` S3 method makes `ggplot` to be fully aware of `Cytometry` data
 ```r
-df <- fority(fs)
+df <- fortify(fs)
 ```
 
 ### One-dimensional `autoplot`
