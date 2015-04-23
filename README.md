@@ -1,6 +1,6 @@
 # ggCyto
 
-### This package overloads `foritfy` S3 methods so that `ggplot` is fully aware of `Cytometry` data structures (e.g `flowSet`).
+### It makes `ggplot` to be fully aware of `Cytometry` data structures (e.g `flowSet`).
 
 
 ```r
@@ -10,9 +10,9 @@ data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 ```
 
-### `histogram` is default for one-dimensional `autoplot`
+### One-dimensional `autoplot`
 ```r
-# histogram for raw flow data
+# default is `geom_histogram`
 autoplot(fs, aes(x = `FL1-H`))
 
 # add transformation
@@ -22,12 +22,12 @@ autoplot(fs, aes(x = `FL1-H`)) + scale_x_log10()
 autoplot(fs, aes(x = `FL1-H`), margin = F) + scale_x_log10()
 ```
 
-### Display 1d `density` by specifying `plotType` argument
+### Switch to `densityplot`
 ```r
 autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
 ```
 
-### Use `ggplot` directly for more customizations
+### For more customizations: do `ggplot` directly
 ```r
 # customize border colors 
 ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + geom_histogram(colour = "white") + scale_x_log10()
@@ -36,7 +36,7 @@ ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + geom_histogram(colour = "whit
 ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name, scale = "free") + geom_histogram(colour = "white", binwidth = 1/10) + scale_x_log10()
 ```
 
-### Two-dimensional scatter/dot plot
+### Two-dimensional plot
 
 ```r
 # default geom_hex plot
@@ -46,7 +46,7 @@ autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_density2d(colour = "black")
 ```
 
-Change the faceting (default is faceting by 'sampleName')
+### Change faceting (default is `facet_wrap(~name)`)
 ```r
 autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
 ```
