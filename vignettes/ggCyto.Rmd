@@ -16,41 +16,85 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 ```{r}
 library(ggCyto)
 data(GvHD)
-fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]][c(1,5)]
 
 ```
 
 ## 1d histogram/densityplot
 ```{r}
 # histogram for raw flow data
-autoplot(fs, aes(x = `FL1-H`))
+# autoplot(fs, aes(x = `FL1-H`))
+# 
+# # add transformation
+# autoplot(fs, aes(x = `FL1-H`)) + scale_x_log10()
+# 
+# # disable marginal events filtering
+# autoplot(fs, aes(x = `FL1-H`), margin = F) + scale_x_log10()
+# 
+# # density
+# autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
 
-# add transformation
-autoplot(fs, aes(x = `FL1-H`)) + scale_x_log10()
+# histogram at raw scale
+ggplot(fs[1], aes(x = `FL1-H`)) + layer(stat = "bin")
 
-# disable marginal events filtering
-autoplot(fs, aes(x = `FL1-H`), margin = F) + scale_x_log10()
+# customize border colors and log scale 
+ggplot(fs[1], aes(x = `FL1-H`)) + scale_x_log10() + layer(stat = "bin", colour = "white")
 
-# density
-autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
+# fasinh scale
+ggplot(fs[1], aes(x = `FL1-H`)) + scale_x_continuous(trans = "fasinh") + layer(stat = "bin", colour = "white")
 
 # customize border colors 
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + geom_histogram(colour = "white") + scale_x_log10()
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white")
 
 # change the bin width
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name, scale = "free") + geom_histogram(colour = "white", binwidth = 1/10) + scale_x_log10()
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white", binwidth = 1/20)
+
+# display density for y
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", mapping = aes(y = ..density..))
+
+# density plot (defaut geom is 'area')
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "density")
+
+# change geom to point
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "density", geom = "line")
+
+# overlay density line to histogram
+ggplot(fs, aes(x = `FL1-H`, y = ..density..)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white") + layer(stat = "density", geom= "line", color = "red")
+
 ```
 
 ## 2d scatter/dot plot
 ```{r}
-# default geom_hex plot
-autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) 
+# # default geom_hex plot
+# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) 
+# 
+# # add contour
+# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_density2d(colour = "black")
+# 
+# # change the faceting
+# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
 
-# add contour
-autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_density2d(colour = "black")
+# 2d hex
+ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex()
 
-# change the faceting
-autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
+
+# change the smooth color 
+myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
+ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex() + scale_fill_gradientn(colours = myColor)  
+
+#change the bin
+ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex(bin = 64) + scale_fill_gradientn(colours = myColor)  
+
+#no binning
+ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + layer(geom = "point") + 
+  + scale_fill_gradientn(colours = myColor)  
 
 ```
+
+## add gate
+```{r}
+autoplot(fs[[6]], aes(x = `FL1-H`)) + scale_x_log10()
+autoplot(fs[[2]], aes(x = `FSC-H`, y =  `SSC-H`)) 
+```
+
 
