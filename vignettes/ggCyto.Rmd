@@ -35,13 +35,19 @@ fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]][c
 # autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
 
 # histogram at raw scale
-ggplot(fs[1], aes(x = `FL1-H`)) + layer(stat = "bin")
+ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram()
 
 # customize border colors and log scale 
-ggplot(fs[1], aes(x = `FL1-H`)) + scale_x_log10() + layer(stat = "bin", colour = "white")
+ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_log10()
 
-# fasinh scale
-ggplot(fs[1], aes(x = `FL1-H`)) + scale_x_continuous(trans = "fasinh") + layer(stat = "bin", colour = "white")
+# flowJo biexponential scale (shorthand: with default parameters setting e.g.maxValue = 262144)
+ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_flowJo_biexp() 
+
+# flowJo biexponential scale (longer form: with customized parameters)
+ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_flowJo_biexp(maxValue = 1e4)
+
+# myBreaks <- c(0, 10, 1e2, 1e3)
+ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_flowJo_biexp(maxValue = 1e4, breaks = c(0, 10, 100, 1000))
 
 # customize border colors 
 ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white")
