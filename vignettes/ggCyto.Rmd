@@ -15,9 +15,11 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r}
 library(ggCyto)
+# library(flowWorkspace)
+# library(scales)
 data(GvHD)
-fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]][c(1,5)]
-
+fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+fr <- fs[[1]]
 ```
 
 ## 1d histogram/densityplot
@@ -35,38 +37,57 @@ fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]][c
 # autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
 
 # histogram at raw scale
-ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram()
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram()
 
 # customize border colors and log scale 
-ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_log10()
-
-# flowJo biexponential scale (shorthand: with default parameters setting e.g.maxValue = 262144)
-ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_flowJo_biexp() 
-
-# flowJo biexponential scale (longer form: with customized parameters)
-ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_flowJo_biexp(maxValue = 1e4)
-
-# myBreaks <- c(0, 10, 1e2, 1e3)
-ggplot(fs[1], aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_flowJo_biexp(maxValue = 1e4, breaks = c(0, 10, 100, 1000))
-
-# customize border colors 
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white")
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_log10()
 
 # change the bin width
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white", binwidth = 1/20)
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white", binwidth = 1/20) + scale_x_log10()
 
-# display density for y
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", mapping = aes(y = ..density..))
+# logicle scale with default parameters setting (e.g. t = 262144)
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_logicle()
 
-# density plot (defaut geom is 'area')
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "density")
+# logicle scale with customized parameter
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_logicle(t = 1e4, w = 0)
 
-# change geom to point
-ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "density", geom = "line")
+# customized breaks
+myBreaks <- c(0, 10, 1e2, 1e3)
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks)
 
-# overlay density line to histogram
-ggplot(fs, aes(x = `FL1-H`, y = ..density..)) + facet_wrap(~name) + scale_x_log10() + layer(stat = "bin", colour = "white") + layer(stat = "density", geom= "line", color = "red")
+# remove marginal events
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white")  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
 
+# other scales: flowJo_fasinh, flowJo_biexp
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_flowJo_fasinh(T = 1e4)
+ggplot(fr, aes(x = `FL1-H`)) + geom_histogram(colour = "white") + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
+
+# save the scales
+myScales <- scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
+
+
+# density  (default y is density)
+ggplot(fr, aes(x = `FL1-H`)) + geom_density() + myScales
+
+# display area
+ggplot(fr, aes(x = `FL1-H`)) + geom_area(stat = "density") + myScales
+
+# display y as count
+ggplot(fr, aes(x = `FL1-H`)) + geom_area(stat = "density", aes(y = ..count..)) + myScales
+  
+# histogram + density line
+ggplot(fr, aes(x = `FL1-H`, y = ..density..)) + geom_histogram(colour = "white") + geom_density(color = "red") + myScales
+
+
+# plot multiple samples by facetting
+ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) +  geom_area(stat = "density") + myScales
+ggplot(fs, aes(x = `FL1-H`)) + facet_grid(Patient~Visit) +  geom_area(stat = "density") + myScales
+
+# fill the color
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + facet_wrap(~name) +  geom_density(alpha = 0.2) + myScales
+
+# or plot in the same panel
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + geom_density(alpha = 0.2) + myScales
 ```
 
 ## 2d scatter/dot plot
@@ -81,26 +102,23 @@ ggplot(fs, aes(x = `FL1-H`, y = ..density..)) + facet_wrap(~name) + scale_x_log1
 # autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
 
 # 2d hex
-ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex()
-
+ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex()
 
 # change the smooth color 
 myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
-ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex() + scale_fill_gradientn(colours = myColor)  
+ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex() + scale_fill_gradientn(colours = myColor)  
 
 #change the bin
-ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex(bin = 64) + scale_fill_gradientn(colours = myColor)  
+ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex(bin = 64) + scale_fill_gradientn(colours = myColor)  
 
 #no binning
-ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + layer(geom = "point") + 
-  + scale_fill_gradientn(colours = myColor)  
-
-```
+# col <- densCols(exprs(fr)[, 1],exprs(fr)[, 2], colramp = flowViz.par.get("argcolramp"))
+# ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) + layer(geom = "point") + scale_fill_manual(values = col)
 
 ## add gate
 ```{r}
-autoplot(fs[[6]], aes(x = `FL1-H`)) + scale_x_log10()
-autoplot(fs[[2]], aes(x = `FSC-H`, y =  `SSC-H`)) 
+# autoplot(fs[[6]], aes(x = `FL1-H`)) + scale_x_log10()
+# autoplot(fs[[2]], aes(x = `FSC-H`, y =  `SSC-H`)) 
 ```
 
 

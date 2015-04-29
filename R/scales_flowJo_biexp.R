@@ -1,26 +1,3 @@
-# 
-# #' logicle transformation.
-# #' 
-# #' @export
-# #' @importFrom scales trans_new
-# logicle_trans <- function(){
-#   trans_new("logicle", )
-#   
-# }
-# 
-# #' logicle transformation.
-# #' 
-# #' @export
-# #' @importFrom scales trans_new
-# flowJo_fasinh_trans <- function(...){
-#   trans <- flowWorkspace:::.fasinh
-#   inv <- flowWorkspace:::.fsinh
-#   brk <- log_breaks(base = base)
-#   debug(brk)
-#   trans_new("flowJo_fasinh", transform = trans, inverse = inv, breaks = brk)
-#   
-# }
-
 #' flowJo biexponential breaks (integer breaks on biexp-transformed scales)
 #' 
 #' @export
@@ -31,7 +8,7 @@
 flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...) 
 {
   
-  f1 <- function(x) {
+  function(x) {
     transFunc <- flowJoTrans(...)
     invFunc <- flowJoTrans(..., inverse = TRUE)
     rng.raw <- range(x, na.rm = TRUE)
@@ -56,7 +33,7 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 }
 
 
-#' logicle transformation. 
+#' flowJo biexponential transformation. 
 #' 
 #' 
 #' 
@@ -77,14 +54,29 @@ flowJo_biexp_trans <- function(..., pretty = FALSE){
 #   debug(brk)
   trans_new("flowJo_biexp", transform = trans, inverse = inv
             , breaks = brk
-            , format = fmt
+#             , format = fmt
 #               , domain = c(-Inf, 4096)
             )
   
 }
 
+#' flowJo biexponential scale
+#' 
+#' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
+#' @param maxValue, widthBasis see 'help(flowJoTrans')
+#' @param pretty whether to display the breaks in pretty format
+#' @export
 scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pretty = FALSE){
   myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pretty = pretty)
 #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("x"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
+
+#' @rdname scale_x_flowJo_biexp
+#' @export
+scale_y_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pretty = FALSE){
+  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pretty = pretty)
+  #   scale_x_continuous(..., trans = myTrans)
+  continuous_scale(aesthetics = c("y"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
+}
+
