@@ -1,5 +1,5 @@
 ---
-title: "Visualize cytometry data with ggplot2"
+title: "Visualize cytometry data with ggplot2 (advanced)"
 author: "Mike Jiang"
 date: "04/13/2015"
 output: html_document
@@ -15,8 +15,6 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r}
 library(ggCyto)
-# library(flowWorkspace)
-# library(scales)
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 fr <- fs[[1]]
@@ -24,18 +22,6 @@ fr <- fs[[1]]
 
 ## 1d histogram/densityplot
 ```{r}
-# histogram for raw flow data
-# autoplot(fs, aes(x = `FL1-H`))
-# 
-# # add transformation
-# autoplot(fs, aes(x = `FL1-H`)) + scale_x_log10()
-# 
-# # disable marginal events filtering
-# autoplot(fs, aes(x = `FL1-H`), margin = F) + scale_x_log10()
-# 
-# # density
-# autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
-
 # histogram at raw scale
 p <- ggplot(fr, aes(x = `FL1-H`)) 
 p + geom_histogram() 
@@ -98,15 +84,6 @@ ggplot(fs, aes(x = `FL1-H`, fill = name)) + geom_density(alpha = 0.2) + myScales
 
 ## 2d scatter/dot plot
 ```{r}
-# # default geom_hex plot
-# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) 
-# 
-# # add contour
-# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_density2d(colour = "black")
-# 
-# # change the faceting
-# autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
-
 # 2d hex
 p <- ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`))
 p + stat_binhex()
@@ -130,21 +107,27 @@ p + geom_density2d(colour = "black")
 # non-binned dot plot
 df <- fortify(fr)
 cols <- densCols(df[,"FSC-H"], df[,"SSC-H"], colramp = flowViz::flowViz.par.get("argcolramp"))
-p <- ggplot(df, aes(x = `FSC-H`, y =  `SSC-H`))
-p + geom_point(color = cols) 
+p1 <- ggplot(df, aes(x = `FSC-H`, y =  `SSC-H`))
+p1 + geom_point(color = cols) 
 ```
 
-## quick plot through convenient wrapper
+## add overlay
 ```{r}
-autoplot(fr, aes(x = `FL1-H`)) + scale_x_log10()
-autoplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) 
+# get a gated data
+lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
+overlay <- lg[["x"]]
+
+# add the overlay dots as geom_points
+p + geom_point(data = overlay, color = "red", size = 0.8, alpha = "0.5")
 ```
 
-
-## add gate
+# add gate
 ```{r}
-ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`)) + stat_binhex(bin = 64) + scale_fill_gradientn(colours = myColor)  
+g <- lg$n2gate
+g <- flowViz:::norm2Polygon(filterDetails(lg[["n2gateResults"]], identifier(g)))
+g + geom_polygon()
 
 ```
+
 
 
