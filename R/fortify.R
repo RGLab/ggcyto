@@ -45,7 +45,6 @@ as.data.frame.flowSet <- function(x, ...){
 #' @param ... not used.
 #' 
 #' @export
-#' @aliases fortify
 fortify.flowFrame <- function(model, data, ...){
   #covert to flowSet
   fs <- .flowFrame2flowSet(model)
@@ -73,3 +72,45 @@ fortify.flowSet <- function(model, data, ...){
   df <- merge(pd, df, by.x = "name", by.y = ".id")
   df
 }
+
+#' Convert a polygonGate to a data.frame useful for ggplot
+#' 
+#' It converts the boundaries slot into a data.frame
+#' 
+#' @param model polygonGate
+#' @param data not used.
+#' @param ... not used.
+#' 
+#' @export
+fortify.polygonGate <- function(model, data, ...){
+  as.data.frame(model@boundaries)
+}
+
+# #' Convert a rectangleGate to a data.frame useful for ggplot
+# #' 
+# #' For 2d rectangelGate, it is converted to a polygonGate.
+# #' for 1d, 
+# #' 
+# #' @param model polygonGate
+# #' @param data not used.
+# #' @param ... not used.
+# #' 
+# #' @export
+# fortify.rectangleGate <- function(model, data, ...){
+#   
+#   param <- parameters(model)
+#   nDim <- length(param)
+#   if (nDim ==  2){
+#     l.b <- model@min
+#     r.t <- model@max
+#     l.t <- c(l.b[1], r.t[2])
+#     r.b <- c(r.t[1], l.b[2])
+#     
+#     as.data.frame(do.call(rbind, list(l.b, l.t, r.t, r.b)))
+#   }else if(nDim ==  1){
+#     browser()  
+#   }else
+#     stop("rectangelGate with dimension ", dDim, "is not supported!")
+#   
+# }
+
