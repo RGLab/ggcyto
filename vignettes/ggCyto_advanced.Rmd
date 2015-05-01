@@ -90,25 +90,41 @@ p + stat_binhex()
 
 # change the smooth color 
 myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
-p <- p + scale_fill_gradientn(colours = myColor)  
-p + stat_binhex()
+myColor_scale_fill <- scale_fill_gradientn(colours = myColor)
+p + myColor_scale_fill + stat_binhex()
 
 
 #change the bin
-p1 <- p + stat_binhex(bin = 64)
+p + myColor_scale_fill + stat_binhex(bin = 64)
+
+# sqr trans binned color
+myColor_scale_fill_sqrt <- scale_fill_gradientn(colours = myColor, trans = "sqrt")
+p1 <- p + myColor_scale_fill_sqrt + stat_binhex(bin = 64)
 p1
 # add boundary limits
 p1 <- p1 + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 p1
 
 # add contour
-p1 + geom_density2d(colour = "black")
+p <- p + myColor_scale_fill
+p + stat_binhex(bin = 64) + geom_density2d(colour = "black")
 
 # non-binned dot plot
 df <- fortify(fr)
 cols <- densCols(df[,"FSC-H"], df[,"SSC-H"], colramp = flowViz::flowViz.par.get("argcolramp"))
 p1 <- ggplot(df, aes(x = `FSC-H`, y =  `SSC-H`))
 p1 + geom_point(color = cols) 
+
+# multiple samples
+p1 <- ggplot(mapping = aes(x = `FSC-H`, y =  `SSC-H`)) + myColor_scale_fill + facet_grid(Patient~Visit)
+p1 + stat_binhex(data = fs, bin = 64)
+# color scale is different when plotting single sample
+p1 + stat_binhex(data = fs[6], bin = 64)
+
+# display density instead
+p1 + stat_binhex(data = fs[6], bin = 64, aes(fill = ..density..))
+# the color scale difference is reduced
+p1 + stat_binhex(data = fs, bin = 64, aes(fill = ..density..))
 ```
 
 ## add overlay
@@ -134,8 +150,8 @@ overlay.fs2 <- Subset(fs, rect.g)
 ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + 
           scale_fill_gradientn(colours = myColor)  +
           stat_binhex(bin = 64, alpha = 0.2) +
-          geom_point(data = overlay.fr, color = "red", cex = 0.5, pch = 19) +
-          geom_point(data = overlay.fr2, color = "black", cex = 0.5, pch = 19) +
+          geom_point(data = overlay.fs1, color = "red", cex = 0.5, pch = 19) +
+          geom_point(data = overlay.fs2, color = "black", cex = 0.5, pch = 19) +
           facet_grid(Patient ~ Visit)
 
 ```
@@ -146,12 +162,14 @@ poly.g <- flowViz:::norm2Polygon(filterDetails(lg[["n2gateResults"]], identifier
 p <- p + stat_binhex(bin = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 
 # polygonGate
-p + geom_gate(data = poly.g)
+p1 <- p + geom_gate(data = poly.g)
+p1
 # 2d rectangleGate
-p + geom_gate(data = rect.g)
+p1 <- p1 + geom_gate(data = rect.g)
+p1
 # 1d rectangleGate
 rect.g1d <- rectangleGate("FSC-H" =  c(550, Inf))
-p + geom_gate(data = rect.g1d, aes(x = `FSC-H`, y =  `SSC-H`))
+p1 + geom_gate(data = rect.g1d, aes(x = `FSC-H`, y =  `SSC-H`))
 
 ```
 
