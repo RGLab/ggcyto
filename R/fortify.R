@@ -86,31 +86,58 @@ fortify.polygonGate <- function(model, data, ...){
   as.data.frame(model@boundaries)
 }
 
-# #' Convert a rectangleGate to a data.frame useful for ggplot
-# #' 
-# #' For 2d rectangelGate, it is converted to a polygonGate.
-# #' for 1d, 
-# #' 
-# #' @param model polygonGate
-# #' @param data not used.
-# #' @param ... not used.
-# #' 
-# #' @export
-# fortify.rectangleGate <- function(model, data, ...){
-#   
-#   param <- parameters(model)
-#   nDim <- length(param)
-#   if (nDim ==  2){
-#     l.b <- model@min
-#     r.t <- model@max
-#     l.t <- c(l.b[1], r.t[2])
-#     r.b <- c(r.t[1], l.b[2])
-#     
-#     as.data.frame(do.call(rbind, list(l.b, l.t, r.t, r.b)))
-#   }else if(nDim ==  1){
-#     browser()  
-#   }else
-#     stop("rectangelGate with dimension ", dDim, "is not supported!")
-#   
-# }
+#' Convert a filterList to a data.frame useful for ggplot
+#' 
+#' It tries to merge with pData
+#' 
+#' @param model filterList
+#' @param data pData of flowSet
+#' @param ... not used.
+#' 
+#' @importFrom plyr name_rows
+#' @export
+fortify.filterList <- function(model, data, ...){
+  
+  if(missing(data))
+    stop("pData must be provided through 'data' argument!")
+  # convert each filter to df
+  df <- ldply(model, fortify, .id = ".rownames")
+  # merge with pd
+  pd <- name_rows(data)
+  df <- merge(df, pd)
+  df
+}
+
+#' Convert a rectangleGate to a data.frame useful for ggplot
+#' 
+#' For 2d rectangelGate, it is converted to a geom_polygon format
+#' for 1d, uses geom_vline/hline format.
+#' 
+#' @param model rectangleGate
+#' @param data not used.
+#' @param ... not used.
+#' 
+#' @export
+fortify.rectangleGate <- function(model, data, ...){
+  
+  param <- parameters(model)
+  nDim <- length(param)
+  l.b <- model@min
+  r.t <- model@max  
+  if (nDim ==  2){
+    
+    l.t <- c(l.b[1], r.t[2])
+    r.b <- c(r.t[1], l.b[2])
+    
+    as.data.frame(do.call(rbind, list(l.b, l.t, r.t, r.b)))
+  }else if(nDim ==  1){
+    coord <- c(l.b, r.t)
+    toRm <- is.infinite(coord)
+    if(any(toRm))
+      coord <- coord[!toRm] 
+    data.frame(as.list(coord), check.names = F)
+  }else
+    stop("rectangelGate with dimension ", dDim, "is not supported!")
+  
+}
 

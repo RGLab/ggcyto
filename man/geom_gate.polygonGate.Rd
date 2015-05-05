@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_gate.R
 \name{geom_gate.polygonGate}
 \alias{geom_gate.polygonGate}
-\title{plot a polygonGate}
+\title{construct geom layer for polygonGate}
 \usage{
 \method{geom_gate}{polygonGate}(data, mapping = NULL, fill = "transparent",
   colour = "red", ...)
@@ -17,6 +17,6 @@
 \item{The}{mapping aesthetic mapping}
 }
 \description{
-plot a polygonGate
+Not intended to be used directly.
 }
 

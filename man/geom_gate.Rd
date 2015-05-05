@@ -2,9 +2,12 @@
 % Please edit documentation in R/geom_gate.R
 \name{geom_gate}
 \alias{geom_gate}
-\title{plot a flowCore gate}
+\alias{geom_gate.default}
+\title{add a flowCore gate layer}
 \usage{
 geom_gate(data, ...)
+
+\method{geom_gate}{default}(data, ...)
 }
 \arguments{
 \item{data}{a rectangleGate, polygonGate or ellipsoidGate}

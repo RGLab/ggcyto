@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_gate.R
 \name{geom_gate.rectangleGate}
 \alias{geom_gate.rectangleGate}
-\title{plot a rectangleGate}
+\title{construct geom layer for rectangleGate}
 \usage{
 \method{geom_gate}{rectangleGate}(data, mapping = NULL,
   fill = "transparent", colour = "red", ...)
@@ -17,6 +17,6 @@
 \item{gate}{a rectangleGate}
 }
 \description{
-It is coerced to polygonGate.
+Not intended to be used directly.
 }
 
