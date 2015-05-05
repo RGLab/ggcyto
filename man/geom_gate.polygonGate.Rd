@@ -17,6 +17,6 @@
 \item{The}{mapping aesthetic mapping}
 }
 \description{
-Not intended to be used directly.
+construct geom layer for polygonGate
 }
 

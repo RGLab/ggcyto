@@ -40,7 +40,7 @@ geom_gate.filterList <- function(data, pd, ...){
 
 #' construct geom layer for polygonGate
 #' 
-#' Not intended to be used directly.
+#' @export
 #' 
 #' @param The mapping aesthetic mapping
 #' @param data a polygonGate
@@ -53,8 +53,8 @@ geom_gate.polygonGate <- function(data, mapping = NULL, fill = "transparent", co
 
 #' construct geom layer for rectangleGate
 #' 
-#' Not intended to be used directly.
 #' 
+#' @export
 #' @param The mapping aesthetic mapping
 #' @param gate a rectangleGate
 #' @param fill rectangleGate is not filled by default
@@ -77,9 +77,9 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
       axis <- gsub("`", "", axis)
       axis <- names(axis)[match(param, axis)]
       if(axis == "x")
-        geom_vline(data = df, aes_q(xintercept = as.symbol(param)), fill = fill, colour = colour, ...)
+        geom_vline(data = data, aes_q(xintercept = as.symbol(param)), fill = fill, colour = colour, ...)
       else if(axis == "y")
-        geom_hline(data = df, aes_q(yintercept = as.symbol(param)), fill = fill, colour = colour, ...)
+        geom_hline(data = data, aes_q(yintercept = as.symbol(param)), fill = fill, colour = colour, ...)
       else
         stop("not avalid axis!")
          

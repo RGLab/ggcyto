@@ -17,6 +17,6 @@
 \item{gate}{a rectangleGate}
 }
 \description{
-Not intended to be used directly.
+construct geom layer for rectangleGate
 }
 

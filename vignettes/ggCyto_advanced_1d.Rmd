@@ -1,0 +1,84 @@
+---
+title: "Visualize cytometry data with ggplot2 (advanced) -- 1d"
+author: "Mike Jiang"
+date: "04/13/2015"
+output: html_document
+---
+
+```{r, echo=FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+`ggCyto` makes `ggplot2` to be able to work with `Cytometry` data, namely `flowSet/ncdfFlowSet` or `flowFrame` S4 objects.
+
+
+```{r}
+library(ggCyto)
+data(GvHD)
+fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+fr <- fs[[1]]
+```
+
+## 1d histogram/densityplot
+```{r}
+# histogram at raw scale
+p <- ggplot(fr, aes(x = `FL1-H`)) 
+p + geom_histogram() 
+
+# customize border colors and log scale 
+p + geom_histogram(colour = "white") + scale_x_log10()
+
+# change the bin width
+p + geom_histogram(colour = "white", binwidth = 1/20) + scale_x_log10()
+
+# logicle scale with default parameters setting (e.g. t = 262144)
+p <- p + geom_histogram(colour = "white")
+p + scale_x_logicle()
+
+# logicle scale with customized parameter
+p + scale_x_logicle(t = 1e4, w = 0)
+
+# customized breaks
+myBreaks <- c(0, 10, 1e2, 1e3)
+p  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks)
+
+# remove marginal events
+p  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
+
+# other scales: flowJo_fasinh, flowJo_biexp
+p + scale_x_flowJo_fasinh(T = 1e4)
+p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
+
+# save the scales
+myScales <- scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
+
+
+# density  (default y is density)
+p <- ggplot(fr, aes(x = `FL1-H`)) + myScales
+p + geom_density() 
+
+# display area
+p + geom_area(stat = "density") 
+
+# display y as count
+p + geom_area(stat = "density", aes(y = ..count..))
+  
+# histogram + density line
+ggplot(fr, aes(x = `FL1-H`, y = ..density..)) + geom_histogram(colour = "white") + geom_density(color = "red") + myScales
+
+# plot multiple samples
+p <- ggplot(fs, aes(x = `FL1-H`)) + myScales + geom_area(stat = "density")
+# facetting by sample names
+p + facet_wrap(~name) 
+
+# faceeting by other pheno data stored in fs
+p + facet_grid(Patient~Visit)
+
+# fill with different colors
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + facet_wrap(~name) +  geom_density(alpha = 0.2) + myScales
+
+# or plot in the same panel
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + geom_density(alpha = 0.2) + myScales
+```
+
