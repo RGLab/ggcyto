@@ -1,7 +1,7 @@
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
-autoplot.flowFrame <- function(object, ...){
-  object <- .flowFrame2flowSet(object)
-  autoplot(object, ...)
+ggcyto.flowFrame <- function(data, ...){
+  data <- .flowFrame2flowSet(data)
+  ggcyto(data, ...)
 }
 
 #' Plot fluorescence intensity in one or two dimension.
@@ -50,45 +50,41 @@ autoplot.flowFrame <- function(object, ...){
 #' @aliases autoplot autoplot.flowFrame 
 #' @importFrom RColorBrewer brewer.pal
 #' @export autoplot.flowSet
-ggcyto.flowSet <- function(object, mapping, ..., plotType = "histogram", margin = TRUE){
+ggcyto.flowSet <- function(data, mapping, ...){
   
-  plotType <- match.arg(plotType, c("histogram", "density"))
+    if(!missing(mapping)){
+      dims <- sapply(mapping,as.character)
+      nDims <- length(mapping)
+    }else
+      stop("mapping must be supplied to ggplot!")
   
-  # check the dimensions
-  if(!missing(mapping)){
-    dims <- sapply(mapping,as.character)
-    nDims <- length(mapping)
-  }else
-    stop("mapping must be supplied to ggplot!")
-  
-  # apply boundary filter to remove outliers
-  if(margin){
-    g <- boundaryFilter(x = dims, tol = 1e-5)
-    object <- Subset(object, g)
-  }
-  
-  df <- fortify(object)
-  
-  p <- ggplot(df, mapping, ...)
-  
-  #hide the legend by default
-  p <- p + guides(colour = F, fill = F)
-  
-  #default faceting by sample names
-  p <- p + facet_wrap(~name)
-  
-  #if 2d
-  if(nDims == 1){
-    if(plotType == "histogram"){
-      p <- p + geom_histogram()
-    }else{
-      p <- p + geom_density(aes(fill = "grey50", colour = "grey50"))
+    p <- ggplot(data, mapping =  mapping, ...)
+    # add default facetting
+    p <- p + facet_wrap(~name) 
+#     browser()
+    if(nDims == 2){
+      # add default fill gradien
+      myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
+      p <- p + scale_fill_gradientn(colours = myColor)  
     }
-      
-  }else if(nDims == 2){
-    p <- p + geom_hex() 
-    p <- p + scale_fill_gradientn(colours = rev(brewer.pal(11, "Spectral")))  
-  }else
-    stop("Only 1d or 2d plots are currently supported!")
-  p
+    
+    class(p) <- c("ggcyto", class(p))
+    p
+}
+
+#' overloaded '+' method for ggcyto
+#' 
+#' It tries to pass the copy of pData of fs(supplied in ggplot object) to gate objects
+#' so that the gate layer does not need explicit `pd` to be supplied by users.
+#' 
+#' @param e1 An object of class \code{ggcyto}
+#' @param e2 A component to add to \code{e1}
+#' 
+#' @method + ggcyto
+#' @rdname ggcyto-add
+#' @export
+`+.ggcyto` <- function(e1, e2){
+  browser()
+  
+  e1 + obj
 }

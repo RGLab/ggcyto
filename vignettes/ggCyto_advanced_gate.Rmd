@@ -1,5 +1,5 @@
 ---
-title: "Visualize cytometry data with ggplot2 (advanced)"
+title: "Visualize cytometry data with ggplot2 (advanced) -- Gate"
 author: "Mike Jiang"
 date: "04/13/2015"
 output: html_document
@@ -61,13 +61,16 @@ poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res
 p + geom_gate(data = poly.gates, pd = pData(fs))
 
 # a list of 1d gate
-den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300))
+den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
 p + geom_gate(data = den.gates, pd = pData(fs), mapping = orig_aes)
 
 # 1d gate on another dimesion
-den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500))
+den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1)
 p + geom_gate(data = den.gates, pd = pData(fs), mapping = orig_aes)
 
+# 1d gate on density plot
+my_aes <- aes(x = `SSC-H`)
+ggplot(fs, my_aes) + geom_density() + facet_wrap(~name) + geom_gate(den.gates, mapping = my_aes, pd = pData(fs))
 ```
 
 

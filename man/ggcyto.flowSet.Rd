@@ -6,15 +6,14 @@
 \alias{ggcyto.flowSet}
 \title{Plot fluorescence intensity in one or two dimension.}
 \usage{
-\method{ggcyto}{flowSet}(object, mapping, ..., plotType = "histogram",
-  margin = TRUE)
+\method{ggcyto}{flowSet}(data, mapping, ...)
 }
 \arguments{
-\item{object}{flowFrame or flowSet object}
-
 \item{mapping}{passed to ggplot, which defines the dimension of the plot}
 
 \item{...}{other arguments passed to ggplot}
+
+\item{object}{flowFrame or flowSet object}
 
 \item{plotType}{either "histogram" or "density", determines which plot to be displayed}
 

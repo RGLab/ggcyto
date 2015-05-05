@@ -1,0 +1,89 @@
+---
+title: "Visualize cytometry data with ggcyto"
+author: "Mike Jiang"
+date: "04/13/2015"
+output: html_document
+---
+
+```{r, echo=FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+
+```{r}
+library(ggCyto)
+data(GvHD)
+fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+fr <- fs[[1]]
+```
+
+## 1d histogram/densityplot
+```{r}
+# construct the `ggcyto` object (inherits from `ggplot` class)
+p <- ggcyto(fs, aes(x = `FSC-H`)) 
+# `facet_wrap(~name)` is used automatically
+p1 <- p + geom_histogram() 
+p1
+# overwriting the default faceeting
+p1 + facet_grid(Patient~Visit)
+
+# display density/area
+p + geom_density()
+p + geom_area(stat = "density") 
+
+# fill with different colors
+ggcyto(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
+
+# or plot in the same panel by using `ggplot` directly (thus remove the default facetting effect)
+ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
+```
+
+## 2d scatter/dot plot
+```{r}
+# 2d hex
+p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+p1 <- p + stat_binhex(bin = 128)
+p1
+
+# overwrite the default fill gradien
+p1 + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
+
+# add boundary limits
+p1 <- p1 + ylim(c(10,9e2)) + xlim(c(10,9e2))   
+p1
+```
+
+## add `geom_gate` layer
+```{r}
+# estimate a lymphGate
+lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
+norm.filter <- lg$n2gate
+#fit norm2 filter to multiple samples
+fres <- filter(fs, norm.filter)
+#extract the polygonGate for each sample
+poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
+
+# add  gate layer
+# Note: pData is implicitly passed to geom_gate layer for facetting
+p1 + geom_gate(data = poly.gates)
+
+# add rectangleGate layer (2d)
+rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+p + geom_gate(data = poly.g)
+    
+
+# a list of 1d gate
+den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
+p + geom_gate(data = den.gates, pd = pData(fs), mapping = orig_aes)
+
+# 1d gate on another dimesion
+den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1)
+p + geom_gate(data = den.gates, pd = pData(fs), mapping = orig_aes)
+
+# 1d gate on density plot
+my_aes <- aes(x = `SSC-H`)
+ggplot(fs, my_aes) + geom_density() + facet_wrap(~name) + geom_gate(den.gates, mapping = my_aes, pd = pData(fs))
+```
+
+

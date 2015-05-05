@@ -29,6 +29,7 @@ geom_gate.list <- function(data, ...){
 #' @param pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
 #' @export
 geom_gate.filterList <- function(data, pd, ...){
+  
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate(data[[1]], ...)
   # update data
@@ -141,13 +142,3 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
 # # #   browser()
 # # })
 # 
-# #' overloaded '+' method for GeomFilterList
-# #' 
-# #' It tries to pass the extra copy of pData of fs(supplied in ggplot object) to gate objects
-# #' so that the gate layer has the proper pData for facetting
-# #' 
-# #' @export
-# # `+.protofilterList` <- function(e1, e2){
-# #   
-# #   e1
-# # }
