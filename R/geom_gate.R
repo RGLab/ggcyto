@@ -67,22 +67,8 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
   if (nDim ==  2){
         geom_polygon(data = data, mapping = mapping, fill = fill, colour = colour, ...)
   }else if(nDim ==  1){
-    if(is.null(mapping))
-      stop("mapping must be provided for 1d rectangelGate!")
-      coord <- c(data@min, data@max)
-      toRm <- is.infinite(coord)
-      if(any(toRm))
-        coord <- coord[!toRm] 
-      #try to figure out on which dimension to plot the line
-      axis <- as.character(mapping)
-      axis <- gsub("`", "", axis)
-      axis <- names(axis)[match(param, axis)]
-      if(axis == "x")
-        geom_vline(data = data, aes_q(xintercept = as.symbol(param)), fill = fill, colour = colour, ...)
-      else if(axis == "y")
-        geom_hline(data = data, aes_q(yintercept = as.symbol(param)), fill = fill, colour = colour, ...)
-      else
-        stop("not avalid axis!")
+#     browser()
+      geom_hvline(data = data, fill = fill, colour = colour, ...)
          
   }else
     stop("rectangelGate with dimension ", dDim, "is not supported!")

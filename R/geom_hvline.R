@@ -100,7 +100,7 @@ my_compute_aesthetics <- function(., data, plot) {
   #the hack:  
   # rm the missing axis from mapping aes so that 
   # it won't fail the following aesthetics evaluation 
-  aes_matched <-  as.character(aesthetics) %in% colnames(data)
+  aes_matched <-  sapply(aesthetics, as.character) %in% colnames(data)
   aesthetics <- aesthetics[aes_matched]
   
   
