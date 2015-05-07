@@ -32,10 +32,24 @@ geom_gate.filterList <- function(data, pd, ...){
   
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate(data[[1]], ...)
-  # update data
-  df <- fortify(data, pd)
-  #   browser()
-  geom_gate_layer[["data"]] <- df
+#   browser()
+  
+  
+  # assuming it is already attached to attribute
+  # when pd is missing
+  if(!missing(pd)){
+    attr(data, "pd") <- pd
+#     attr(layer_data, "annotated") <- TRUE
+  }
+    
+  
+  #must explicitly fortify it since ggplot only does it during the layer$new method 
+  data <- fortify(data) 
+
+  #tag this data.frame so that ggcyo wrapper can recongnize it
+  class(data) <- c("geom_gate_filterList", class(data))
+  # update data with pdata
+  geom_gate_layer[["data"]] <- data
   geom_gate_layer
 }
 

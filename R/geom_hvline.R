@@ -70,7 +70,8 @@ GeomHVline <- proto(ggplot2:::Geom, {
   
 })
 
-#' override the original Layer$compute_aesthetics method to make the 1d gate data work with geom_segment
+#' override the original Layer$compute_aesthetics method so that it could make it for the layer
+#' that contains 1d data but uses the 2d aes
 #' 
 #' This is the hook invoked by ggplot_build at early stage of plotting.
 #' We need to match the 1d gate definition with the mapping
@@ -80,6 +81,9 @@ GeomHVline <- proto(ggplot2:::Geom, {
 #' Idealy it could have been be done at `map_statistic` step. Unfortunetly, the data would have already been generalized at that point and 
 #' thus it won't be able to do the matching otherwise.  
 #' 
+#' It would be nice if we could also hack to associate pData from plot$data here. Unforutntely the data
+#' is already facetted before this step and there is no way to access the facetted plot$data in order to
+#' reassign the 'panel' info for layer data.
 my_compute_aesthetics <- function(., data, plot) {
   
   aesthetics <- .$layer_mapping(plot$mapping)

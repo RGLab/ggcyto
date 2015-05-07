@@ -20,20 +20,10 @@ as.data.frame.flowFrame <- function(x, ...){
 #' @export
 as.data.frame.flowSet <- function(x, ...){
   df.list <- fsApply(x, as.data.frame, simplify = FALSE)
-  df <- ldply(df.list)
+  df <- ldply(df.list, .id = ".rownames")
   df  
 }
 
-#' coerce flowFrame to flowSet
-#' The default coerce method does not perserve the sample name.
-#' 
-.flowFrame2flowSet <- function(fr){
-  sn <- identifier(fr)
-  fs <- as(fr, "flowSet")
-  sampleNames(fs) <- sn
-  pData(fs)[["name"]] <- sn
-  fs
-}
 
 #' Convert a flowFrame to a ggplot-compatible data.frame
 #' 
@@ -47,7 +37,7 @@ as.data.frame.flowSet <- function(x, ...){
 #' @export
 fortify.flowFrame <- function(model, data, ...){
   #covert to flowSet
-  fs <- .flowFrame2flowSet(model)
+  fs <- fortify_fs(model)
   #then dispatch to forityf method for flowSet
   fortify(fs, ...)
 }
@@ -69,7 +59,13 @@ fortify.flowSet <- function(model, data, ...){
   df <- as.data.frame(model)
   #merge with pData
   pd <- pData(model)
-  df <- merge(pd, df, by.x = "name", by.y = ".id")
+  pd <- name_rows(pd)#add rownames to column
+  df <- merge(pd, df, by = ".rownames")
+  
+  
+  #we have to attach the extra copy of pd to attribute as well
+  # in order for the ggcyo wrapper to copy it to the gate layer
+  attr(df, "pd") <- pd
   df
 }
 
@@ -98,13 +94,16 @@ fortify.polygonGate <- function(model, data, ...){
 #' @export
 fortify.filterList <- function(model, data, ...){
   
-  if(missing(data))
-    stop("pData must be provided through 'data' argument!")
   # convert each filter to df
   df <- ldply(model, fortify, .id = ".rownames")
-  # merge with pd
-  pd <- name_rows(data)
-  df <- merge(df, pd)
+  pd <- attr(model,"pd")
+  if(!is.null(pd)){
+    # merge with pd
+    pd <- name_rows(pd)
+    df <- merge(df, pd)  
+  }
+    
+  
   df
 }
 

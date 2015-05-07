@@ -2,7 +2,8 @@
 % Please edit documentation in R/geom_hvline.R
 \name{my_compute_aesthetics}
 \alias{my_compute_aesthetics}
-\title{override the original Layer$compute_aesthetics method to make the 1d gate data work with geom_segment}
+\title{override the original Layer$compute_aesthetics method so that it could make it for the layer
+that contains 1d data but uses the 2d aes}
 \usage{
 my_compute_aesthetics(., data, plot)
 }
@@ -15,5 +16,9 @@ stored in the original aes (from 'plot$mapping') so that the line can be determi
 And so far this is the best place where we can look up the original mapping and store the axis information.
 Idealy it could have been be done at `map_statistic` step. Unfortunetly, the data would have already been generalized at that point and
 thus it won't be able to do the matching otherwise.
+
+It would be nice if we could also hack to associate pData from plot$data here. Unforutntely the data
+is already facetted before this step and there is no way to access the facetted plot$data in order to
+reassign the 'panel' info for layer data.
 }
 
