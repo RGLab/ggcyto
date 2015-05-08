@@ -10,11 +10,11 @@ library(knitr)
 opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
-`ggCyto` makes `ggplot2` to be able to work with `Cytometry` data, namely `flowSet/ncdfFlowSet` or `flowFrame` S4 objects.
+`ggcyto` makes `ggplot2` to be able to work with `Cytometry` data, namely `flowSet/ncdfFlowSet` or `flowFrame` S4 objects.
 
 
 ```{r}
-library(ggCyto)
+library(ggcyto)
 # library(flowWorkspace)
 # library(scales)
 data(GvHD)

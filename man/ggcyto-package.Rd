@@ -1,24 +1,24 @@
-\name{ggCyto-package}
-\alias{ggCyto-package}
-\alias{ggCyto}
+\name{ggcyto-package}
+\alias{ggcyto-package}
+\alias{ggcyto}
 \docType{package}
 \title{
-\packageTitle{ggCyto}
+\packageTitle{ggcyto}
 }
 \description{
-\packageDescription{ggCyto}
+\packageDescription{ggcyto}
 }
 \details{
 
 The DESCRIPTION file:
-\packageDESCRIPTION{ggCyto}
-\packageIndices{ggCyto}
+\packageDESCRIPTION{ggcyto}
+\packageIndices{ggcyto}
 ~~ An overview of how to use the package, including the most important functions ~~
 }
 \author{
-\packageAuthor{ggCyto}
+\packageAuthor{ggcyto}
 
-Maintainer: \packageMaintainer{ggCyto}
+Maintainer: \packageMaintainer{ggcyto}
 }
 \references{
 ~~ Literature or other references for background information ~~

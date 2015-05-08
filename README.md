@@ -1,7 +1,7 @@
-# ggCyto : Visualize `Cytometry` data with `ggplot`
+# ggcyto : Visualize `Cytometry` data with `ggplot`
 
 ```r
-library(ggCyto)
+library(ggcyto)
 data(GvHD)
 # select samples from 2 patients * 3 visits
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]

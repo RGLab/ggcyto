@@ -101,6 +101,7 @@ fortify.filterList <- function(model, data, ...){
     # merge with pd
     pd <- name_rows(pd)
     df <- merge(df, pd)  
+    attr(df, "annotated") <- TRUE
   }
     
   

@@ -1,4 +1,4 @@
-Package: ggCyto
+Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
 Version: 1.0

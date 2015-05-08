@@ -2,7 +2,6 @@
 title: "Visualize cytometry data with ggcyto"
 author: "Mike Jiang"
 date: "04/13/2015"
-output: html_document
 ---
 
 ```{r, echo=FALSE}
@@ -12,7 +11,7 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 
 ```{r}
-library(ggCyto)
+library(ggcyto)
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 fr <- fs[[1]]
@@ -43,17 +42,17 @@ ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
 ```{r}
 # 2d hex
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-p1 <- p + stat_binhex(bin = 128)
-p1
+p <- p + stat_binhex(bin = 128)
+p
 
 # add boundary limits
-p1 <- p1 + ylim(c(10,9e2)) + xlim(c(10,9e2))   
-p1
+p <- p + ylim(c(10,9e2)) + xlim(c(10,9e2))   
+p
 
 # overwrite the default fill gradien
-p1 + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
+p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
 
-p1 + scale_fill_gradient(trans = "sqrt", low = "gray", high = "black")
+p + scale_fill_gradient(trans = "sqrt", low = "gray", high = "black")
 
 ```
 
@@ -68,24 +67,24 @@ fres <- filter(fs, norm.filter)
 poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
 
 # add  gate layer
-p1 + geom_gate(data = poly.gates)
+p + geom_gate(poly.gates)
 
 # add rectangleGate layer (2d)
 rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
-p + geom_gate(data = poly.g)
+rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+p + geom_gate(rect.gates)
     
 
 # a list of 1d gate
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
-p + geom_gate(data = den.gates)
+p + geom_gate(den.gates)
 
 # 1d gate on another dimesion
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1)
-p + geom_gate(data = den.gates, pd = pData(fs), mapping = orig_aes)
+p + geom_gate(den.gates)
 
 # 1d gate on density plot
-my_aes <- aes(x = `SSC-H`)
-ggplot(fs, my_aes) + geom_density() + facet_wrap(~name) + geom_gate(den.gates, mapping = my_aes, pd = pData(fs))
+ggcyto(fs, aes(x = `SSC-H`)) + geom_density() + geom_gate(den.gates)
 ```
 
 
