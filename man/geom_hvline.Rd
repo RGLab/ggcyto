@@ -8,7 +8,21 @@ geom_hvline(mapping = NULL, data = NULL, position = "identity",
   show_guide = FALSE, ...)
 }
 \arguments{
+\item{mapping}{The aesthetic mapping, usually constructed with
+\code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set
+at the layer level if you are overriding the plot defaults.}
+
+\item{data}{A layer specific dataset - only needed if you want to override
+the plot defaults.}
+
+\item{position}{The position adjustment to use for overlapping points
+on this layer}
+
 \item{show_guide}{should a legend be drawn? (defaults to \code{FALSE})}
+
+\item{...}{other arguments passed on to \code{\link{layer}}. This can
+include aesthetics whose values you want to set, not map. See
+\code{\link{layer}} for more details.}
 }
 \description{
 This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
@@ -27,9 +41,5 @@ p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
 p + geom_hvline(data = data.frame(wt= 3))
 # hline
 p + geom_hvline(data = data.frame(mpg= 20))
-}
-\seealso{
-\code{\link{geom_hline}} for horizontal lines,
- \code{\link{geom_segment}} for a more general approach"
 }
 

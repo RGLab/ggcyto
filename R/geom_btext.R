@@ -1,12 +1,16 @@
 #' modified geom_text that draws the rectangle background.
 #'
 #' Limitation: It does not support rotation.
+#' 
+#' @inheritParams geom_hvline
+#' @param stat The statistical transformation to use on the data for this
+#'    layer.
 #' @param parse If TRUE, the labels will be parsed into expressions and
 #'   displayed as described in ?plotmath
 #' @export
 #' @examples
 #' \donttest{
-#' ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 3, fill = "red")
+#' ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, bgcolor = "green", bgfill = "gray", bgalpha = 0.4)
 #' }
 geom_btext <- function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
 parse = FALSE, ...) {
@@ -14,14 +18,13 @@ parse = FALSE, ...) {
   parse = parse, ...)
 }
 
-#' @import Kmisc grid.text2
 GeomBText <- proto(ggplot2:::Geom, {
-  objname <- "text"
+  objname <- "btext"
 
   draw_groups <- function(., ...) .$draw(...)
   draw <- function(., data, scales, coordinates, ..., parse = FALSE, na.rm = FALSE) {
     data <- remove_missing(data, na.rm,
-      c("x", "y", "label"), name = "geom_text")
+      c("x", "y", "label"), name = "geom_btext")
 
     lab <- data$label
     if (parse) {
@@ -33,7 +36,7 @@ GeomBText <- proto(ggplot2:::Geom, {
         hjust=hjust, vjust=vjust, 
         gp = gpar(col = alpha(colour, alpha), fontsize = size * .pt
                   ,fontfamily = family, fontface = fontface, lineheight = lineheight)
-#         ,gp.rect = gpar(colour = bgcolor, fill = bgcolor)
+        ,gp.rect = gpar(col = bgcolor, fill = bgfill, alpha = bgalpha)
          , widthAdj = unit(0, "npc")
         , heightAdj = unit(0, "npc")
         )
@@ -51,7 +54,7 @@ GeomBText <- proto(ggplot2:::Geom, {
 
   default_stat <- function(.) StatIdentity
   required_aes <- c("x", "y", "label")
-  default_aes <- function(.) aes(colour="black", bgcolor = "white", size=5 , angle=0, hjust=0.5,
+  default_aes <- function(.) aes(colour="black", bgfill = "white", bgcolor = "white", bgalpha = 1, size = 4 , angle=0, hjust=0.5,
     vjust=0.5, alpha = NA, family="", fontface=1, lineheight=1.2)
   guide_geom <- function(x) "text"
 

@@ -60,22 +60,8 @@ poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res
 p + geom_gate(data = poly.gates, pd = pData(fs))
 
 # add stats
-library(plyr)
-# calculate cell %
-digits <- 3
-stats <- ldply(fres, function(res){
-                thisStat = sum(res@subSet)/length(res@subSet)
-                thisStat <- paste(format(thisStat*100,digits=digits),"%",sep="")  
-                names(thisStat) <- "percent"
-                thisStat
-                }, .id = ".rownames") 
-centroids <- ldply(poly.gates, function(gate){
-                          df <- fortify(gate)
-                          colMeans(df)
-                          }, .id = ".rownames")
-df <- merge(centroids, stats)
-df <- merge(df, name_rows(pData(fs)))
-p + geom_gate(data = poly.gates, pd = pData(fs)) + geom_btext(data = df , aes(label = percent), size = 3)
+stats <- compute_stats.percent(fs, poly.gates)# calculate cell % and ccentroid of the gates
+p + geom_gate(data = poly.gates, pd = pData(fs)) + geom_btext(data = stats , aes(label = percent))
 
 # a list of 1d gate
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
@@ -83,11 +69,15 @@ p + geom_gate(data = den.gates, pd = pData(fs))
 
 # 1d gate on another dimesion
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1)
-p + geom_gate(data = den.gates, pd = pData(fs))
+# add stats
+stats <- compute_stats.percent(fs, den.gates)# calculate cell % and ccentroid of the gates
+p + geom_gate(data = den.gates, pd = pData(fs)) + geom_btext(data = stats , aes(label = percent), bgfill = "yellow")
 
 # 1d gate on density plot
-my_aes <- aes(x = `SSC-H`)
-ggplot(fs, my_aes) + geom_density() + facet_wrap(~name) + geom_gate(den.gates, pd = pData(fs))
+p1 <- ggplot(fs, aes(x = `SSC-H`)) + geom_density(aes(y = ..scaled..),fill = "black") + facet_wrap(~name) 
+p1 <- p1 + geom_gate(den.gates, pd = pData(fs), limit = c(0, 1e3)) 
+p1 + geom_btext(data = stats , aes(label = percent, y = density))
+
 ```
 
 

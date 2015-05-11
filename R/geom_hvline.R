@@ -8,11 +8,17 @@
 #' @section Aesthetics:
 #' \Sexpr[results=rd,stage=build]{ggplot2:::rd_aesthetics("geom", "vline")}
 #'
+#' @param mapping The aesthetic mapping, usually constructed with
+#'    \code{\link{aes}} or \code{\link{aes_string}}. Only needs to be set
+#'    at the layer level if you are overriding the plot defaults.
+#' @param data A layer specific dataset - only needed if you want to override
+#'    the plot defaults.
+#' @param position The position adjustment to use for overlapping points
+#'    on this layer
+#' @param ... other arguments passed on to \code{\link{layer}}. This can
+#'   include aesthetics whose values you want to set, not map. See
+#'   \code{\link{layer}} for more details.
 #' @param show_guide should a legend be drawn? (defaults to \code{FALSE})
-#' @inheritParams geom_point
-#' @seealso
-#'  \code{\link{geom_hline}} for horizontal lines,
-#'  \code{\link{geom_segment}} for a more general approach"
 #' @export
 #' @examples
 #' 
@@ -44,6 +50,7 @@ GeomHVline <- proto(ggplot2:::Geom, {
   
   
   draw <- function(., data, scales, coordinates, ...) {
+    
     ranges <- coord_range(coordinates, scales)
     
     # determien wether x or y 
@@ -60,7 +67,9 @@ GeomHVline <- proto(ggplot2:::Geom, {
     data[[paste0(axis.missing, "end")]] <- thisRange[2]
     #fill end point for the used axis
     data[[paste0(axis.used, "end")]] <- data[[axis.used]]
-    
+
+    #remove Inf lines
+    data <- data[!is.infinite(data[,axis.used]), ]
     GeomSegment$draw(unique(data), scales, coordinates)
   }
   

@@ -132,12 +132,15 @@ fortify.rectangleGate <- function(model, data, ...){
     as.data.frame(do.call(rbind, list(l.b, l.t, r.t, r.b)))
   }else if(nDim ==  1){
     coord <- c(l.b, r.t)
-    toRm <- is.infinite(coord)
-    if(any(toRm))
-      coord <- coord[!toRm] 
-    data.frame(as.list(coord), check.names = F)
+#     toRm <- is.infinite(coord)
+#     if(any(toRm))
+#       coord <- coord[!toRm] 
+# browser()
+    df <- data.frame(unname(coord), check.names = F)
+    colnames(df) <- param
+    df
   }else
     stop("rectangelGate with dimension ", dDim, "is not supported!")
-  
+#   browser()
 }
 

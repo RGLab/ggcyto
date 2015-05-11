@@ -1,7 +1,7 @@
 ##' Grid Text with a Background (modified based on Kmisc::grid.text2)
 ##' 
 ##' 
-##' @importFrom grid unit gpar is.unit stringWidth stringHeight grid.rect grid.text
+##' @importFrom grid unit gpar is.unit stringWidth stringHeight grid.rect grid.text gList
 ##' @param label A character or \code{\link{expression}} vector. 
 ##' Other objects are coerced by \code{as.graphicsAnnot}.
 ##' @param x A numeric vector or unit object specifying x-values.
@@ -30,6 +30,7 @@
 ##' @param heightAdj A height adjustment parameter, to help control how much
 ##' vertical padding there should be between the text and the background rectangle.
 ##' @seealso \code{\link{grid.text}} and \code{\link{grid.rect}}
+##' @export
 btextGrob <- function(label, 
                       x=unit(0.5, "npc"), 
                       y=unit(0.5, "npc"),
@@ -67,7 +68,7 @@ btextGrob <- function(label,
 #   browser()
   fontsize <- gp$fontsize
   size <- fontsize/ggplot2:::.pt
-  ratio <- size/6
+  ratio <- size/5
   strWidth <- ratio * stringWidth(label)
   strHeight <- ratio * stringHeight(label)
   
