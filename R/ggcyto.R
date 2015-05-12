@@ -84,6 +84,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
 #' 
 #' @method + ggcyto
 #' @rdname ggcyto-add
+#' @importFrom plyr defaults
 #' @export
 `+.ggcyto` <- function(e1, e2){
   
@@ -101,14 +102,91 @@ ggcyto.flowSet <- function(data, mapping, ...){
           e2$data <- layer_data
         }
         
+    }else if(e2$geom$objname == "popStats"){
+#       browser()    
+      #parse the flow data
+      plot_data <- e1$data
+      fs <- .df2fs(plot_data)
+      #parse the gate (currently we only look at the first gate layer )
+      found <- FALSE
+      for(layer in e1$layers){
+        layer_data <- layer$data
+        if(isTRUE(attr(layer_data, "annotated"))){
+#           browser()
+          gate <- .df2gate(layer_data, flowCore::colnames(fs))
+          found <- TRUE
+          break
+        }  
       }
+      if(!found)
+        stop("geom_gate layer must be added before geom_stats!")
+      
+     # do the gating to get pop stats
+     stat_type <- e2$stat_params[["type"]]
+     stats <- compute_stats(fs, gate, type = stat_type)
+     # update the data for geo_stats
+     e2$data <- stats
+     # update aes
+     stats_mapping <- aes_string(label = stat_type)
+
+     #add y aes for 1d density plot
+     dims <- sapply(e1$mapping,as.character)
+     dims <- dims[grepl("[x|y]", names(dims))]
+     if(length(dims) == 1)
+       stats_mapping <- defaults(stats_mapping, aes(y = density))
+     e2$mapping <- defaults(e2$mapping, stats_mapping)
+
     }
+    
+  }
   
 # browser()
   
   ggplot2:::`+.gg`(e1, e2)
 }
 
+#' Convert data.frame back to original flowSet format
+#' 
+#' It is used for gating purporse for geom_stats layer
+#' @importFrom plyr dlply
+.df2fs <- function(df){
+  
+  pd <- attr(df, "pd")
+
+  frlist <- dlply(df, .variables = ".rownames", function(sub_df){
+    markers <- setdiff(colnames(sub_df), colnames(pd))
+    fr <- flowFrame(exprs = as.matrix(sub_df[, markers]))
+    fr
+  })
+  fs <- as(frlist, "flowSet")
+  pData(fs) <- name_rows(pd)
+  fs
+}
+
+#' Convert data.frame back to original gate format
+#' 
+#' It is used for gating purporse for geom_stats layer
+#' @param chnls the valid channels
+.df2gate <- function(df, chnls){
+  
+  
+  glist <- dlply(df, .variables = ".rownames", function(sub_df){
+    
+    markers <- intersect(colnames(sub_df), chnls)
+    sub_df <- sub_df[, markers, drop = FALSE]
+    nDim <- length(markers)
+    if(nDim == 2){
+      g <- polygonGate(sub_df)  
+    }else if (nDim == 1){
+#       browser()
+      g <- rectangleGate(sub_df)
+    }else
+      stop("invalid dimension number!")
+    g
+  })
+  
+  filterList(glist)
+}
 
 # #' Draw ggcyto on current graphics device.
 # #'

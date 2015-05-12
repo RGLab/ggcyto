@@ -60,7 +60,7 @@ poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res
 p + geom_gate(data = poly.gates, pd = pData(fs))
 
 # add stats
-stats <- compute_stats.percent(fs, poly.gates)# calculate cell % and ccentroid of the gates
+stats <- compute_stats(fs, poly.gates, type = "percent")# calculate cell % and ccentroid of the gates
 p + geom_gate(data = poly.gates, pd = pData(fs)) + geom_btext(data = stats , aes(label = percent))
 
 # a list of 1d gate
@@ -76,6 +76,7 @@ p + geom_gate(data = den.gates, pd = pData(fs)) + geom_btext(data = stats , aes(
 # 1d gate on density plot
 p1 <- ggplot(fs, aes(x = `SSC-H`)) + geom_density(aes(y = ..scaled..),fill = "black") + facet_wrap(~name) 
 p1 <- p1 + geom_gate(den.gates, pd = pData(fs), limit = c(0, 1e3)) 
+#must define y aes here since ggplot object does not have y defined in aes
 p1 + geom_btext(data = stats , aes(label = percent, y = density))
 
 ```

@@ -27,9 +27,9 @@ p1
 # overwriting the default faceeting
 p1 + facet_grid(Patient~Visit)
 
-# display density/area
+# display density
 p + geom_density()
-p + geom_area(stat = "density") 
+p + geom_density(fill = "black")
 
 # fill with different colors
 ggcyto(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
@@ -42,7 +42,7 @@ ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
 ```{r}
 # 2d hex
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-p <- p + stat_binhex(bin = 128)
+p <- p + geom_hex(bins = 128)
 p
 
 # add boundary limits
@@ -56,7 +56,7 @@ p + scale_fill_gradient(trans = "sqrt", low = "gray", high = "black")
 
 ```
 
-## add `geom_gate` layer
+## add `geom_gate` and `geom_stats` layers
 ```{r}
 # estimate a lymphGate
 lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
@@ -74,17 +74,17 @@ rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 p + geom_gate(rect.gates)
     
-
+p + geom_gate(rect.gates) + geom_stats()
 # a list of 1d gate
-den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
-p + geom_gate(den.gates)
+den.gates.x <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
+p + geom_gate(den.gates.x) + geom_stats()
 
 # 1d gate on another dimesion
-den.gates <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1)
-p + geom_gate(den.gates)
+den.gates.y <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1, positive = FALSE)
+p + geom_gate(den.gates.y) + geom_stats()
 
 # 1d gate on density plot
-ggcyto(fs, aes(x = `SSC-H`)) + geom_density() + geom_gate(den.gates)
+ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")
 ```
 
 
