@@ -4,14 +4,16 @@
 \alias{compute_stats}
 \title{compute the statistics of the cell population defined by gates}
 \usage{
-compute_stats(fs, gates, type = "percent", ...)
+compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
 }
 \arguments{
-\item{fs}{flowSet}
+\item{fs}{flowSet. can be NULL when precaculated 'value' is provided}
 
 \item{gates}{a list of filters}
 
 \item{type}{can be "percent", "count" or "MFI".}
+
+\item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
 \item{...}{other arguments passed to stat_position function}
 }

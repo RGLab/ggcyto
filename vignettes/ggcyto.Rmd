@@ -73,15 +73,20 @@ p + geom_gate(poly.gates)
 rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 p + geom_gate(rect.gates)
-    
+
+#add stats layer
 p + geom_gate(rect.gates) + geom_stats()
+
+
 # a list of 1d gate
 den.gates.x <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
 p + geom_gate(den.gates.x) + geom_stats()
 
 # 1d gate on another dimesion
 den.gates.y <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1, positive = FALSE)
-p + geom_gate(den.gates.y) + geom_stats()
+
+# pass the precalculated stats value
+p + geom_gate(den.gates.y) + geom_stats(value = lapply(rect.gates, function(g)0.1))
 
 # 1d gate on density plot
 ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")

@@ -4,10 +4,15 @@
 \alias{geom_stats}
 \title{Popluation statistics layer}
 \usage{
-geom_stats(..., type = "percent")
+geom_stats(gate = NULL, ..., value = NULL, type = "percent")
 }
 \arguments{
+\item{gate}{a 'filterList` or character (represent as a population node in GatingSet)
+if not supplied, ggcyto then tries to parse the gate from the first geom_gate layer}
+
 \item{...}{other arguments passed to stat_position function}
+
+\item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
 \item{type}{can be "percent", "count" or "MFI".}
 }

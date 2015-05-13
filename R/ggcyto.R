@@ -104,37 +104,50 @@ ggcyto.flowSet <- function(data, mapping, ...){
         
     }else if(e2$geom$objname == "popStats"){
 #       browser()    
-      #parse the flow data
-      plot_data <- e1$data
-      fs <- .df2fs(plot_data)
-      #parse the gate (currently we only look at the first gate layer )
-      found <- FALSE
-      for(layer in e1$layers){
-        layer_data <- layer$data
-        if(isTRUE(attr(layer_data, "annotated"))){
-#           browser()
-          gate <- .df2gate(layer_data, flowCore::colnames(fs))
-          found <- TRUE
-          break
-        }  
-      }
-      if(!found)
-        stop("geom_gate layer must be added before geom_stats!")
       
-     # do the gating to get pop stats
-     stat_type <- e2$stat_params[["type"]]
-     stats <- compute_stats(fs, gate, type = stat_type)
-     # update the data for geo_stats
-     e2$data <- stats
-     # update aes
-     stats_mapping <- aes_string(label = stat_type)
+      #parse the gate from the first gate layer if it is not present in the current geom_stats layer
+      stat_type <- e2$stat_params[["type"]]
+      gate <- e2$stat_params[["gate"]]
+      value <- e2$stat_params[["value"]]
+      
+      if(is.null(gate))
+      {
+        found <- FALSE
+        for(layer in e1$layers){
+          layer_data <- layer$data
+          if(isTRUE(attr(layer_data, "annotated"))){
+            #           browser()
+            gate <- .df2gate(layer_data, flowCore::colnames(fs))
+            found <- TRUE
+            break
+          }  
+        }
+        if(!found)
+          stop("geom_gate layer must be added before geom_stats!")
+        
+      }
 
-     #add y aes for 1d density plot
-     dims <- sapply(e1$mapping,as.character)
-     dims <- dims[grepl("[x|y]", names(dims))]
-     if(length(dims) == 1)
+      # compute pop stats
+      
+      plot_data <- e1$data
+
+      # we can consider skipping this when value is provided if the performance becomes an issue
+      # for now we parse it any way for the sake of simplicity of the compute_stats API
+      fs <- .df2fs(plot_data)#parse the flow data 
+      stats <- compute_stats(fs, gate, type = stat_type, value = value)
+      
+      # update the data for geom_btext
+      e2$data <- stats    
+      
+      # update aes
+      stats_mapping <- aes_string(label = stat_type)
+
+      #add y aes for 1d density plot
+      dims <- sapply(e1$mapping,as.character)
+      dims <- dims[grepl("[x|y]", names(dims))]
+      if(length(dims) == 1)
        stats_mapping <- defaults(stats_mapping, aes(y = density))
-     e2$mapping <- defaults(e2$mapping, stats_mapping)
+      e2$mapping <- defaults(e2$mapping, stats_mapping)
 
     }
     
