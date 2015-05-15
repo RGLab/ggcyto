@@ -89,3 +89,17 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
   
 }
 
+#' construct an abstract geom layer for a character that represents nodes in a Gating tree
+#' 
+#' It will be instanatiated later as a specific geom_gate layer or layers based on the gates
+#' extracted from the given GatingSet object.
+#' @export
+geom_gate.character <- function(data, ...){
+  
+  GeomGsNode$new(data = NULL, node = data, ...)
+}
+
+GeomGsNode <- proto(ggplot2:::Geom, {
+  objname <- "gs.node"
+  default_stat <- function(.) StatIdentity
+})

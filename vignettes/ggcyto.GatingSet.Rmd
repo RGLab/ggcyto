@@ -1,0 +1,49 @@
+---
+title: "Visualize GatingSet with ggcyto"
+author: "Mike Jiang"
+date: "04/13/2015"
+---
+
+```{r, echo=FALSE}
+library(knitr)
+opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+
+```{r echo=FALSE}
+library(ggcyto)
+gs <- load_gs("/fh/fast/gottardo_r/mike_working/lyoplate_out//gated_data/auto/gslist-tcell/D54tFo7RPl/")
+gs <- gs[1:2]
+library(proto)
+library(plyr)
+source("~/rglab/workspace/ggcyto/R/ggcyto.R")
+source("~/rglab/workspace/ggcyto/R/ggcyto-gs.R")
+```
+
+```{r}
+p <- ggcyto(gs, parent = "CD3", aes(x = `CD4`, y = `CD8`)) 
+# 2d plot
+p1 <- p + geom_hex(bins = 128) + xlim(0,4096) + ylim(0,4096)
+p1
+
+
+# add gate
+p1 <- p1 + geom_gate("CD4")
+p1
+
+# add stats
+# p1 + geom_stats()
+
+# add another gate
+p1 + geom_gate("CD8")
+
+# 1d plot
+# p <- ggcyto(gs, parent = "Live", aes(x = `CD3`, y = `SSC-A`)) 
+# # add gate
+# p1 + geom_gate("CD3")
+
+
+```
+
+
+

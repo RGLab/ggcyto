@@ -1,5 +1,5 @@
 ---
-title: "Visualize cytometry data with ggplot2 (advanced) -- Gate"
+title: "Visualize gates on cytometry data with ggplot2"
 author: "Mike Jiang"
 date: "04/13/2015"
 output: html_document

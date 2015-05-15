@@ -66,6 +66,7 @@ fortify.flowSet <- function(model, data, ...){
   #we have to attach the extra copy of pd to attribute as well
   # in order for the ggcyo wrapper to copy it to the gate layer
   attr(df, "pd") <- pd
+  attr(df, "gs") <- attr(model, "gs") #copy gs attribute over
   df
 }
 

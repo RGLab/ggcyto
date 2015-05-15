@@ -34,7 +34,7 @@ is.ggcyto <- function(x) inherits(x, "ggcyto")
 
 #' @export
 ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
-  ggcyto.flowSet(fortify.fs(data, ...), mapping)
+  ggcyto.flowSet(fortify_fs(data, ...), mapping)
 }
 
 
@@ -87,16 +87,15 @@ ggcyto.flowSet <- function(data, mapping, ...){
 #' @importFrom plyr defaults
 #' @export
 `+.ggcyto` <- function(e1, e2){
-  
+#   browser()  
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
   if(is.proto(e2)){
     layer_data <- e2$data
-    
+    pd <- attr(e1$data, "pd")
     if(is(layer_data, "geom_gate_filterList")){
         if(!isTRUE(attr(layer_data, "annotated"))){
-          pd <- attr(e1$data, "pd")
-        
+          
           layer_data <- merge(layer_data, pd, by = ".rownames")  
           attr(layer_data, "annotated") <- TRUE
           e2$data <- layer_data
@@ -116,8 +115,8 @@ ggcyto.flowSet <- function(data, mapping, ...){
         for(layer in e1$layers){
           layer_data <- layer$data
           if(isTRUE(attr(layer_data, "annotated"))){
-            #           browser()
-            gate <- .df2gate(layer_data, flowCore::colnames(fs))
+                      
+            gate <- .df2gate(layer_data, colnames(name_rows(pd)))
             found <- TRUE
             break
           }  
@@ -153,7 +152,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
     
   }
   
-# browser()
+
   
   ggplot2:::`+.gg`(e1, e2)
 }
@@ -179,15 +178,15 @@ ggcyto.flowSet <- function(data, mapping, ...){
 #' Convert data.frame back to original gate format
 #' 
 #' It is used for gating purporse for geom_stats layer
-#' @param chnls the valid channels
-.df2gate <- function(df, chnls){
+#' @param pcols the pData columns
+.df2gate <- function(df, pcols){
   
-  
+  markers <- setdiff(colnames(df), pcols)
+  nDim <- length(markers) -1
+  df <- df[, markers, drop = FALSE]
   glist <- dlply(df, .variables = ".rownames", function(sub_df){
     
-    markers <- intersect(colnames(sub_df), chnls)
-    sub_df <- sub_df[, markers, drop = FALSE]
-    nDim <- length(markers)
+    sub_df[[".rownames"]] <- NULL
     if(nDim == 2){
       g <- polygonGate(sub_df)  
     }else if (nDim == 1){
@@ -203,7 +202,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
 
 # #' Draw ggcyto on current graphics device.
 # #'
-# #' A wrapper for contructing the actual ggplot objects
+# #' A wrapper for print.ggplot. I does the lazy fortifying of data here instead of during the ggcyto contructor
 # #' @param x ggcyto object to display
 # #' @param ... other arguments not used by this method
 # #' @export

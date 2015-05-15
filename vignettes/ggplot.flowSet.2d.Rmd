@@ -1,5 +1,5 @@
 ---
-title: "Visualize cytometry data with ggplot2 (advanced) - 2d scatter plot"
+title: "2d scatter plot of cytometry data with ggplot2"
 author: "Mike Jiang"
 date: "04/13/2015"
 output: html_document

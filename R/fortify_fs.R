@@ -19,11 +19,24 @@ fortify_fs.default <- function(model, data, ...) {
 
 #' coerce flowFrame to flowSet
 #' The default coerce method does not perserve the sample name.
-#' 
+#' @export
 fortify_fs.flowFrame <- function(model, data, ...){
   sn <- identifier(model)
   fs <- as(model, "flowSet")
   sampleNames(fs) <- sn
   pData(fs)[["name"]] <- sn
   fs
+}
+
+#' coerce a GatingSet node to flowSet
+#' The default coerce method does not perserve the sample name.
+#' @param model GatingSet
+#' @param parent character as node name
+#' @export
+fortify_fs.GatingSet <- function(model, data, parent, ...){
+  
+  fs <- getData(model, parent)
+  attr(fs, "gs") <- model #need to store gs to be used later for other layers
+  fs
+  
 }
