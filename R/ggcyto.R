@@ -51,7 +51,7 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 ggcyto.flowSet <- function(data, mapping, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
-#   p <- ggplot2:::ggplot.data.frame(data, mapping)
+  p <- ggplot2:::ggplot.data.frame(data, mapping, ...)
 
   if(!missing(mapping)){
     dims <- sapply(mapping,as.character)
@@ -60,7 +60,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
   }else
     stop("mapping must be supplied to ggplot!")
 #   browser()  
-  p <- ggplot(data = data, mapping, ...)
+#   p <- ggplot(data = data, mapping, ...)
   # add default facetting
   p <- p + facet_wrap(~name) 
   #     browser()
@@ -92,7 +92,8 @@ ggcyto.flowSet <- function(data, mapping, ...){
   # it is used solely for geom_gate.filterList layer
   if(is.proto(e2)){
     layer_data <- e2$data
-    pd <- attr(e1$data, "pd")
+#     pd <- attr(e1$data, "pd")
+      pd <- name_rows(pData(e1$data))
     if(is(layer_data, "geom_gate_filterList")){
         if(!isTRUE(attr(layer_data, "annotated"))){
           
@@ -128,11 +129,12 @@ ggcyto.flowSet <- function(data, mapping, ...){
 
       # compute pop stats
       
-      plot_data <- e1$data
+#       plot_data <- e1$data
 
       # we can consider skipping this when value is provided if the performance becomes an issue
       # for now we parse it any way for the sake of simplicity of the compute_stats API
-      fs <- .df2fs(plot_data)#parse the flow data 
+#       fs <- .df2fs(plot_data)#parse the flow data 
+      fs <- e1$data
       stats <- compute_stats(fs, gate, type = stat_type, value = value)
       
       # update the data for geom_btext
@@ -200,39 +202,20 @@ ggcyto.flowSet <- function(data, mapping, ...){
   filterList(glist)
 }
 
-# #' Draw ggcyto on current graphics device.
-# #'
-# #' A wrapper for print.ggplot. I does the lazy fortifying of data here instead of during the ggcyto contructor
-# #' @param x ggcyto object to display
-# #' @param ... other arguments not used by this method
-# #' @export
-# #' @method print ggplot
-# print.ggcyto <- function(x, ...) {
-# 
-#     #fortify plot data here instead
-#     x$data <- fortify(x$data)
-#     mapping <- x$mapping
-#     if(!missing(mapping)){
-#       dims <- sapply(mapping,as.character)
-#       dims <- dims[grepl("[x|y]", names(dims))]
-#       nDims <- length(dims)
-#     }else
-#       stop("mapping must be supplied to ggplot!")
-#   
-#     
-#     # add default facetting
-#     x <- x + facet_wrap(~name) 
-# #     browser()
-#     if(nDims == 2){
-#       # add default fill gradien
-#       myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
-#       x <- x + scale_fill_gradientn(colours = myColor)  
-#     }
-#     #strip the ggcyto attribute and let ggplot does its job
-#     class(x) <- class(x)[-1]
-#     printx
-# }
-# #' @rdname print.ggcyto
-# #' @method plot ggcyto
-# #' @export
-# plot.ggcyto <- print.ggcyto
+#' Draw ggcyto on current graphics device.
+#'
+#' A wrapper for print.ggplot. I does the lazy fortifying of data here instead of during the ggcyto contructor
+#' @param x ggcyto object to display
+#' @param ... other arguments not used by this method
+#' @export
+#' @method print ggcyto
+print.ggcyto <- function(x, ...) {
+
+    #fortify plot data here instead
+    x$data <- fortify(x$data)
+    ggplot2:::print.ggplot(x)
+}
+#' @rdname print.ggcyto
+#' @method plot ggcyto
+#' @export
+plot.ggcyto <- print.ggcyto
