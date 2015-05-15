@@ -43,6 +43,11 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
       nodes <- e2$stat_params[["node"]]  
       #instantiate the parent by the first node if it is not yet been done
       parent <- attr(gs, "subset")
+      if(nodes == "_child_"){
+        if(parent == "_parent_")
+          stop("either 'subset' in ggcyto object or 'data' in geom_gate layer needs to be specified!")
+        nodes <- getChildren(gs[[1]], parent, showHidden = FALSE)
+      }
       if(parent == "_parent_"){
         parent <- getParent(gs[[1]], nodes[[1]])
         attr(e1$data, "subset") <- parent

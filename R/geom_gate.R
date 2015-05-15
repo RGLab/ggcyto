@@ -9,7 +9,12 @@ geom_gate <- function(data, ...)UseMethod("geom_gate")
 #' @export
 #' @rdname geom_gate
 geom_gate.default <- function(data, ...){
-  stop("ggcyto doesn't know how to deal with gate of class ", class(data), call. = FALSE)
+  
+  if(missing(data)){
+    data <- "_child_"
+      geom_gate(data, ...)
+  }else
+    stop("ggcyto doesn't know how to deal with gate of class ", class(data), call. = FALSE)
 }
 
 #' @rdname geom_gate.filterList
