@@ -30,13 +30,16 @@ fortify_fs.flowFrame <- function(model, data, ...){
 
 #' coerce a GatingSet node to flowSet
 #' The default coerce method does not perserve the sample name.
-#' @param model GatingSet
-#' @param parent character as node name
+#' @param model GatingSet object that has 'subset' character attribute that specifies the node name
 #' @export
-fortify_fs.GatingSet <- function(model, data, parent, ...){
-  
-  fs <- getData(model, parent)
-  attr(fs, "gs") <- model #need to store gs to be used later for other layers
+fortify_fs.GatingSet <- function(model, data, ...){
+  subset <- attr(model, "subset")
+  if(is.null(subset))
+    stop("subset must be supplied!")
+  else if(subset == "_parent_")
+    stop("'subset' must be instantiated by the actual node name!\nMake sure either 'subset' is specified or the 'geom_gate' layer is added. ")
+  fs <- getData(model, subset)
+#   attr(fs, "gs") <- model #need to store gs to be used later for other layers
   fs
   
 }

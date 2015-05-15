@@ -63,11 +63,20 @@ fortify.flowSet <- function(model, data, ...){
   df <- merge(pd, df, by = ".rownames")
   
   
-  #we have to attach the extra copy of pd to attribute as well
-  # in order for the ggcyo wrapper to copy it to the gate layer
-  attr(df, "pd") <- pd
-  attr(df, "gs") <- attr(model, "gs") #copy gs attribute over
+#   #we have to attach the extra copy of pd to attribute as well
+#   # in order for the ggcyo wrapper to copy it to the gate layer
+#   attr(df, "pd") <- pd
+#   attr(df, "gs") <- attr(model, "gs") #copy gs attribute over
   df
+}
+
+#' coerce a GatingSet node to data.frame
+#' @param model GatingSet
+#' @export
+fortify.GatingSet <- function(model, ...){
+  
+  fs <- fortify_fs(model, ...)
+  fortify(fs)
 }
 
 #' Convert a polygonGate to a data.frame useful for ggplot

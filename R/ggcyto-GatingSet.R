@@ -2,26 +2,22 @@
 #' Create a new ggcyto plot from a flowSet
 #'
 #' @param data GatingSet to plot
+#' @param subset character that specifies the node path or node name in the GatingSet. 
+#'                Default is "_parent_", which will be substitute with the actual node name 
+#'                based on the geom_gate layer to be added later.
 #' @inheritParams ggcyto.flowSet
 #' @method ggcyto GatingSet
 #' @export
-ggcyto.GatingSet <- function(data, parent, mapping, ...){
-#   
-#   
-#   if(!missing(mapping)){
-#     dims <- sapply(mapping,as.character)
-#     dims <- dims[grepl("[x|y]", names(dims))]
-#     nDims <- length(dims)
-#   }else
-#     stop("mapping must be supplied to ggplot!")
-  
-  p <- ggcyto.default(data = data, parent = parent, mapping = mapping, ...)
-  p <- p + labs(title  = parent)
+ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
+  attr(data, "subset") <- subset
+#   browser()
+  p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
+  p <- p + labs(title  = subset)
   #somehow p + theme won't work here
-  p <- `+.ggcyto`(p, theme(plot.title = element_text(face="bold")))
+  p <- `+.ggcyto_flowSet`(p, theme(plot.title = element_text(face="bold")))
   
   # prepend the ggcyto class attribute
-  class(p) <- c("ggcyto.gs", class(p))  
+  class(p) <- c("ggcyto_GatingSet", class(p))  
   p
 }
 
@@ -33,24 +29,39 @@ ggcyto.GatingSet <- function(data, parent, mapping, ...){
 #' @param e1 An object of class \code{ggcyto}
 #' @param e2 A component to add to \code{e1}
 #' 
-#' @method + ggcyto
+#' @method + ggcyto_GatingSet
 #' @rdname ggcyto-add
 #' @importFrom plyr defaults
 #' @export
-`+.ggcyto.gs` <- function(e1, e2){
-  
+`+.ggcyto_GatingSet` <- function(e1, e2){
+#   browser()
   if(is.proto(e2)){
     if(e2$geom$objname=="gs.node"){
       #instanatiate e2 layer as a specific gate layer
 #       browser()      
-      gs <- attr(e1$data, "gs")
-      node <- e2$stat_params[["node"]]  
-      gate <- getGate(gs, node)
-      e2.new <- geom_gate(gate)
-      # copy all the other parameters
-      e2.new$geom_params <- defaults(e2.new$geom_params, e2$geom_params)
-      e2.new$stat_params <- defaults(e2.new$stat_params, e2$stat_params)
-      e2 <- e2.new
+      gs <- e1$data
+      nodes <- e2$stat_params[["node"]]  
+      #instantiate the parent by the first node if it is not yet been done
+      parent <- attr(gs, "subset")
+      if(parent == "_parent_"){
+        parent <- getParent(gs[[1]], nodes[[1]])
+        attr(e1$data, "subset") <- parent
+      }
+#       browser()
+      if(e1$labels[["title"]] == "_parent_")
+        e1$labels[["title"]] <- parent
+      
+      for(node in nodes)
+      {
+        gate <- getGate(gs, node)
+        e2.new <- geom_gate(gate)
+        # copy all the other parameters
+        e2.new$geom_params <- defaults(e2.new$geom_params, e2$geom_params)
+        e2.new$stat_params <- defaults(e2.new$stat_params, e2$stat_params)
+        e1 <- `+.ggcyto_flowSet`(e1, e2.new)
+      }
+     return (e1) 
+      
     }else if(e2$geom$objname == "popStats"){
       browser()
       # insert the pre-calculated stats
@@ -81,5 +92,5 @@ ggcyto.GatingSet <- function(data, parent, mapping, ...){
   }
   
     
-  `+.ggcyto`(e1, e2)
+  `+.ggcyto_flowSet`(e1, e2)
 }

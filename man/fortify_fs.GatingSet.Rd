@@ -5,12 +5,10 @@
 \title{coerce a GatingSet node to flowSet
 The default coerce method does not perserve the sample name.}
 \usage{
-\method{fortify_fs}{GatingSet}(model, data, parent, ...)
+\method{fortify_fs}{GatingSet}(model, data, ...)
 }
 \arguments{
-\item{model}{GatingSet}
-
-\item{parent}{character as node name}
+\item{model}{GatingSet object that has 'subset' character attribute that specifies the node name}
 }
 \description{
 coerce a GatingSet node to flowSet
