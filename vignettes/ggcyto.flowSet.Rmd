@@ -90,6 +90,12 @@ p + geom_gate(den.gates.y) + geom_stats(value = lapply(rect.gates, function(g)0.
 
 # 1d gate on density plot
 ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")
+
+# add stats layer for each gate layer implicitly
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats()
+
+# add stats layer only for one gate explicitly
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates)
 ```
 
 

@@ -97,7 +97,7 @@ fortify.polygonGate <- function(model, data, ...){
 #' It tries to merge with pData
 #' 
 #' @param model filterList
-#' @param data pData of flowSet
+#' @param data not used
 #' @param ... not used.
 #' 
 #' @importFrom plyr name_rows

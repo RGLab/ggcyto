@@ -43,8 +43,7 @@ geom_gate.filterList <- function(data, pd, ...){
   # assuming it is already attached to attribute
   # when pd is missing
   if(!missing(pd)){
-    attr(data, "pd") <- pd
-#     attr(layer_data, "annotated") <- TRUE
+    attr(data, "pd") <- pd #this step is done automatically when `+.ggcyto_flowSet` is invoked
   }
     
   
