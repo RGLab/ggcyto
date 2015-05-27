@@ -13,8 +13,10 @@
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 #' p <- p + geom_hex(bins = 128)
 #' p + geom_gate(rect.gates) + geom_stats()
-geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent"){
-  GeomStats$new(gate = gate, ...,  value = value, type = type)
+geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", data_range = NULL){
+  type <- match.arg(type, c("percent", "count"))
+  # data_range can be passed in to prevent the data(gs or fs) to be evaluated by compute_stats
+  GeomStats$new(gate = gate, ...,  value = value, type = type, data_range = data_range)
 }
 
 GeomStats <- proto(ggcyto:::GeomBText, {

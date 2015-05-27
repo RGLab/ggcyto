@@ -9,7 +9,7 @@
 \arguments{
 \item{model}{filterList}
 
-\item{data}{pData of flowSet}
+\item{data}{not used}
 
 \item{...}{not used.}
 }

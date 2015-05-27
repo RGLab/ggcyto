@@ -4,7 +4,8 @@
 \alias{compute_stats}
 \title{compute the statistics of the cell population defined by gates}
 \usage{
-compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
+compute_stats(fs = NULL, gates, type = "percent", value = NULL,
+  data_range = NULL, ...)
 }
 \arguments{
 \item{fs}{flowSet. can be NULL when precaculated 'value' is provided}
@@ -14,6 +15,8 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
 \item{type}{can be "percent", "count" or "MFI".}
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
+
+\item{data_range}{the data range for each channels}
 
 \item{...}{other arguments passed to stat_position function}
 }

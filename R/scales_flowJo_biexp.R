@@ -39,7 +39,6 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 #' 
 #' @export
 #' @importFrom scales trans_new format_format
-#' @importFrom flowWorkspace flowJoTrans
 #' @param ... arguments passed to flowJoTrans
 flowJo_biexp_trans <- function(..., pretty = FALSE){
 #   browser()

@@ -7,25 +7,23 @@
 #' @param gates a list of filters
 #' @param type can be "percent", "count" or "MFI".
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
+#' @param data_range the data range for each channels
 #' @param ... other arguments passed to stat_position function
 #' @return
 #' a data.frame that contains percent and centroid locations as well as pData
 #' that used as data for geom_btext layer.
 #' @export
-compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...){
+compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data_range = NULL, ...){
   
-  if(is.null(fs)&&is.null(value))
+  if(is.null(fs)&&(is.null(value)||is.null(data_range)))
     stop("fs must be provided when 'value' or 'data_range' is not supplied!")
-  
-  type <- match.arg(type, c("percent", "count", "MFI"))
   
   stat_func <- eval(as.symbol(paste(".stat", type, sep = "_")))
   stats <- stat_func(fs, gates, value = value, ...)  
   
-  
-  data_range <- range(fs[[1, use.exprs = F]])
-#   params <- parameters(gates[[1]])
-#   data_range <- data_range[, params, drop = FALSE]
+  if(is.null(data_range))
+    data_range <- range(fs[[1, use.exprs = F]])
+
   #add default density range
 # browser()
   data_range[["density"]] <- c(0,1)

@@ -4,7 +4,8 @@
 \alias{geom_stats}
 \title{Popluation statistics layer}
 \usage{
-geom_stats(gate = NULL, ..., value = NULL, type = "percent")
+geom_stats(gate = NULL, ..., value = NULL, type = "percent",
+  data_range = NULL)
 }
 \arguments{
 \item{gate}{a 'filterList` or character (represent as a population node in GatingSet)
@@ -15,6 +16,8 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
 \item{type}{can be "percent", "count" or "MFI".}
+
+\item{data_range}{the data range for each channels}
 }
 \description{
 It is a dummy layer that simply inherits GeomBText.
