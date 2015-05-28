@@ -16,6 +16,14 @@ ggcyto.flowSet <- function(data, mapping, ...){
   if(!missing(mapping)){
     dims <- sapply(mapping,as.character)
     dims <- dims[grepl("[x|y]", names(dims))]
+    
+    #update x , y with actual channel name
+    frm <- getFlowFrame(data)
+    new.aes <- sapply(dims, function(dim)as.symbol(getChannelMarker(frm, dim)[["name"]]))
+    mapping[["x"]] <- new.aes[["x"]]
+    mapping[["y"]] <- new.aes[["y"]]
+    p$mapping <- mapping
+    
     nDims <- length(dims)
   }else
     stop("mapping must be supplied to ggplot!")

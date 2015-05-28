@@ -12,7 +12,7 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r echo=FALSE}
 library(ggcyto)
-gs <- load_gs("/fh/fast/gottardo_r/mike_working/lyoplate_out//gated_data/auto/gslist-tcell/D54tFo7RPl/")
+gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/080/test/")
 gs <- gs[1:2]
 # library(proto)
 # library(plyr)
@@ -22,14 +22,14 @@ gs <- gs[1:2]
 ```
 
 ```{r}
-p <- ggcyto(gs, aes(x = `CD4`, y = `CD8`), subset = "CD3") 
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
 # 2d plot
 p <- p + geom_hex(bins = 128, na.rm = T) + xlim(0,4096) + ylim(0,4096)
-p
+p + scale_x_continuous(limits = c(0,4096), breaks = c())
 
 # add gate
 p + geom_gate("CD4")
-
+prettyAxis(gs[[1]], "CD4")
 # add two gates
 p1 <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p1
