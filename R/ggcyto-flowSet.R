@@ -99,9 +99,10 @@ ggcyto.flowSet <- function(data, mapping, ...){
       value <- e2$stat_params[["value"]]
       stat_type <- e2$stat_params[["type"]]
       data_range <- e2$stat_params[["data_range"]]
+      adjust <- e2$stat_params[["adjust"]]
       fs <- e1$data
       for(gate in gates_parsed){
-        stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range)
+        stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust)
         
         # instantiate the new stats layer(somehow direct clone by proto doesn't work here)
         e2.new <- geom_stats(data = stats)

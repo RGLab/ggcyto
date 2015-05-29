@@ -37,7 +37,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' @inheritParams compute_stats
 #' @importFrom plyr rename
 #' @param digits control the percent format
-.stat_percent <- function(fs, gates, digits = 3, value = NULL){
+.stat_percent <- function(fs, gates, digits = 3, value = NULL, ...){
   if(is.null(value)){
     # compute the stats
     fres <- filter(fs, gates)
@@ -54,7 +54,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' compute the event count of the cell population
 #' 
 #' @inheritParams compute_stats
-.stat_count <- function(fs, gates, value = NULL){
+.stat_count <- function(fs, gates, value = NULL, ...){
   if(is.null(value)){
     fres <- filter(fs, gates)
     stats <- ldply(fres, function(res)sum(res@subSet), .id = ".rownames")
@@ -71,7 +71,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' compute the MFI of the cell population
 #' 
 #' @inheritParams compute_stats
-.stat_MFI <- function(fs, gates, digits = 3){
+.stat_MFI <- function(fs, gates, digits = 3, ...){
   stop("MFI not supported yet!")
   fs_sub <- Subset(fs, gates)
   stats <- ldply(sampleNames(fs_sub), function(sn){
