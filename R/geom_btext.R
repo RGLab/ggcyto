@@ -10,7 +10,7 @@
 #' @export
 #' @examples
 #' \donttest{
-#' ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, bgcolor = "green", bgfill = "gray", bgalpha = 0.4)
+#' ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, fill = "gray")
 #' }
 geom_btext <- function (mapping = NULL, data = NULL, stat = "identity", position = "identity",
 parse = FALSE, ...) {
@@ -36,7 +36,7 @@ GeomBText <- proto(ggplot2:::Geom, {
         hjust=hjust, vjust=vjust, 
         gp = gpar(col = alpha(colour, alpha), fontsize = size * .pt
                   ,fontfamily = family, fontface = fontface, lineheight = lineheight)
-        ,gp.rect = gpar(col = bgcolor, fill = bgfill, alpha = bgalpha)
+        ,gp.rect = gpar(col = fill, fill = fill, alpha = bgalpha)
          , widthAdj = unit(0, "npc")
         , heightAdj = unit(0, "npc")
         )
@@ -54,7 +54,7 @@ GeomBText <- proto(ggplot2:::Geom, {
 
   default_stat <- function(.) StatIdentity
   required_aes <- c("x", "y", "label")
-  default_aes <- function(.) aes(colour="black", bgfill = "white", bgcolor = "white", bgalpha = 1, size = 4 , angle=0, hjust=0.5,
+  default_aes <- function(.) aes(colour="black", fill = "white", bgalpha = 1, size = 4 , angle=0, hjust=0.5,
     vjust=0.5, alpha = NA, family="", fontface=1, lineheight=1.2)
   guide_geom <- function(x) "text"
 
