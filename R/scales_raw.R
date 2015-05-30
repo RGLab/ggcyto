@@ -1,5 +1,7 @@
 #' Display axis in raw scales
 #' 
+#' It is essentially a dummy continous scale and will be instantiated 
+#' by '+.ggcyto_GatingSet' with 'breaks` and 'lables' customized.
 #' @param gs GatingSet
 #' @param channel the channel or marker name
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)

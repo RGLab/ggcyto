@@ -37,9 +37,11 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
 #   browser()
+  plot_mapping <- e1$mapping
+  prj <- sapply(plot_mapping, as.character)
+  gs <- e1$data
   if(is.proto(e2)){
-    plot_mapping <- e1$mapping
-    gs <- e1$data
+    
     parent <- attr(gs, "subset")
     if(e2$geom$objname=="gs.node"){
       #instantiate e2 layer as a specific gate layer
@@ -49,7 +51,7 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
       if(isTRUE(nodes == "_child_")){
         if(parent == "_parent_")
           stop("either 'subset' in ggcyto object or 'data' in geom_gate layer needs to be specified!")
-        prj <- as.character(plot_mapping)
+        
         nodes <- getChildren_by_projection(gs, parent, x = prj[1], y = prj[2])
       }
       #instantiate the subset/parent info
@@ -97,6 +99,7 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
         for(node in gates){
           gates <- getGate(gs, node)
           #clone e2
+          
           e2.new <- proto(e2)#as.proto(as.list(e2), parent = GeomStats)
           e2.new$stat_params[["gate"]] <- gates
           stat_type <- e2.new$stat_params[["type"]]
@@ -115,6 +118,14 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
       
     }
     
+  }else if(inherits(e2, "raw_scale")){
+    #get channel name
+    channel <- ifelse(any(grepl("x", e2[["aesthetics"]])), prj[["x"]], prj[["y"]])
+    #compute the breaks and labels
+    res <- prettyAxis(gs[[1]], channel)
+    #modify e2
+    e2[["breaks"]] <- res[["at"]]
+    e2[["labels"]] <- res[["label"]]
   }
   
     

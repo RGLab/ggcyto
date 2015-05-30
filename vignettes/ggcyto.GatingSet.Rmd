@@ -12,24 +12,25 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r echo=FALSE}
 library(ggcyto)
-gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/080/test/")
+gs <- load_gs("/fh/fast/gottardo_r/mike_working/lyoplate_out/gated_data/auto/gslist-tcell/D54tFo7RPl/")
 gs <- gs[1:2]
-# library(proto)
-# library(plyr)
-# source("~/rglab/workspace/ggcyto/R/ggcyto.R")
-# source("~/rglab/workspace/ggcyto/R/ggcyto-flowSet.R")
-# source("~/rglab/workspace/ggcyto/R/ggcyto-GatingSet.R")
 ```
 
 ```{r}
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3") 
 # 2d plot
-p <- p + geom_hex(bins = 128, na.rm = T) + xlim(0,4096) + ylim(0,4096)
-p + scale_x_continuous(limits = c(0,4096), breaks = c())
+p <- p + geom_hex(bins = 128, na.rm = T)
+p
+
+#filter boundary events
+myCoord <- coord_cartesian(xlim = c(-100,4100), ylim = c(-100,4100))
+p <- p + myCoord
+p
+
 
 # add gate
 p + geom_gate("CD4")
-prettyAxis(gs[[1]], "CD4")
+
 # add two gates
 p1 <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p1
@@ -46,7 +47,7 @@ p1 + geom_stats("CD4", type = "count")
 
 ```{r error=T}
 # 'subset' is abstract without specifiying it
-p <- ggcyto(gs, aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + xlim(0,4096) + ylim(0,4096)
+p <- ggcyto(gs, aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + myCoord
 p
 ```
 
@@ -56,17 +57,43 @@ p
 p + geom_gate(c("CD4", "CD8"))
 
 # plot all children of the specified parent
-p <- ggcyto(gs, aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 128) + xlim(0,4096) + ylim(0,4096)
-p + geom_gate() + geom_stats()
+p <- ggcyto(gs, aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 128) + myCoord
+p
+
+p + geom_gate() + geom_stats(fill = "yellow")
 
 # add gates to the arbitary(non-parent) node
-p2 <- ggcyto(gs, subset = "Live", aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + xlim(0,4096) + ylim(0,4096)
+p2 <- ggcyto(gs, subset = "Live", aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + myCoord
 p2 + geom_gate(c("CD4", "CD8"))
 
 # 1d gate
 p <- ggcyto(gs, aes(x = `CD3`, y = `SSC-A`)) + geom_hex(bins = 128) + geom_gate("CD3")
-p + geom_stats()
+p + geom_stats(adjust = 0.3)
 ```
+
+```{r echo=FALSE}
+gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
+gs <- gs[1:2]
+```
+
+```{r}
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
+# 2d plot
+p <- p + geom_hex(bins = 64, na.rm = T)
+p
+
+#set limit
+p + xlim(0, 3500) + ylim(0, 3500)
+
+# raw scale
+p <- p + scale_x_raw(limits = c(0, 3500)) + scale_y_raw(limits = c(0, 3500))
+p 
+
+p + geom_gate("4+")
+
+p + geom_gate("4+") + scale_x_continuous()+ scale_y_continuous()
+```
+
 
 ```{r}
 class(p)
