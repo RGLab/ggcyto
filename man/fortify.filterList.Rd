@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify.R
 \name{fortify.filterList}
 \alias{fortify.filterList}
-\title{Convert a filterList to a data.frame useful for ggplot}
+\title{Convert a filterList to a data.table useful for ggplot}
 \usage{
 \method{fortify}{filterList}(model, data, ...)
 }

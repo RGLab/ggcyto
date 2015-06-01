@@ -10,7 +10,7 @@
 #' @param data_range the data range for each channels
 #' @param ... other arguments passed to stat_position function
 #' @return
-#' a data.frame that contains percent and centroid locations as well as pData
+#' a data.table that contains percent and centroid locations as well as pData
 #' that used as data for geom_btext layer.
 #' @export
 compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data_range = NULL, ...){
@@ -25,29 +25,30 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
     data_range <- range(fs[[1, use.exprs = F]])
 
   #add default density range
-# browser()
+
   data_range[["density"]] <- c(0,1)
   centroids <- stat_position(gates, data_range = data_range, ...)
-  stats <- merge(centroids, stats) # merge stats with centroid
-  merge(stats, name_rows(pData(fs))) # merge with pdata
+  
+  stats <- merge(centroids, stats, by = ".rownames") # merge stats with centroid
+  merge(stats, .pd2dt(pData(fs)), by = ".rownames") # merge with pdata
 }
 
 #' compute the proportion/percent of the cell population over the parent 
 #' 
 #' @inheritParams compute_stats
-#' @importFrom plyr rename
 #' @param digits control the percent format
 .stat_percent <- function(fs, gates, digits = 3, value = NULL, ...){
   if(is.null(value)){
     # compute the stats
     fres <- filter(fs, gates)
-    stats <- ldply(fres, function(res)sum(res@subSet)/length(res@subSet), .id = ".rownames")   
-  }else{
-    #simply fomart the pre-calculated stats values
-    stats <- ldply(value, function(x)x, .id = ".rownames") 
+    value <- sapply(fres, function(res)sum(res@subSet)/length(res@subSet), simplify = FALSE)
   }
-  stats <- rename(stats, replace = c("V1" = "percent"))
-  stats[["percent"]] <- paste(format(stats[["percent"]]*100,digits=digits),"%",sep="")  
+  sn <- names(value)
+  value <- unlist(value)
+  #format the calculated stats values
+  value <- paste(format(value *100,digits=digits),"%",sep="")
+  stats <- data.table(percent = value, .rownames = sn) 
+    
   stats
 }
 
@@ -57,14 +58,12 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 .stat_count <- function(fs, gates, value = NULL, ...){
   if(is.null(value)){
     fres <- filter(fs, gates)
-    stats <- ldply(fres, function(res)sum(res@subSet), .id = ".rownames")
-  }else{
-    #simply fomart the pre-calculated stats values
-    stats <- ldply(value, function(x)x, .id = ".rownames") 
+    value <- sapply(fres, function(res)sum(res@subSet), simplify = FALSE)
   }
-  
-  stats <- rename(stats, replace = c("V1" = "count"))
-  
+  sn <- names(value)
+  value <- unlist(value)
+  stats <- data.table(count = value, .rownames = sn) 
+    
   stats
 }
 
@@ -74,8 +73,5 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 .stat_MFI <- function(fs, gates, digits = 3, ...){
   stop("MFI not supported yet!")
   fs_sub <- Subset(fs, gates)
-  stats <- ldply(sampleNames(fs_sub), function(sn){
-    
-    
-  }, .id = ".rownames")   
+     
 }

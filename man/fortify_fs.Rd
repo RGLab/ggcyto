@@ -7,7 +7,7 @@
 fortify_fs(model, data, ...)
 }
 \arguments{
-\item{model}{model or other R object to convert to data frame}
+\item{model}{model or other R object to convert to data table}
 
 \item{data}{original dataset, if needed}
 

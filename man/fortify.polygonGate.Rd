@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify.R
 \name{fortify.polygonGate}
 \alias{fortify.polygonGate}
-\title{Convert a polygonGate to a data.frame useful for ggplot}
+\title{Convert a polygonGate to a data.table useful for ggplot}
 \usage{
 \method{fortify}{polygonGate}(model, data, ...)
 }
@@ -14,6 +14,6 @@
 \item{...}{not used.}
 }
 \description{
-It converts the boundaries slot into a data.frame
+It converts the boundaries slot into a data.table
 }
 

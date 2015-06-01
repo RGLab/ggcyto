@@ -1,6 +1,6 @@
 #' Create a new ggcyto plot from a flowSet
 #'
-#' @param data default flowSet for plot
+#' @param data default flowSet/GatingSet for plot
 #' @param mapping default list of aesthetic mappings (these can be colour,
 #'   size, shape, line type -- see individual geom functions for more details)
 #' @param ... ignored
@@ -22,9 +22,13 @@ ggcyto.flowSet <- function(data, mapping, ...){
     new.aes <- sapply(dims, function(dim)as.symbol(getChannelMarker(frm, dim)[["name"]]))
     mapping[["x"]] <- new.aes[["x"]]
     mapping[["y"]] <- new.aes[["y"]]
+    #update dims
     p$mapping <- mapping
     
     nDims <- length(dims)
+    #attach dims to data for more efficient fortify
+    attr(p$data, "dims") <- sapply(new.aes,as.character)
+    
   }else
     stop("mapping must be supplied to ggplot!")
 #   browser()  
@@ -61,8 +65,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
   # it is used solely for geom_gate.filterList layer
   if(is.proto(e2)){
     layer_data <- e2$data
-#     pd <- attr(e1$data, "pd")
-      pd <- name_rows(pData(e1$data))
+    pd <- .pd2dt(pData(e1$data))
     if(is(layer_data, "geom_gate_filterList")){
         if(!isTRUE(attr(layer_data, "annotated"))){
           
@@ -80,7 +83,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
         gates_parsed <- lapply(e1$layers, function(layer){
           
                               if(is.geom_gate_filterList(layer))
-                                .df2gate(layer$data, colnames(name_rows(pd)))
+                                .df2gate(layer$data, colnames(pd))
                               else
                                 NULL
                               })
@@ -141,34 +144,36 @@ ggcyto.flowSet <- function(data, mapping, ...){
 is.geom_gate_filterList <- function(layer){
   isTRUE(attr(layer$data, "annotated"))
 }
-#' Convert data.frame back to original flowSet format
-#' 
-#' It is used for gating purporse for geom_stats layer
-#' @importFrom plyr dlply
-.df2fs <- function(df){
-  
-  pd <- attr(df, "pd")
-
-  frlist <- dlply(df, .variables = ".rownames", function(sub_df){
-    markers <- setdiff(colnames(sub_df), colnames(pd))
-    fr <- flowFrame(exprs = as.matrix(sub_df[, markers]))
-    fr
-  })
-  fs <- as(frlist, "flowSet")
-  pData(fs) <- name_rows(pd)
-  fs
-}
-
+# Convert data.frame back to original flowSet format
+# 
+# It is used for gating purporse for geom_stats layer
+#.df2fs <- function(df){
+#  
+#  pd <- attr(df, "pd")
+#
+#  frlist <- dlply(df, .variables = ".rownames", function(sub_df){
+#    markers <- setdiff(colnames(sub_df), colnames(pd))
+#    fr <- flowFrame(exprs = as.matrix(sub_df[, markers]))
+#    fr
+#  })
+#  fs <- as(frlist, "flowSet")
+#  pData(fs) <- name_rows(pd)
+#  fs
+#}
+#
 #' Convert data.frame back to original gate format
 #' 
 #' It is used for gating purporse for geom_stats layer
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
+#' @importFrom plyr dlply
 #' @param pcols the pData columns
 .df2gate <- function(df, pcols){
   
   markers <- setdiff(colnames(df), pcols)
-  nDim <- length(markers) -1
-  df <- df[, markers, drop = FALSE]
+  nDim <- length(markers)
+  df <- df[, c(markers, ".rownames"), with = FALSE]
+  # unfortunately data.table j expression won't return a list
+  # instead it will always try to coerce the list back to dt, which is not desirable here
   glist <- dlply(df, .variables = ".rownames", function(sub_df){
     
     sub_df[[".rownames"]] <- NULL

@@ -1,31 +1,35 @@
-#' coerce the flowFrame to a data.frame
+#' coerce the flowFrame to a data.table
 #' 
-#' It extracts the cell event matrix and convert it to a data.frame.
+#' It extracts the cell event matrix and convert it to a data.table.
 #' 
 #' @param x flowFrame
-#' @return data.frame
+#' @return data.table
+#' @import data.table
 #' @export
 #' @
-as.data.frame.flowFrame <- function(x, ...){
-  as.data.frame(exprs(x))
+.fr2dt <- function(x, ...){
+  as.data.table(exprs(x))
 }
 
-#' coerce the flowSet to a data.frame
+#' coerce the flowSet to a data.table
 #' 
 #' It extract the cell event matrix from each flowFrame
-#'  and combind them to a single data.frame.
+#'  and combind them to a single data.table.
 #' 
 #' @param x flowSet
-#' @return data.frame
+#' @return data.table
 #' @export
-as.data.frame.flowSet <- function(x, ...){
-  df.list <- fsApply(x, as.data.frame, simplify = FALSE)
-  df <- ldply(df.list, .id = ".rownames")
-  df  
+.fs2dt <- function(x, ...){
+  # subset by columns if applicable
+  dims <- attr(x, "dims")
+  if(!is.null(dims))
+    x <- x[, dims]
+  df.list <- .fsdply(x, .fr2dt, .id = ".rownames")
+  
 }
 
 
-#' Convert a flowFrame to a ggplot-compatible data.frame
+#' Convert a flowFrame to a ggplot-compatible data.table
 #' 
 #' It actually converts the flowFrame to flowSet first and
 #' then dispatch to the fority method for flowSet.
@@ -42,35 +46,35 @@ fortify.flowFrame <- function(model, data, ...){
   fortify(fs, ...)
 }
 
-#' Convert a flowSet to a ggplot-compatible data.frame
+#' convert pData to data.table
+.pd2dt <- function(pd){
+  pd <- as.data.table(pd, keep.rownames = TRUE)
+  setnames(pd, "rn", ".rownames")
+  pd
+}
+#' Convert a flowSet to a ggplot-compatible data.table
 #' 
-#' It invokes as.data.frame.flowSet and append the pData
+#' It invokes as.data.table.flowSet and append the pData
 #' to it so that ggplot can use the pData for facetting.
 #' 
 #' @param model flowSet
 #' @param data not used.
 #' @param ... not used.
 #' 
-#' @importFrom plyr ldply
 #' @export
 #' @aliases fortify
 fortify.flowSet <- function(model, data, ...){
-  #convert to data.frame
-  df <- as.data.frame(model)
+  #convert to data.table
+  df <- .fs2dt(model)
+
   #merge with pData
-  pd <- pData(model)
-  pd <- name_rows(pd)#add rownames to column
-  df <- merge(pd, df, by = ".rownames")
+  pd <- .pd2dt(pData(model))
   
-  
-#   #we have to attach the extra copy of pd to attribute as well
-#   # in order for the ggcyo wrapper to copy it to the gate layer
-#   attr(df, "pd") <- pd
-#   attr(df, "gs") <- attr(model, "gs") #copy gs attribute over
-  df
+  merge(pd, df, by = ".rownames")
+
 }
 
-#' coerce a GatingSet node to data.frame
+#' coerce a GatingSet node to data.table
 #' @param model GatingSet
 #' @export
 fortify.GatingSet <- function(model, ...){
@@ -79,9 +83,9 @@ fortify.GatingSet <- function(model, ...){
   fortify(fs)
 }
 
-#' Convert a polygonGate to a data.frame useful for ggplot
+#' Convert a polygonGate to a data.table useful for ggplot
 #' 
-#' It converts the boundaries slot into a data.frame
+#' It converts the boundaries slot into a data.table
 #' 
 #' @param model polygonGate
 #' @param data not used.
@@ -89,10 +93,10 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @export
 fortify.polygonGate <- function(model, data, ...){
-  as.data.frame(model@boundaries)
+  as.data.table(model@boundaries)
 }
 
-#' Convert a filterList to a data.frame useful for ggplot
+#' Convert a filterList to a data.table useful for ggplot
 #' 
 #' It tries to merge with pData
 #' 
@@ -105,12 +109,13 @@ fortify.polygonGate <- function(model, data, ...){
 fortify.filterList <- function(model, data, ...){
   
   # convert each filter to df
-  df <- ldply(model, fortify, .id = ".rownames")
+  df <- .ldply(model, fortify, .id = ".rownames")
+  
   pd <- attr(model,"pd")
   if(!is.null(pd)){
     # merge with pd
-    pd <- name_rows(pd)
-    df <- merge(df, pd)  
+    pd <- .pd2dt(pd)
+    df <- merge(df, pd, by = ".rownames")  
     attr(df, "annotated") <- TRUE
   }
     
@@ -118,7 +123,7 @@ fortify.filterList <- function(model, data, ...){
   df
 }
 
-#' Convert a rectangleGate to a data.frame useful for ggplot
+#' Convert a rectangleGate to a data.table useful for ggplot
 #' 
 #' For 2d rectangelGate, it is converted to a geom_polygon format
 #' for 1d, uses geom_vline/hline format.
@@ -139,15 +144,12 @@ fortify.rectangleGate <- function(model, data, ...){
     l.t <- c(l.b[1], r.t[2])
     r.b <- c(r.t[1], l.b[2])
     
-    as.data.frame(do.call(rbind, list(l.b, l.t, r.t, r.b)))
+    as.data.table(do.call(rbind, list(l.b, l.t, r.t, r.b)))
   }else if(nDim ==  1){
     coord <- c(l.b, r.t)
-#     toRm <- is.infinite(coord)
-#     if(any(toRm))
-#       coord <- coord[!toRm] 
-# browser()
-    df <- data.frame(unname(coord), check.names = F)
-    colnames(df) <- param
+    
+    df <- data.table(unname(coord), check.names = F)
+    setnames(df, "V1" , param)
     df
   }else
     stop("rectangelGate with dimension ", dDim, "is not supported!")

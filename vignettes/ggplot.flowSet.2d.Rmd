@@ -48,7 +48,7 @@ p + stat_binhex(bin = 64) + geom_density2d(colour = "black")
 
 # non-binned dot plot
 df <- fortify(fr)
-cols <- densCols(df[,"FSC-H"], df[,"SSC-H"], colramp = flowViz::flowViz.par.get("argcolramp"))
+cols <- densCols(df[,`FSC-H`], df[,`SSC-H`], colramp = flowViz::flowViz.par.get("argcolramp"))
 p1 <- ggplot(df, aes(x = `FSC-H`, y =  `SSC-H`))
 p1 + geom_point(color = cols) 
 

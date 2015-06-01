@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify.R
 \name{fortify.GatingSet}
 \alias{fortify.GatingSet}
-\title{coerce a GatingSet node to data.frame}
+\title{coerce a GatingSet node to data.table}
 \usage{
 \method{fortify}{GatingSet}(model, ...)
 }
@@ -10,6 +10,6 @@
 \item{model}{GatingSet}
 }
 \description{
-coerce a GatingSet node to data.frame
+coerce a GatingSet node to data.table
 }
 

@@ -3,7 +3,7 @@
 \name{fortify.flowSet}
 \alias{fortify}
 \alias{fortify.flowSet}
-\title{Convert a flowSet to a ggplot-compatible data.frame}
+\title{Convert a flowSet to a ggplot-compatible data.table}
 \usage{
 \method{fortify}{flowSet}(model, data, ...)
 }
@@ -15,7 +15,7 @@
 \item{...}{not used.}
 }
 \description{
-It invokes as.data.frame.flowSet and append the pData
+It invokes as.data.table.flowSet and append the pData
 to it so that ggplot can use the pData for facetting.
 }
 

@@ -33,7 +33,7 @@ Limitation: It does not support rotation.
 }
 \examples{
 \donttest{
-ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, bgcolor = "green", bgfill = "gray", bgalpha = 0.4)
+ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, fill = "gray")
 }
 }
 

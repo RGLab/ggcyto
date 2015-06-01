@@ -73,7 +73,7 @@ stat_position.filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = N
   centroids <- centroids + diffs * (adjust - 0.5)
   
   
-  centroids
+  as.data.table(t(centroids))
   
 }
 
@@ -94,9 +94,9 @@ stat_position.filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = N
 #' @export
 #' @rdname stat_position
 stat_position.filterList<- function(gates, ...){
-  ldply(gates, function(gate){
-    stat_position(gate, ...)
-  }, .id = ".rownames")
+  
+  .ldply(gates, stat_position, ..., .id = ".rownames")
+  
 }
 
 #' @export

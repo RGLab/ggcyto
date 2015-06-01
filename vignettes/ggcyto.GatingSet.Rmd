@@ -86,7 +86,7 @@ p
 p + xlim(0, 3500) + ylim(0, 3500)
 
 # raw scale
-p <- p + scale_x_raw(limits = c(0, 3500)) + scale_y_raw(limits = c(0, 3500))
+p <- p + scale_x_raw() + scale_y_raw()
 p 
 
 p + geom_gate("4+")

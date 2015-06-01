@@ -50,7 +50,7 @@ geom_gate.filterList <- function(data, pd, ...){
   #must explicitly fortify it since ggplot only does it during the layer$new method 
   data <- fortify(data) 
 
-  #tag this data.frame so that ggcyo wrapper can recongnize it
+  #tag this data.table so that ggcyo wrapper can recongnize it
   class(data) <- c("geom_gate_filterList", class(data))
   # update data with pdata
   geom_gate_layer[["data"]] <- data

@@ -2,7 +2,7 @@
 #'
 #' Method to convert a generic R object into a flowSet useful for ggcyto
 #'
-#' @param model model or other R object to convert to data frame
+#' @param model model or other R object to convert to data table
 #' @param data original dataset, if needed
 #' @param ... other arguments passed to methods
 #' @export
@@ -39,7 +39,8 @@ fortify_fs.GatingSet <- function(model, data, ...){
   else if(subset == "_parent_")
     stop("'subset' must be instantiated by the actual node name!\nMake sure either 'subset' is specified or the 'geom_gate' layer is added. ")
   fs <- getData(model, subset)
-#   attr(fs, "gs") <- model #need to store gs to be used later for other layers
+  #copy dims attribute to fs
+  attr(fs, "dims") <- attr(model, "dims")
   fs
   
 }

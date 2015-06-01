@@ -21,7 +21,7 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL,
 \item{...}{other arguments passed to stat_position function}
 }
 \value{
-a data.frame that contains percent and centroid locations as well as pData
+a data.table that contains percent and centroid locations as well as pData
 that used as data for geom_btext layer.
 }
 \description{

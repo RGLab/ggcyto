@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify.R
 \name{fortify.rectangleGate}
 \alias{fortify.rectangleGate}
-\title{Convert a rectangleGate to a data.frame useful for ggplot}
+\title{Convert a rectangleGate to a data.table useful for ggplot}
 \usage{
 \method{fortify}{rectangleGate}(model, data, ...)
 }

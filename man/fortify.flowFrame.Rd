@@ -2,7 +2,7 @@
 % Please edit documentation in R/fortify.R
 \name{fortify.flowFrame}
 \alias{fortify.flowFrame}
-\title{Convert a flowFrame to a ggplot-compatible data.frame}
+\title{Convert a flowFrame to a ggplot-compatible data.table}
 \usage{
 \method{fortify}{flowFrame}(model, data, ...)
 }

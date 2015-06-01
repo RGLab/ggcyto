@@ -7,7 +7,7 @@
 \method{ggcyto}{flowSet}(data, mapping, ...)
 }
 \arguments{
-\item{data}{default flowSet for plot}
+\item{data}{default flowSet/GatingSet for plot}
 
 \item{mapping}{default list of aesthetic mappings (these can be colour,
 size, shape, line type -- see individual geom functions for more details)}
