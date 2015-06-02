@@ -12,7 +12,9 @@
   }
   
   res <- .do_loop(index = index, .data = .data, ..., .id = .id)
-  rbindlist(res)
+  res <- rbindlist(res)
+  setkeyv(res, .id)
+  res
 }
 
 #' @param index the index of the list, can be either character or numeric
@@ -34,11 +36,13 @@
 }
 #' convert a flowSet to a data.table
 #' @param .data flowSet
-.fsdply <- function (.data, ...) 
+.fsdply <- function (.data, ..., .id = NA) 
 {
   index <- sampleNames(.data)
-  res <- .do_loop(index = index, .data = .data, ...)
-  rbindlist(res)
+  res <- .do_loop(index = index, .data = .data, ..., .id = .id)
+  res <- rbindlist(res)
+  setkeyv(res, .id)
+  res
 }
 
 
