@@ -24,6 +24,14 @@
   dims <- attr(x, "dims")
   if(!is.null(dims))
     x <- x[, dims]
+  thisFilter <- attr(x, "filter")
+  if(!is.null(thisFilter)){
+    if(is.function(thisFilter)){
+      thisFilter <- thisFilter(x, dims)
+    }
+    x <- Subset(x, thisFilter)
+  }
+    
   df.list <- .fsdply(x, .fr2dt, .id = ".rownames")
   
 }

@@ -10,7 +10,7 @@
 \item{data}{GatingSet to plot}
 
 \item{mapping}{default list of aesthetic mappings (these can be colour,
-size, shape, line type -- see individual geom functions for more details)}
+ size, shape, line type -- see individual geom functions for more details)}
 
 \item{subset}{character that specifies the node path or node name in the GatingSet.
 Default is "_parent_", which will be substitute with the actual node name

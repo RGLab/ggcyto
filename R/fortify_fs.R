@@ -41,6 +41,7 @@ fortify_fs.GatingSet <- function(model, data, ...){
   fs <- getData(model, subset)
   #copy dims attribute to fs
   attr(fs, "dims") <- attr(model, "dims")
+  attr(fs, "filter") <- attr(model, "filter")
   fs
   
 }

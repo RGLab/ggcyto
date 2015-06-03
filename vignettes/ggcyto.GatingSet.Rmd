@@ -2,6 +2,9 @@
 title: "Visualize GatingSet with ggcyto"
 author: "Mike Jiang"
 date: "04/13/2015"
+output:
+  html_document:
+    keep_md: yes
 ---
 
 ```{r, echo=FALSE}
@@ -79,17 +82,21 @@ gs <- gs[1:2]
 ```{r}
 p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
 # 2d plot
+p <- p + geom_hex(bins = 128, na.rm = T)
+p
+p+ ylim(0, 4e3)
+
+#add filter (consistent with `margin` behavior in flowViz)
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter) 
+# 2d plot
 p <- p + geom_hex(bins = 64, na.rm = T)
 p
-
-#set limit
-p + xlim(0, 3500) + ylim(0, 3500)
 
 # raw scale
 p <- p + scale_x_raw() + scale_y_raw()
 p 
 
-p + geom_gate("4+")
+p + geom_gate("4+") + ylim(-1e3, 4e3)
 
 p + geom_gate("4+") + scale_x_continuous()+ scale_y_continuous()
 ```

@@ -3,12 +3,14 @@
 #' @param data default flowSet/GatingSet for plot
 #' @param mapping default list of aesthetic mappings (these can be colour,
 #'   size, shape, line type -- see individual geom functions for more details)
+#'  @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
+#'                The gate is used to filter the flow data before it is plotted. 
 #' @param ... ignored
 #' @param environment in which evaluation of aesthetics should occur
 #' @method ggcyto flowSet
 #' @export
 #' @importFrom RColorBrewer brewer.pal
-ggcyto.flowSet <- function(data, mapping, ...){
+ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
   p <- ggplot2:::ggplot.data.frame(data, mapping, ...)
@@ -28,6 +30,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
     nDims <- length(dims)
     #attach dims to data for more efficient fortify
     attr(p$data, "dims") <- sapply(new.aes,as.character)
+    attr(p$data, "filter") <- filter
     
   }else
     stop("mapping must be supplied to ggplot!")
@@ -39,7 +42,7 @@ ggcyto.flowSet <- function(data, mapping, ...){
   if(nDims == 2){
     # add default fill gradien
     myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
-    p <- p + scale_fill_gradientn(colours = myColor)  
+    p <- p + scale_fill_gradientn(colours = myColor, trans = "sqrt")  
   }
   # prepend the ggcyto class attribute
   class(p) <- c("ggcyto", class(p))  

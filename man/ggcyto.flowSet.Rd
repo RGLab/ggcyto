@@ -4,13 +4,16 @@
 \alias{ggcyto.flowSet}
 \title{Create a new ggcyto plot from a flowSet}
 \usage{
-\method{ggcyto}{flowSet}(data, mapping, ...)
+\method{ggcyto}{flowSet}(data, mapping, filter = NULL, ...)
 }
 \arguments{
 \item{data}{default flowSet/GatingSet for plot}
 
 \item{mapping}{default list of aesthetic mappings (these can be colour,
-size, shape, line type -- see individual geom functions for more details)}
+ size, shape, line type -- see individual geom functions for more details)}
+
+\item{filter}{a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
+The gate is used to filter the flow data before it is plotted.}
 
 \item{...}{ignored}
 
