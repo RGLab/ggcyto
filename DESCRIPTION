@@ -8,6 +8,6 @@ Maintainer: Mike Jiang <wjiang2@fhcrc.org>
 Description: Visualize Cytometry data with ggplot
 VignetteBuilder: knitr
 Depends: methods, flowCore, ggplot2, flowWorkspace
-Imports: plyr, scales, flowWorkspace, proto
+Imports: plyr, scales, flowWorkspace, proto, data.table(>= 1.9.5)
 License: Artistic-2.0
 biocViews: Infrastructure, Visualization
