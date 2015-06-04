@@ -101,7 +101,55 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @export
 fortify.polygonGate <- function(model, data, ...){
-  as.data.table(model@boundaries)
+  vertices <- model@boundaries
+  chnls <- colnames(vertices)
+  
+  measure_range <- 4096 #should come from the actual range info of the data
+  bins <- 64 # should come from geom_hex 
+  unit_length <- measure_range/bins
+  
+  nVert <- nrow(vertices)
+  # compute distance between each pair of adjacent points
+  edges <- sapply(1:nVert, function(i){
+                   j <- ifelse(i < nVert, i + 1, 1)
+                   dist(vertices[c(i, j), ])[[1]]
+                })
+  
+  #determine the number of points to be interpolated for each edge
+  nEdge.points <- round(edges / unit_length)
+  new.vertices <- ggcyto:::.ldply(1:nVert, function(i){
+    j <- ifelse(i < nVert, i + 1, 1)
+    thisPair <- vertices[c(i, j),]
+    #we need to jitter the x coordinates in case they are identical which will fail approx
+    xx <- thisPair[,1]
+    yy <- thisPair[,2]
+    if(xx[1] ==  xx[2])
+      xx[1] <- jitter(xx[1])
+    nOut <- max(2, nEdge.points[i]) # at least 2 to preserve orginal points
+    # interpolate more points to prevent it from losing its shape by xlim/ylim
+    new.points <- approx(x = xx, y = yy, n = nOut) 
+    #approx tends to goes from left to right regardless of the order of original points
+    #we try to reverse it when needed
+    
+    if(xx[1] > xx[2]){
+      new.points[["x"]] <- rev(new.points[["x"]])
+      new.points[["y"]] <- rev(new.points[["y"]])
+    }
+#       browser()
+#     plot(thisPair, xlim =range(vertices[,1]), ylim =range(vertices[,2]))
+#     text(new.points,labels = 1:nOut,  col = "red")
+    as.data.table(new.points)
+  })
+  
+#   
+# 
+# 
+# #   plot(vertices, type = "l")
+# #   polygon(new.vertices, col = "red")
+
+  dt <- as.data.table(new.vertices)
+  setnames(dt, chnls)
+  dt
 }
 
 #' Convert a filterList to a data.table useful for ggplot

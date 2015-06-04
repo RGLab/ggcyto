@@ -15,66 +15,6 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r echo=FALSE}
 library(ggcyto)
-gs <- load_gs("/fh/fast/gottardo_r/mike_working/lyoplate_out/gated_data/auto/gslist-tcell/D54tFo7RPl/")
-gs <- gs[1:2]
-```
-
-```{r}
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3") 
-# 2d plot
-p <- p + geom_hex(bins = 128, na.rm = T)
-p
-
-#filter boundary events
-myCoord <- coord_cartesian(xlim = c(-100,4100), ylim = c(-100,4100))
-p <- p + myCoord
-p
-
-
-# add gate
-p + geom_gate("CD4")
-
-# add two gates
-p1 <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
-p1
-
-# add stats (for all gate layers by default)
-p1 + geom_stats()
-
-# add stats for one specific gate
-p1 + geom_stats("CD4")
-
-# change type
-p1 + geom_stats("CD4", type = "count")
-```
-
-```{r error=T}
-# 'subset' is abstract without specifiying it
-p <- ggcyto(gs, aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + myCoord
-p
-```
-
-```{r}
-
-# it can be instantiated by gate layer
-p + geom_gate(c("CD4", "CD8"))
-
-# plot all children of the specified parent
-p <- ggcyto(gs, aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 128) + myCoord
-p
-
-p + geom_gate() + geom_stats(fill = "yellow")
-
-# add gates to the arbitary(non-parent) node
-p2 <- ggcyto(gs, subset = "Live", aes(x = `CD4`, y = `CD8`)) + geom_hex(bins = 128) + myCoord
-p2 + geom_gate(c("CD4", "CD8"))
-
-# 1d gate
-p <- ggcyto(gs, aes(x = `CD3`, y = `SSC-A`)) + geom_hex(bins = 128) + geom_gate("CD3")
-p + geom_stats(adjust = 0.3)
-```
-
-```{r echo=FALSE}
 gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
 gs <- gs[1:2]
 ```
@@ -82,23 +22,54 @@ gs <- gs[1:2]
 ```{r}
 p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
 # 2d plot
-p <- p + geom_hex(bins = 128, na.rm = T)
+p <- p + geom_hex(bins = 32, na.rm = T)
 p
-p+ ylim(0, 4e3)
+
+# raw scale + limits
+p <- p + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p
+
+# add gate
+p + geom_gate("4+")
+
+# add two gates
+p1 <- p + geom_gate(c("4+","8+")) # short for geom_gate("8+") + geom_gate("4+")
+p1
+
+# add stats (for all gate layers by default)
+p1 + geom_stats()
+
+# add stats for one specific gate
+p1 + geom_stats("4+")
+
+# change type
+p1 + geom_stats("4+", type = "count")
+```
+
+```{r error=T}
+# 'subset' is abstract without specifiying it
+p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p
+```
+
+```{r}
+
+# it can be instantiated by gate layer
+p + geom_gate(c("4+", "8+"))
+
+# plot all children of the specified parent
+p <- ggcyto(gs, aes(x = IFNg, y = IL2), subset = "4+") + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p
+
+p + geom_gate() + geom_stats(fill = "yellow")
+
+# add gates to the arbitary(non-parent) node
+p2 <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p2 + geom_gate(c("4+/IFNg+"))
 
 #add filter (consistent with `margin` behavior in flowViz)
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter) 
-# 2d plot
-p <- p + geom_hex(bins = 64, na.rm = T)
-p
+# ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
 
-# raw scale
-p <- p + scale_x_raw() + scale_y_raw()
-p 
-
-p + geom_gate("4+") + ylim(-1e3, 4e3)
-
-p + geom_gate("4+") + scale_x_continuous()+ scale_y_continuous()
 ```
 
 

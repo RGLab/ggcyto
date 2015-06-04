@@ -37,7 +37,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
 #   browser()  
 #   p <- ggplot(data = data, mapping, ...)
   # add default facetting
-  p <- p + facet_wrap(~name) 
+  p <- p + facet_wrap(~name, scales = "free") 
   #     browser()
   if(nDims == 2){
     # add default fill gradien

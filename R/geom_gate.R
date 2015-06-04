@@ -67,7 +67,7 @@ geom_gate.filterList <- function(data, pd, ...){
 #' @param colour default is red
 geom_gate.polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
   
-  geom_polygon(mapping = mapping, data = data , fill = fill, colour = colour, ...)  
+  geom_path(mapping = mapping, data = data , fill = fill, colour = colour, ...)  
 }
 
 #' construct geom layer for rectangleGate
@@ -83,7 +83,7 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
   param <- parameters(data)
   nDim <- length(param)
   if (nDim ==  2){
-        geom_polygon(data = data, mapping = mapping, fill = fill, colour = colour, ...)
+        geom_path(data = data, mapping = mapping, fill = fill, colour = colour, ...)
   }else if(nDim ==  1){
 #     browser()
       geom_hvline(data = data, fill = fill, colour = colour, ...)
