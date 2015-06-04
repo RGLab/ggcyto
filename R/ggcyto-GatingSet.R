@@ -120,12 +120,20 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
     
   }else if(inherits(e2, "raw_scale")){
     #get channel name
-    channel <- ifelse(any(grepl("x", e2[["aesthetics"]])), prj[["x"]], prj[["y"]])
+    axis_name <- ifelse(any(grepl("^x$", e2[["aesthetics"]])), "x", "y")
+    channel <- prj[[axis_name]]
     #compute the breaks and labels
     res <- prettyAxis(gs[[1]], channel)
-    #modify e2
-    e2[["breaks"]] <- res[["at"]]
-    e2[["labels"]] <- res[["label"]]
+    
+    #instead of adding a separate scale layer
+    #we store it to be used later on 
+    #so that it won't be interfering with the other scale layers(g.g. xlim)
+    
+    e1[["axis_inverse_trans"]][[axis_name]] <- res
+    return(e1)
+#     #modify e2
+#     e2[["breaks"]] <- res[["at"]]
+#     e2[["labels"]] <- res[["label"]]
   }
   
     

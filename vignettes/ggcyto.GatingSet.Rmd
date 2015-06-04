@@ -22,13 +22,16 @@ gs <- gs[1:2]
 ```{r}
 p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
 # 2d plot
-p <- p + geom_hex(bins = 32, na.rm = T)
+p <- p + geom_hex()
 p
 
-# raw scale + limits
-p <- p + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+# raw scale
+p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
 p
 
+#remove outliers by limits
+p <- p  + xlim(0,3.5e3) + ylim(-10, 3.5e3) 
+p
 # add gate
 p + geom_gate("4+")
 
@@ -43,12 +46,12 @@ p1 + geom_stats()
 p1 + geom_stats("4+")
 
 # change type
-p1 + geom_stats("4+", type = "count")
+p1 + geom_stats("4+", type = "count", adjust = 0.2)
 ```
 
 ```{r error=T}
 # 'subset' is abstract without specifiying it
-p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans() + xlim(0,3.5e3) + ylim(-10, 3.5e3)
 p
 ```
 
@@ -58,13 +61,13 @@ p
 p + geom_gate(c("4+", "8+"))
 
 # plot all children of the specified parent
-p <- ggcyto(gs, aes(x = IFNg, y = IL2), subset = "4+") + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p <- ggcyto(gs, aes(x = IFN, y = IL2), subset = "4+") + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans()+ xlim(0,3.5e3) + ylim(-10, 3.5e3)
 p
 
 p + geom_gate() + geom_stats(fill = "yellow")
 
 # add gates to the arbitary(non-parent) node
-p2 <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex() + scale_x_raw(limits = c(0, 4e3)) + scale_y_raw(limits = c(0, 4e3))
+p2 <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans()+ xlim(0,3.5e3) + ylim(-10, 3.5e3)
 p2 + geom_gate(c("4+/IFNg+"))
 
 #add filter (consistent with `margin` behavior in flowViz)

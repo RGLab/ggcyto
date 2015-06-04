@@ -60,7 +60,39 @@ print.ggcyto <- function(x, ...) {
 #' @export
 as.ggplot <- function(x){
 #   browser()
+  #lazy-fortifying the plot data
   x$data <- fortify(x$data)
+  
+  #lazy-breaks and labels setting
+  ranges <- x[["axis_inverse_trans"]]
+  if(length(ranges) > 0)
+  {
+    old.scales <- x$scales
+    
+    for(axis_name in names(ranges))
+    {
+      
+      thisRange <- ranges[[axis_name]]
+      
+      if(old.scales$has_scale(axis_name)){
+        #modifying the exsiting scale instead of adding new ones
+        ind <- which(old.scales$find(axis_name))
+        old.scales$scales[[ind]]$breaks <- thisRange[["at"]]
+        old.scales$scales[[ind]]$labels <- thisRange[["label"]]
+      }else{
+        #add new one
+        new.scale <- switch(axis_name
+                         , x = scale_x_continuous(breaks = thisRange[["at"]], labels = thisRange[["label"]])
+                         , y = scale_y_continuous(breaks = thisRange[["at"]], labels = thisRange[["label"]])
+                         )
+        x <- x + new.scale
+      }
+        
+        
+    }
+    
+  }
+  
   x
 }
 #' @rdname print.ggcyto

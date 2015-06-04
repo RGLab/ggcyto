@@ -44,6 +44,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
     p <- p + scale_fill_gradientn(colours = myColor, trans = "sqrt")  
   }
+  #init axis inversed labels and breaks
+  p[["axis_inverse_trans"]] <- list()
   # prepend the ggcyto class attribute
   class(p) <- c("ggcyto", class(p))  
   class(p) <- c("ggcyto_flowSet", class(p))  
