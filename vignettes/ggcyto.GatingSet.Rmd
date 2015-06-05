@@ -19,39 +19,41 @@ gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
 gs <- gs[1:2]
 ```
 
+
 ```{r}
 p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
-# 2d plot
-p <- p + geom_hex()
+# 2d plot 
+p <- p + geom_hex(bins = 64)
 p
 
-# raw scale
-p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
+#use instrument range by overwritting limits setting in the default theme
+p + theme_ggcyto(limits = "instrument")
+
+#manually set limits
+myTheme <- theme_ggcyto(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
+p <- p  + myTheme# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
 p
 
-#remove outliers by limits
-p <- p  + xlim(0,3.5e3) + ylim(-10, 3.5e3) 
-p
 # add gate
 p + geom_gate("4+")
 
 # add two gates
-p1 <- p + geom_gate(c("4+","8+")) # short for geom_gate("8+") + geom_gate("4+")
-p1
+p <- p + geom_gate(c("4+","8+")) # short for geom_gate("8+") + geom_gate("4+")
+p
 
 # add stats (for all gate layers by default)
-p1 + geom_stats()
+p + geom_stats()
 
-# add stats for one specific gate
-p1 + geom_stats("4+")
+# add stats just for one specific gate
+p + geom_stats("4+")
 
-# change type
-p1 + geom_stats("4+", type = "count", adjust = 0.2)
+# change stats type, background color and position
+p + geom_stats("4+", type = "count", size = 6,  color = "yellow", fill = "black", adjust = 0.3)
 ```
 
 ```{r error=T}
 # 'subset' is abstract without specifiying it
-p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans() + xlim(0,3.5e3) + ylim(-10, 3.5e3)
+p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + myTheme
 p
 ```
 
@@ -61,18 +63,21 @@ p
 p + geom_gate(c("4+", "8+"))
 
 # plot all children of the specified parent
-p <- ggcyto(gs, aes(x = IFN, y = IL2), subset = "4+") + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans()+ xlim(0,3.5e3) + ylim(-10, 3.5e3)
+p <- ggcyto(gs, aes(x = IFN, y = IL2), subset = "4+") + geom_hex(bins = 64)
 p
 
-p + geom_gate() + geom_stats(fill = "yellow")
+p + geom_gate() + geom_stats()
 
 # add gates to the arbitary(non-parent) node
-p2 <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex() + axis_x_inverse_trans() + axis_y_inverse_trans()+ xlim(0,3.5e3) + ylim(-10, 3.5e3)
-p2 + geom_gate(c("4+/IFNg+"))
+p <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex(bins = 64) + geom_gate(c("4+/IFNg+"))
+p
+#print the default theme settings
+theme_ggcyto_default()
 
+# inverse transform the axis without affecting the data
+p + axis_x_inverse_trans() + axis_y_inverse_trans()
 #add filter (consistent with `margin` behavior in flowViz)
 # ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
-
 ```
 
 
@@ -85,6 +90,8 @@ class(p$data)
 
 # To return a regular ggplot object
 p <- as.ggplot(p)
+
+class(p)
 class(p$data)
 ```
 

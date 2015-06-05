@@ -2,6 +2,9 @@
 title: "Visualize cytometry data with ggcyto"
 author: "Mike Jiang"
 date: "04/13/2015"
+output:
+  html_document:
+    keep_md: yes
 ---
 
 ```{r, echo=FALSE}

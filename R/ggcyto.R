@@ -61,37 +61,54 @@ print.ggcyto <- function(x, ...) {
 as.ggplot <- function(x){
 #   browser()
   #lazy-fortifying the plot data
+  dims <- attr(x$data, "dims")
+  aes_names <- names(dims)
+  
+  #fortify to fs first in order to get instrument range
+  x$data <- fortify_fs(x$data)
+  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, dims]
   x$data <- fortify(x$data)
   
-  #lazy-breaks and labels setting
-  ranges <- x[["axis_inverse_trans"]]
-  if(length(ranges) > 0)
+  breaks <- x[["axis_inverse_trans"]]
+  #lazy scales setting 
+  for(this_aes in aes_names)
   {
-    old.scales <- x$scales
-    
-    for(axis_name in names(ranges))
+    dim <- dims[this_aes]
+    # set limits
+    if(!x$scales$has_scale(this_aes))
     {
-      
-      thisRange <- ranges[[axis_name]]
-      
-      if(old.scales$has_scale(axis_name)){
-        #modifying the exsiting scale instead of adding new ones
-        ind <- which(old.scales$find(axis_name))
-        old.scales$scales[[ind]]$breaks <- thisRange[["at"]]
-        old.scales$scales[[ind]]$labels <- thisRange[["label"]]
-      }else{
-        #add new one
-        new.scale <- switch(axis_name
-                         , x = scale_x_continuous(breaks = thisRange[["at"]], labels = thisRange[["label"]])
-                         , y = scale_y_continuous(breaks = thisRange[["at"]], labels = thisRange[["label"]])
-                         )
-        x <- x + new.scale
+      #add new one if not present 
+      new.scale <- ggplot2:::make_scale("continuous", this_aes)
+      x <- x + new.scale
+    }
+    ind <- which(x$scales$find(this_aes))
+    #set the default limits if it has not been set
+    if(is.null(x$scales$scales[[ind]][["limits"]])){
+      theme_limits <- x$ggcyto_theme[["limits"]]
+      if(is.list(theme_limits)){
+        this_limits <- theme_limits[[this_aes]]
+      }else if(is.character(theme_limits)){
+        if(theme_limits == "instrument")
+          this_limits <- instrument_range[, dim]
+        else if(theme_limits == "data")
+          this_limits <- range(x$data[, dim, with = FALSE])
+        else
+          this_limits <- NULL
       }
-        
-        
+      
+      if(!is.null(theme_limits))
+        x$scales$scales[[ind]][["limits"]] <- this_limits
+    }
+    #update breaks and labels
+    thisBreaks <- breaks[[this_aes]]
+    if(!is.null(thisBreaks)){
+      x$scales$scales[[ind]]$breaks <- thisBreaks[["at"]]
+      x$scales$scales[[ind]]$labels <- thisBreaks[["label"]]  
     }
     
   }
+    
+  
   
   x
 }

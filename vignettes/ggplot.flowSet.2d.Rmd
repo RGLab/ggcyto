@@ -2,7 +2,9 @@
 title: "2d scatter plot of cytometry data with ggplot2"
 author: "Mike Jiang"
 date: "04/13/2015"
-output: html_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 ```{r, echo=FALSE}

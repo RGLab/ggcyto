@@ -34,23 +34,31 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     
   }else
     stop("mapping must be supplied to ggplot!")
-#   browser()  
-#   p <- ggplot(data = data, mapping, ...)
+  
+  #set default theme
+  p[["ggcyto_theme"]] <- theme_ggcyto_default()
+  
   # add default facetting
-  p <- p + facet_wrap(~name, scales = "free") 
-  #     browser()
+  p <- p + p[["ggcyto_theme"]][["facet"]]
+  
   if(nDims == 2){
-    # add default fill gradien
-    myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
-    p <- p + scale_fill_gradientn(colours = myColor, trans = "sqrt")  
+    # add default fill gradient
+    p <- p + p[["ggcyto_theme"]][["hex_fill"]]
   }
+  
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()
   # prepend the ggcyto class attribute
   class(p) <- c("ggcyto", class(p))  
   class(p) <- c("ggcyto_flowSet", class(p))  
+  
+  
   p
 }
+#' Reports whether x is a ggplot object
+#' @param x An object to test
+#' @export
+is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 
 #' overloaded '+' method for ggcyto
 #' 
@@ -64,7 +72,16 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
 #' @rdname ggcyto-add
 #' @importFrom plyr defaults
 #' @export
-`+.ggcyto_flowSet` <- function(e1, e2){
+"+.ggcyto_flowSet" <- function(e1, e2) {
+  # Get the name of what was passed in as e2, and pass along so that it
+  # can be displayed in error messages
+  e2name <- deparse(substitute(e2))
+  
+  if      (is.ggcyto_theme(e1))  add_theme(e1, e2, e2name)
+  else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
+}
+
+add_ggcyto <- function(e1, e2, e2name){
 #   browser()  
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
@@ -78,7 +95,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
           attr(layer_data, "annotated") <- TRUE
           e2$data <- layer_data
         }
-        
+      
     }else if(e2$geom$objname == "popStats"){
       gate <- e2$stat_params[["gate"]]
       #parse the gate from the each gate layer if it is not present in the current geom_stats layer
@@ -133,11 +150,14 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
       return(e1)
     }
     
+  }else if (is.ggcyto_theme(e2)) {
+    e1$ggcyto_theme <- add_theme(e1$ggcyto_theme, e2, deparse(substitute(e2)))
+    return(e1)
   }
   
-
-  
   ggplot2:::`+.gg`(e1, e2)
+  
+  
 }
 
 #' Checking if a layer is geom_gate layer for a filterList
