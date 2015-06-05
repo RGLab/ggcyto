@@ -12,29 +12,40 @@ library(knitr)
 opts_chunk$set(message = FALSE, warning = FALSE, fig.height= 4, fig.width= 4)
 ```
 
+### Overloaded `fortify` S3 method makes `Cytometry` data to be fully compatible with `ggplot`. 
+
 ```{r}
 library(ggcyto)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
-```
-
-### Overloaded `fortify` S3 method makes `Cytometry` data to be fully compatible with `ggplot`. 
-
-```{r}
-#GatingSet
-class(gs)
-#show gating tree
-getNodes(gs, path = "auto")[1:6]
-#tell gs which sub pupolation to fortify
-attr(gs, "subset") <- "CD8"
-fortify(gs)[1:3, c(2:3,6:9), with = FALSE]
-
-#flowSet
 fs <- getData(gs, "CD3+")
-fortify(fs)[1:3, c(2:3,6:9), with = FALSE]
 ```
 
-### `ggplot` + `flowSet`
+## Using **ggcyto** convenient wrapper
+
+### plot **flowSet**
+```{r}
+# support fuzzy-matching of aes to the data
+# with flowJo-type of default color fills
+# facet on `name` by default
+ggcyto(fs,aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + xlim(0, 3600)
+```
+
+More examples :
+
+* [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
+
+
+### plot **GatingSet**
+```{r}
+ggcyto(gs,aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 64) + geom_gate("CD4/CCR7+ 45RA+") + geom_stats(fill = "yellow", size = 4)
+```
+
+More examples :
+
+* [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
+
+### Plot `flowSet` directly with `ggplot`
 ```{r}
 # 1d
 p <- ggplot(fs, aes(x = `<B710-A>`)) + facet_wrap(~name) 
@@ -53,28 +64,3 @@ More examples of using `ggplot` directly on `flowSet`:
 * [ggplot + flowSet2d](vignettes/ggplot.flowSet.2d.md)
 * [ggplot + flowSet + gate](vignettes/ggplot.flowSet.gate.md)
 * [ggplot + flowSet + overlay](vignettes/ggplot.flowSet.overlay.md)
-
-## Using **ggcyto** convenient wrapper
-
-### plot `flowSet` with `ggcyto`
-```{r}
-# support fuzzy-matching of aes to the data
-# with flowJo-type of default color fills
-# facet on `name` by default
-ggcyto(fs,aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + xlim(0, 3600)
-```
-
-More examples :
-
-* [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
-
-
-### plot `GatingSet` with `ggcyto`
-```{r}
-ggcyto(gs,aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 64) + geom_gate("CD4/CCR7+ 45RA+") + geom_stats(fill = "yellow", size = 4)
-```
-
-More examples :
-
-* [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
-
