@@ -1,9 +1,9 @@
 ---
 title: "Visualize GatingSet with ggcyto"
-author: "Mike Jiang"
-date: "04/13/2015"
 output:
   html_document:
+    fig_height: 2
+    fig_width: 5
     keep_md: yes
 ---
 

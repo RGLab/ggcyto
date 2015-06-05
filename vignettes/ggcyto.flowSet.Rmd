@@ -1,9 +1,9 @@
 ---
-title: "Visualize cytometry data with ggcyto"
-author: "Mike Jiang"
-date: "04/13/2015"
+title: "Visualize flowSet with ggcyto"
 output:
   html_document:
+    fig_height: 3
+    fig_width: 5
     keep_md: yes
 ---
 
@@ -52,6 +52,8 @@ p
 p <- p + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 p
 
+browser()#it is so bizarre that without this knitr failed to proceed here
+
 # overwrite the default fill gradien
 p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
 
@@ -78,7 +80,7 @@ rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 p + geom_gate(rect.gates)
 
 #add stats layer
-p + geom_gate(rect.gates) + geom_stats()
+p + geom_gate(rect.gates) + geom_stats(size = 3)
 
 
 # a list of 1d gate
@@ -95,10 +97,10 @@ p + geom_gate(den.gates.y) + geom_stats(value = lapply(rect.gates, function(g)0.
 ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")
 
 # add stats layer for each gate layer implicitly
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats()
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(size = 3)
 
 # add stats layer only for one gate explicitly
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates)
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates, size = 3)
 ```
 
 

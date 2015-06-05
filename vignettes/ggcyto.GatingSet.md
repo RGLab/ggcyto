@@ -1,6 +1,4 @@
 # Visualize GatingSet with ggcyto
-Mike Jiang  
-04/13/2015  
 
 
 

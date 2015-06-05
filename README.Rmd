@@ -9,7 +9,7 @@ output:
 
 ```{r, echo=FALSE}
 library(knitr)
-opts_chunk$set(message = FALSE, warning = FALSE, fig.height= 4, fig.width= 4)
+opts_chunk$set(message = FALSE, warning = FALSE, fig.height= 3, fig.width= 5)
 ```
 
 ### Overloaded `fortify` S3 method makes `Cytometry` data to be fully compatible with `ggplot`. 

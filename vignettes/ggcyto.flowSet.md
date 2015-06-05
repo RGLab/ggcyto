@@ -1,6 +1,4 @@
-# Visualize cytometry data with ggcyto
-Mike Jiang  
-04/13/2015  
+# Visualize flowSet with ggcyto
 
 
 
@@ -79,6 +77,14 @@ p
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-2.png) 
 
 ```r
+browser()
+```
+
+```
+## Called from: eval(expr, envir, enclos)
+```
+
+```r
 # overwrite the default fill gradien
 p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
 ```
@@ -119,7 +125,7 @@ p + geom_gate(rect.gates)
 
 ```r
 #add stats layer
-p + geom_gate(rect.gates) + geom_stats()
+p + geom_gate(rect.gates) + geom_stats(size = 3)
 ```
 
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-3.png) 
@@ -151,14 +157,14 @@ ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..))
 
 ```r
 # add stats layer for each gate layer implicitly
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats()
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(size = 3)
 ```
 
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-7.png) 
 
 ```r
 # add stats layer only for one gate explicitly
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates)
+p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates, size = 3)
 ```
 
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-8.png) 
