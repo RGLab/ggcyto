@@ -175,8 +175,7 @@ class(p)
 ```
 
 ```
-## [1] "ggcyto_GatingSet" "ggcyto_flowSet"   "ggcyto"          
-## [4] "gg"               "ggplot"
+## [1] "gg"     "ggplot"
 ```
 
 ```r

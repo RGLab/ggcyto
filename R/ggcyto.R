@@ -90,7 +90,7 @@ as.ggplot <- function(x){
       }else if(is.character(theme_limits)){
         if(theme_limits == "instrument")
           this_limits <- instrument_range[, dim]
-        else if(theme_limits == "data")
+        else if(theme_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
           this_limits <- range(x$data[, dim, with = FALSE])
         else
           this_limits <- NULL
@@ -109,7 +109,7 @@ as.ggplot <- function(x){
   }
     
   
-  
+  class(x) <- c("gg", "ggplot")
   x
 }
 #' @rdname print.ggcyto
