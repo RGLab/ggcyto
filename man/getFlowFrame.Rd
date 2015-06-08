@@ -2,6 +2,7 @@
 % Please edit documentation in R/getFlowFrame.R
 \name{getFlowFrame}
 \alias{getFlowFrame}
+\alias{getFlowFrame.GatingHierarchy}
 \alias{getFlowFrame.GatingSet}
 \alias{getFlowFrame.flowSet}
 \title{extract flowFrame data structure from the given R object}
@@ -11,9 +12,11 @@ getFlowFrame(x)
 \method{getFlowFrame}{flowSet}(x)
 
 \method{getFlowFrame}{GatingSet}(x)
+
+\method{getFlowFrame}{GatingHierarchy}(x)
 }
 \arguments{
-\item{x}{flowSet or GatingSet}
+\item{x}{flowSet or GatingSet/GatingHierarchy}
 }
 \value{
 an empty flowFrame

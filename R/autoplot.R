@@ -1,95 +1,150 @@
-#' @importFrom ggplot2 autoplot
-#' @export autoplot.flowFrame
-autoplot.flowFrame <- function(object, ...){
-  object <- .flowFrame2flowSet(object)
-  autoplot(object, ...)
-}
-
 #' Plot fluorescence intensity in one or two dimension.
 #' 
-#' Overloaded autoplot for the cytomertry data structure: flowFrame or flowSet.
+#' Overloaded autoplot for the cytomertry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
 #' It plots the cytometry data with geom_histogram, geom_density or geom_hex.
 #' 
-#' @param object flowFrame or flowSet object
-#' @param mapping passed to ggplot, which defines the dimension of the plot
+#' @param object flowFrame, flowSet, GatingSet object
+#' @param x,y define the dimension of the plot
+#' @param bins passed to geom_hex
 #' @param ... other arguments passed to ggplot
-#' @param plotType either "histogram" or "density", determines which plot to be displayed
-#' @param margin whether to enable marginal/bounary events filtering. Default is TRUE.
 #' 
-#' @return a ggplot object
+#' @rdname autoplot
+#' @return a ggcyto object
 #' 
 #' @examples
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #'
-#' #histogram for raw flow data
-#' autoplot(fs, aes(x = `FL1-H`))
-#' # add transformation
-#' autoplot(fs, aes(x = `FL1-H`)) + scale_x_log10()
-#' 
-#' # disable marginal events filtering
-#' autoplot(fs, aes(x = `FL1-H`), margin = F) + scale_x_log10()
-#' 
-#' # density
-#' autoplot(fs, aes(x = `FL1-H`), plotType = "density") + scale_x_log10()
-#' 
-#' # customize border colors 
-#' ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name) + geom_histogram(colour = "white") + scale_x_log10()
-#' 
-#' # change the bin width
-#' ggplot(fs, aes(x = `FL1-H`)) + facet_wrap(~name, scale = "free") + geom_histogram(colour = "white", binwidth = 1/10) + scale_x_log10()
+#' #1d- density plot
+#' autoplot(fs, x = "SSC-H")
 #' 
 #' #2d plot: default geom_hex plot
-#' autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) 
+#' autoplot(fs, x = 'FSC-H', y ='SSC-H')
 #' 
-#' # add contour
-#' autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_density2d(colour = "black")
-#' 
-#' # change the faceting
-#' autoplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + facet_grid(Patient~Visit) 
-#' 
-#' @aliases autoplot autoplot.flowFrame 
-#' @importFrom RColorBrewer brewer.pal
 #' @export autoplot.flowSet
-autoplot.flowSet <- function(object, mapping, ..., plotType = "histogram", margin = TRUE){
-  
-  plotType <- match.arg(plotType, c("histogram", "density"))
+autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   
   # check the dimensions
-  if(!missing(mapping)){
-    dims <- sapply(mapping,as.character)
-    nDims <- length(mapping)
-  }else
-    stop("mapping must be supplied to ggplot!")
-  
-  # apply boundary filter to remove outliers
-  if(margin){
-    g <- boundaryFilter(x = dims, tol = 1e-5)
-    object <- Subset(object, g)
+  if(missing(x))
+    stop("'x' must be supplied to ggplot!")
+  if(is.null(y)){
+    p <- ggcyto(object, aes_q(x = as.symbol(x)), ...)  #aes_string doesn't play well with special character (e.g. '-')
+    p <- p + geom_density(fill = "black")
+  }else{
+    p <- ggcyto(object, aes_q(x = as.symbol(x), y = as.symbol(y)), ...)  
+    p <- p + geom_hex(bins = bins) 
+    
   }
-  
-  df <- fortify(object)
-  
-  p <- ggplot(df, mapping, ...)
-  
-  #hide the legend by default
-  p <- p + guides(colour = F, fill = F)
-  
-  #default faceting by sample names
-  p <- p + facet_wrap(~name)
-  
-  #if 2d
-  if(nDims == 1){
-    if(plotType == "histogram"){
-      p <- p + geom_histogram()
+    
+  # apply boundary filter to remove outliers
+#   if(margin){
+#     g <- boundaryFilter(x = dims, tol = 1e-5)
+#     object <- Subset(object, g)
+#   }
+
+  p
+}
+
+#' @importFrom ggplot2 autoplot
+#' @export autoplot.flowFrame
+#' @rdname autoplot
+autoplot.flowFrame <- function(object, ...){
+  object <- fortify_fs(object)
+  autoplot(object, ...)
+}
+
+#' @param gate the gate to be plotted
+#' @export autoplot.GatingSet
+#' @rdname autoplot
+autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
+  if(missing(gate))
+    stop("Must specifiy 'gate'!")
+  if(is.null(x)){
+    #determine dimensions from gate
+    g <- getGate(gs[[1]], gate[1])
+    params <- parameters(g)
+    nDims <- length(params)
+    if(nDims == 1){
+      x <- params
     }else{
-      p <- p + geom_density(aes(fill = "grey50", colour = "grey50"))
+      x <- params[2]
+      y <- params[1]
+    }    
+  }  
+  
+  mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))
+  
+  p <- ggcyto(object, mapping) + geom_hex(...) + geom_gate(gate) + geom_stats() 
+  p <- p + theme_ggcyto(limits = "instrument")
+  p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
+  p
+  
+}
+
+#' @param gate the gate to be plotted
+#' @export autoplot.GatingHierarchy
+#' @rdname autoplot
+autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE
+                         , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
+                         , projections = list()
+                         , ...){
+  if(missing(gate)){
+    gate <- getNodes(object, path = "auto")
+    gate <- setdiff(gate,"root")
+  }else if (is.numeric(gate)){
+    gate <- getNodes(object, path = "auto")[gate]
+  }
+    
+  #match given axis to channel names
+  fr <- getData(object, use.exprs = FALSE)
+  projections <- lapply(projections, function(thisPrj){
+    sapply(thisPrj, function(thisAxis)getChannelMarker(fr, thisAxis)[["name"]])
+  })
+  
+#   browser()
+  plotList <- flowWorkspace:::.mergeGates(object, gate, bool, merge, projections = projections)
+  Objs <- lapply(plotList,function(plotObjs){
+    
+    if(is.list(plotObjs)){
+      gate <- plotObjs[["popIds"]]
+      parent <- plotObjs[["parentId"]]
+      myPrj <- projections[[as.character(gate[1])]]
+      
+    }else{
+      gate <- plotObjs
+      parent <- getParent(object, gate, path = "auto")
+      myPrj <- projections[[as.character(gate)]]
+    }
+    
+#     browser()
+    if(is.null(myPrj)){
+      p <- autoplot.GatingSet(object, gate, ...)
+    }else{
+      p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
+    }
+    
+    p <- p + guides(fill=FALSE) + labs(title = "")
+    p <- as.ggplot(p)
+  
+    #rename sample name with parent in order to display it in strip
+    p$data[, name:= parent]
+    
+    for(i in 1:length(p$layers)){
+      if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
+        
+        p$layers[[i]][["data"]][, name:= parent]
+      }
+        
     }
       
-  }else if(nDims == 2){
-    p <- p + geom_hex() 
-    p <- p + scale_fill_gradientn(colours = rev(brewer.pal(11, "Spectral")))  
-  }else
-    stop("Only 1d or 2d plots are currently supported!")
-  p
+    
+    p
+
+  })
+  			
+  if(arrange)
+    do.call(grid.arrange,c(Objs, main = arrange.main))
+  else
+    Objs
+  
 }

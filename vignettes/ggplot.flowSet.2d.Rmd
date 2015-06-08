@@ -64,5 +64,11 @@ p1 + stat_binhex(data = fs[6], bin = 64)
 p1 + stat_binhex(data = fs[6], bin = 64, aes(fill = ..density..))
 # the color scale difference is reduced
 p1 + stat_binhex(data = fs, bin = 64, aes(fill = ..density..))
+
+# non-binned dot plot
+df <- fortify(fr)
+cols <- densCols(df[,`FSC-H`], df[,`SSC-H`], colramp = flowViz::flowViz.par.get("argcolramp"))
+p <- ggplot(df, aes(x = `FSC-H`, y =  `SSC-H`))
+p + geom_point(color = cols) 
 ```
 

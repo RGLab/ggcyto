@@ -23,6 +23,16 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p
 }
 
+
+#' @rdname ggcyto.GatingSet
+#' @export
+ggcyto.GatingHierarchy <- function(data, ...){
+  data <- as.GatingSet(data)
+  ggcyto(data, ...)  
+}
+as.GatingSet <- function(gh){
+  as(gh, "GatingSet")[sampleNames(gh)]
+}
 #' overloaded '+' method for ggcyto.gs
 #' 
 #' It tries to copy pData from ggcyto object to the gate layers

@@ -1,18 +1,9 @@
----
-title: "Quick plot for cytometry data"
-output:
-  html_document:
-    fig_height: 2
-    fig_width: 5
-    keep_md: yes
----
+# Quick plot for cytometry data
 
-```{r, echo=FALSE}
-library(knitr)
-opts_chunk$set(message = FALSE, warning = FALSE)
-```
 
-```{r}
+
+
+```r
 library(ggcyto)
 gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
 gs <- gs[1:2]
@@ -21,37 +12,73 @@ fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
 ```
 
 ## `flowSet`
-```{r}
+
+```r
 ## 1d densityplot
 autoplot(fs, x = 'FSC-H')
+```
 
+![](autoplot_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 ## 2d hex
 autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
 ```
 
+![](autoplot_files/figure-html/unnamed-chunk-3-2.png) 
+
 ## `GatingSet` 
-```{r}
+
+```r
 # apply the instrument range by default
 # use direct parent
 # inverse trans axis
 autoplot(gs, "3+", bins = 64)
+```
 
+![](autoplot_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 # multiple
 autoplot(gs, c("4+", "8+"), bins = 64)
 ```
 
+![](autoplot_files/figure-html/unnamed-chunk-4-2.png) 
+
 ## `GatingHierarchy`
-```{r, fig.height = 4}
+
+```r
 gh <- gs[[1]]
 nodes <- c("Lv", "L", "3+", "4+", "8+")
 # default use grid.arrange
 autoplot(gh, nodes, bins = 64)
+```
 
+![](autoplot_files/figure-html/unnamed-chunk-5-1.png) 
+
+```r
 # disable arrange and receive a list of ggplot objects to manually arrange
 objs <- autoplot(gh, nodes, bins = 64, arrange = F)
 length(objs)
-class(objs[[1]])
-class(objs[[2]])
+```
 
+```
+## [1] 4
+```
+
+```r
+class(objs[[1]])
+```
+
+```
+## [1] "gg"     "ggplot"
+```
+
+```r
+class(objs[[2]])
+```
+
+```
+## [1] "gg"     "ggplot"
 ```
 

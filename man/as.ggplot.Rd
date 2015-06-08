@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggcyto.R
 \name{as.ggplot}
 \alias{as.ggplot}
-\title{It simply fortifies data and return a regular ggplot object.}
+\title{It fortifies the data, fills some default settings and returns a regular ggplot object.}
 \usage{
 as.ggplot(x)
 }

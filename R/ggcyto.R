@@ -51,7 +51,7 @@ print.ggcyto <- function(x, ...) {
     ggplot2:::print.ggplot(x)
 }
 
-#' It simply fortifies data and return a regular ggplot object.
+#' It fortifies the data, fills some default settings and returns a regular ggplot object.
 #' 
 #' The orginal data format is preserved during the ggcyo constructor because they still need to be used during the plot building process.
 #' 
@@ -60,7 +60,9 @@ print.ggcyto <- function(x, ...) {
 #' @export
 as.ggplot <- function(x){
 #   browser()
+  #####################
   #lazy-fortifying the plot data
+  #####################
   dims <- attr(x$data, "dims")
   aes_names <- names(dims)
   
@@ -69,8 +71,11 @@ as.ggplot <- function(x){
   instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, dims]
   x$data <- fortify(x$data)
   
-  breaks <- x[["axis_inverse_trans"]]
+  #####################
   #lazy scales setting 
+  #####################
+  breaks <- x[["axis_inverse_trans"]]
+  
   for(this_aes in aes_names)
   {
     dim <- dims[this_aes]
@@ -108,7 +113,7 @@ as.ggplot <- function(x){
     
   }
     
-  
+  #strip the ggcyto class attributes
   class(x) <- c("gg", "ggplot")
   x
 }
