@@ -1,6 +1,4 @@
 # ggcyto : Visualize `Cytometry` data with `ggplot`
-Mike Jiang  
-06/05/2015  
 
 
 
@@ -14,9 +12,31 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 fs <- getData(gs, "CD3+")
 ```
 
-## Using **ggcyto** convenient wrapper
+### Quick plot with [autoplot](vignettes/autplot.md) 
 
-### plot **flowSet**
+```r
+#1d
+autoplot(fs, "CD4")
+```
+
+![](README_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
+#2d
+autoplot(fs, "CD4", "CD8", bins = 64)
+```
+
+![](README_files/figure-html/unnamed-chunk-3-2.png) 
+
+```r
+autoplot(gs, "singlets", bins = 64)
+```
+
+![](README_files/figure-html/unnamed-chunk-3-3.png) 
+
+### More flexibility with **ggcyto** wrapper
+
+#### [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
 
 ```r
 # support fuzzy-matching of aes to the data
@@ -25,26 +45,17 @@ fs <- getData(gs, "CD3+")
 ggcyto(fs,aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + xlim(0, 3600)
 ```
 
-![](README_files/figure-html/unnamed-chunk-3-1.png) 
+![](README_files/figure-html/unnamed-chunk-4-1.png) 
 
-More examples :
-
-* [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
-
-
-### plot **GatingSet**
+#### [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
 
 ```r
 ggcyto(gs,aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 64) + geom_gate("CD4/CCR7+ 45RA+") + geom_stats(fill = "yellow", size = 4)
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-1.png) 
+![](README_files/figure-html/unnamed-chunk-5-1.png) 
 
-More examples :
-
-* [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
-
-### Plot `flowSet` directly with `ggplot`
+### Use `ggplot` directly to have more controls. 
 
 ```r
 # 1d
@@ -53,21 +64,21 @@ p <- ggplot(fs, aes(x = `<B710-A>`)) + facet_wrap(~name)
 p + geom_histogram(colour = "white")
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png) 
+![](README_files/figure-html/unnamed-chunk-6-1.png) 
 
 ```r
 #density plot
 p + geom_density(fill = "black")
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-2.png) 
+![](README_files/figure-html/unnamed-chunk-6-2.png) 
 
 ```r
 # 2d hexbin
 ggplot(fs, aes(x = `<B710-A>`, y = `<R780-A>`)) + facet_wrap(~name) + geom_hex(bins = 64)
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-3.png) 
+![](README_files/figure-html/unnamed-chunk-6-3.png) 
 
 More examples of using `ggplot` directly on `flowSet`:
 
