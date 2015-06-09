@@ -34,7 +34,14 @@ autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
 # apply the instrument range by default
 # use direct parent
 # inverse trans axis
-autoplot(gs, "3+", bins = 64)
+p <- autoplot(gs, "3+", bins = 64)
+p
+
+# display marker only
+p + labs_cyto("marker")
+
+# display channel only
+p + labs_cyto("channel")
 
 # multiple
 autoplot(gs, c("4+", "8+"), bins = 64)

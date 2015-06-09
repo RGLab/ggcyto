@@ -64,21 +64,22 @@ as.ggplot <- function(x){
   #lazy-fortifying the plot data
   #####################
   dims <- attr(x$data, "dims")
-  aes_names <- names(dims)
-  
+  aes_names <- dims[, axis]
+  chnls <- dims[, name]
+#   browser()
   #fortify to fs first in order to get instrument range
   x$data <- fortify_fs(x$data)
-  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, dims]
+  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, chnls]
   x$data <- fortify(x$data)
   
   #####################
-  #lazy scales setting 
+  #update default scales
   #####################
   breaks <- x[["axis_inverse_trans"]]
   
   for(this_aes in aes_names)
   {
-    dim <- dims[this_aes]
+    dim <- dims[axis == this_aes, name]
     # set limits
     if(!x$scales$has_scale(this_aes))
     {

@@ -12,16 +12,20 @@ theme_ggcyto(...)
 }
 \description{
 Use this function to modify theme settings.
+There are not really theme elements but the regular (or to be instantiated as) scales, labs, facet objects.
+They are just organized as a cluster of settings that can be added as a single layer to the plot for the convenience.
 }
 \section{Theme elements}{
 
 The individual theme elements are:
 
 \tabular{ll}{
-  limits             \tab can be "data"(default) or "instrument" or a list of actual numeric limits for x and y
-                   (\code{list(x = c(0, 4000))}) \cr
-  facet             \tab the regular facet object
-  hex_fill             \tab default scale_fill_gradientn for geom_hex layer
+  limits             \tab can be "data"(default) or "instrument" or a list of numeric limits for x and y
+                   (e.g. \code{list(x = c(0, 4000))}) \cr
+  facet             \tab the regular facet object \cr
+  hex_fill             \tab default scale_fill_gradientn for geom_hex layer \cr
+  lab              \tab labs_cyto object
+
 }
 }
 \examples{

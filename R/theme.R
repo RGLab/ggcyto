@@ -1,23 +1,27 @@
 .element_tree <- list(
-                      limits = "data"
+                      limits = "data" #or "instrument"
                       , facet = facet_wrap(~name, scales = "free") 
                       , hex_fill = scale_fill_gradientn(colours = rev(RColorBrewer::brewer.pal(11, "Spectral")), trans = "sqrt")  
+                      , lab = labs_cyto("both") 
                       )
-
+.lazy_element <- c("limits")
 #' Set ggcyto theme elements
 #'
 #'
-#' Use this function to modify theme settings.
-#'
+#' Use this function to modify theme settings. 
+#' There are not really theme elements but the regular (or to be instantiated as) scales, labs, facet objects.
+#' They are just organized as a cluster of settings that can be added as a single layer to the plot for the convenience.
 #'
 #' @section Theme elements:
 #' The individual theme elements are:
 #'
 #' \tabular{ll}{
-#'   limits             \tab can be "data"(default) or "instrument" or a list of actual numeric limits for x and y
-#'                    (\code{list(x = c(0, 4000))}) \cr
-#'   facet             \tab the regular facet object
-#'   hex_fill             \tab default scale_fill_gradientn for geom_hex layer
+#'   limits             \tab can be "data"(default) or "instrument" or a list of numeric limits for x and y
+#'                    (e.g. \code{list(x = c(0, 4000))}) \cr
+#'   facet             \tab the regular facet object \cr
+#'   hex_fill             \tab default scale_fill_gradientn for geom_hex layer \cr
+#'   lab              \tab labs_cyto object
+#'   
 #' }
 #'
 #' @param ... a list of element name, element pairings that modify the
@@ -56,7 +60,7 @@ validate_element <- function(el, elname) {
   eldef <- .element_tree[[elname]]
   
   if (is.null(eldef)) {
-    stop('"', elname, '" is not a valid theme element name.')
+    stop('"', elname, '" is not a valid theme element! Print the default theme by "theme_ggcyto_default()"')
   }
   
   invisible()

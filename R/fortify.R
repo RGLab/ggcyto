@@ -23,7 +23,7 @@
   # subset by columns if applicable
   dims <- attr(x, "dims")
   if(!is.null(dims))
-    x <- x[, dims]
+    x <- x[, dims[, name]]
   thisFilter <- attr(x, "filter")
   if(!is.null(thisFilter)){
     if(is.function(thisFilter)){

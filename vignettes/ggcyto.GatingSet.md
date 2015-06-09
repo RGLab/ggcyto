@@ -33,6 +33,34 @@ p
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-3.png) 
 
 ```r
+# print the default settings
+theme_ggcyto_default()
+```
+
+```
+## $limits
+## [1] "data"
+## 
+## $facet
+## facet_wrap(name) 
+## 
+## $hex_fill
+## continuous_scale(aesthetics = "fill", scale_name = "gradientn", 
+##     palette = gradient_n_pal(colours, values, space), na.value = na.value, 
+##     trans = "sqrt", guide = guide)
+## 
+## $lab
+## $labels
+## [1] "both"
+## 
+## attr(,"class")
+## [1] "labs_cyto"
+## 
+## attr(,"class")
+## [1] "ggcyto_theme"
+```
+
+```r
 # add gate
 p + geom_gate("4+")
 ```
@@ -126,6 +154,13 @@ theme_ggcyto_default()
 ## continuous_scale(aesthetics = "fill", scale_name = "gradientn", 
 ##     palette = gradient_n_pal(colours, values, space), na.value = na.value, 
 ##     trans = "sqrt", guide = guide)
+## 
+## $lab
+## $labels
+## [1] "both"
+## 
+## attr(,"class")
+## [1] "labs_cyto"
 ## 
 ## attr(,"class")
 ## [1] "ggcyto_theme"

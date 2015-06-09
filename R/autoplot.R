@@ -21,7 +21,7 @@
 #' #2d plot: default geom_hex plot
 #' autoplot(fs, x = 'FSC-H', y ='SSC-H')
 #' 
-#' @export autoplot.flowSet
+#' @export 
 autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   
   # check the dimensions
@@ -46,7 +46,7 @@ autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
 }
 
 #' @importFrom ggplot2 autoplot
-#' @export autoplot.flowFrame
+#' @export 
 #' @rdname autoplot
 autoplot.flowFrame <- function(object, ...){
   object <- fortify_fs(object)
@@ -54,7 +54,7 @@ autoplot.flowFrame <- function(object, ...){
 }
 
 #' @param gate the gate to be plotted
-#' @export autoplot.GatingSet
+#' @export 
 #' @rdname autoplot
 autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
   if(missing(gate))
@@ -82,7 +82,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
 }
 
 #' @param gate the gate to be plotted
-#' @export autoplot.GatingHierarchy
+#' @export 
 #' @rdname autoplot
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE
                          , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE

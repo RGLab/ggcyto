@@ -33,17 +33,32 @@ autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
 # apply the instrument range by default
 # use direct parent
 # inverse trans axis
-autoplot(gs, "3+", bins = 64)
+p <- autoplot(gs, "3+", bins = 64)
+p
 ```
 
 ![](autoplot_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
+# display marker only
+p + labs_cyto("marker")
+```
+
+![](autoplot_files/figure-html/unnamed-chunk-4-2.png) 
+
+```r
+# display channel only
+p + labs_cyto("channel")
+```
+
+![](autoplot_files/figure-html/unnamed-chunk-4-3.png) 
 
 ```r
 # multiple
 autoplot(gs, c("4+", "8+"), bins = 64)
 ```
 
-![](autoplot_files/figure-html/unnamed-chunk-4-2.png) 
+![](autoplot_files/figure-html/unnamed-chunk-4-4.png) 
 
 ## `GatingHierarchy`
 

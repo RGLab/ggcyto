@@ -20,7 +20,7 @@
   
   res <- rbindlist(res, idcol = idcol)
   if(!is.null(idcol))
-    setkeyv(res, .id)
+    setkeyv(res, idcol)
   res
 }
 
@@ -38,7 +38,7 @@
   
   res <- rbindlist(res, idcol = idcol)
   if(!is.null(idcol))
-    setkeyv(res, .id)
+    setkeyv(res, idcol)
   res
 }
 

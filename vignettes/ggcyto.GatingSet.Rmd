@@ -34,6 +34,8 @@ myTheme <- theme_ggcyto(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
 p <- p  + myTheme# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
 p
 
+# print the default settings
+theme_ggcyto_default()
 # add gate
 p + geom_gate("4+")
 

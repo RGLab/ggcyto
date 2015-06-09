@@ -21,37 +21,30 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     
     #update x , y with actual channel name
     frm <- getFlowFrame(data)
-    new.aes <- sapply(dims, function(dim)as.symbol(getChannelMarker(frm, dim)[["name"]]))
-    mapping[["x"]] <- new.aes[["x"]]
-    mapping[["y"]] <- new.aes[["y"]]
+    dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
+    
+    for(axis_name in names(dims))
+      mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
     #update dims
     p$mapping <- mapping
     
     nDims <- length(dims)
     #attach dims to data for more efficient fortify
-    attr(p$data, "dims") <- sapply(new.aes,as.character)
+    attr(p$data, "dims") <- dims.tbl
     attr(p$data, "filter") <- filter
     
   }else
     stop("mapping must be supplied to ggplot!")
   
-  #set default theme
-  p[["ggcyto_theme"]] <- theme_ggcyto_default()
-  
-  # add default facetting
-  p <- p + p[["ggcyto_theme"]][["facet"]]
-  
-  if(nDims == 2){
-    # add default fill gradient
-    p <- p + p[["ggcyto_theme"]][["hex_fill"]]
-  }
-  
+    
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()
   # prepend the ggcyto class attribute
   class(p) <- c("ggcyto", class(p))  
   class(p) <- c("ggcyto_flowSet", class(p))  
-  
+  #add default the2me
+  p[["ggcyto_theme"]] <- list()
+  p <- p + theme_ggcyto_default()
   
   p
 }
@@ -83,6 +76,8 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 
 add_ggcyto <- function(e1, e2, e2name){
 #   browser()  
+  
+  dims <- attr(e1$data, "dims")
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
   if(is.proto(e2)){
@@ -151,8 +146,39 @@ add_ggcyto <- function(e1, e2, e2name){
     }
     
   }else if (is.ggcyto_theme(e2)) {
+    # store the theme for the lazy-eval elements
     e1$ggcyto_theme <- add_theme(e1$ggcyto_theme, e2, deparse(substitute(e2)))
+    # apply the non-lazy-eval elements right away
+    to_apply <- e2[!names(e2) %in% .lazy_element] 
+    
+    for(element in names(to_apply)){
+      #skip hex_fill for 1d plot
+      
+      if(element == "hex_fill" && nrow(dims) == 1)
+        next
+      e1 <- e1 + to_apply[[element]]
+    }
+      
+    
+    
     return(e1)
+  }else if(inherits(e2, "labs_cyto")){
+    # instantiated it to a concrete labs object
+    
+    lab_txt <- list()    
+    for(axis_name in dims[, axis]){
+      thisDim  <- dims[axis == axis_name, ]
+      marker <- thisDim[, desc]
+      chnl <- thisDim[, name]
+      lab_txt[[axis_name]] <- switch(e2[["labels"]]
+                                  , "marker" = ifelse(is.na(marker), chnl, marker)
+                                  , "channel" = chnl
+                                  , "both" = sub("NA","",paste(chnl, marker))
+                                  )
+                        
+    }
+    e2 <- labs(lab_txt)
+    
   }
   
   ggplot2:::`+.gg`(e1, e2)
