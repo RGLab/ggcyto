@@ -21,7 +21,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 fs <- getData(gs, "CD3+")
 ```
 
-### Quick plot with [autoplot](vignettes/autplot.md) 
+### Quick plot with [autoplot](vignettes/autoplot.md) 
 ```{r}
 #1d
 autoplot(fs, "CD4")
