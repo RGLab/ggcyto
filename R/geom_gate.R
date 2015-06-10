@@ -68,8 +68,7 @@ geom_gate.filterList <- function(data, ...){
   geom_gate_layer
 }
 
-#' construct geom layer for polygonGate
-#' 
+
 #' @export
 #' @rdname geom_gate
 geom_gate.polygonGate <- function(data, ...){
@@ -80,8 +79,7 @@ geom_gate.polygonGate <- function(data, ...){
   geom_path(mapping = mapping, data = data , fill = fill, colour = colour, ...)  
 }
 
-#' construct geom layer for rectangleGate
-#' 
+
 #' @rdname geom_gate
 #' @export
 geom_gate.rectangleGate <- function(data, ...){
@@ -100,6 +98,13 @@ geom_gate.rectangleGate <- function(data, ...){
   }else
     stop("rectangelGate with dimension ", nDim, "is not supported!")
   
+}
+
+#' @rdname geom_gate
+#' @export
+geom_gate.ellipsoidGate <- function(data, ...){
+  
+  geom_gate.polygonGate(data, ...)
 }
 
 #' @rdname geom_gate

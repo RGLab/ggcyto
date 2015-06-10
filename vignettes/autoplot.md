@@ -5,8 +5,8 @@
 
 ```r
 library(ggcyto)
-gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
-gs <- gs[1:2]
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
 ```
@@ -33,38 +33,32 @@ autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
 # apply the instrument range by default
 # use direct parent
 # inverse trans axis
-p <- autoplot(gs, "3+", bins = 64)
-p
+autoplot(gs, "CD3+", bins = 64)
 ```
 
 ![](autoplot_files/figure-html/unnamed-chunk-4-1.png) 
 
 ```r
-# display marker only
-p + labs_cyto("marker")
+# multiple
+autoplot(gs, c("CD4", "CD8"), bins = 64)
 ```
 
 ![](autoplot_files/figure-html/unnamed-chunk-4-2.png) 
-
-```r
-# display channel only
-p + labs_cyto("channel")
-```
-
-![](autoplot_files/figure-html/unnamed-chunk-4-3.png) 
-
-```r
-# multiple
-autoplot(gs, c("4+", "8+"), bins = 64)
-```
-
-![](autoplot_files/figure-html/unnamed-chunk-4-4.png) 
 
 ## `GatingHierarchy`
 
 ```r
 gh <- gs[[1]]
-nodes <- c("Lv", "L", "3+", "4+", "8+")
+nodes <- getNodes(gh, path = "auto")[c(3:9, 14)]
+nodes
+```
+
+```
+## [1] "singlets"    "CD3+"        "CD4"         "CD4/38- DR+" "CD4/38+ DR+"
+## [6] "CD4/38+ DR-" "CD4/38- DR-" "CD8"
+```
+
+```r
 # default use grid.arrange
 autoplot(gh, nodes, bins = 64)
 ```

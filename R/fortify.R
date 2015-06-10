@@ -129,22 +129,27 @@ fortify.polygonGate <- function(model, data, ...){
   new.vertices <- .ldply(1:nVert, function(i){
     j <- ifelse(i < nVert, i + 1, 1)
     thisPair <- vertices[c(i, j),]
-    #we need to jitter the x coordinates in case they are identical which will fail approx
+    
     xx <- thisPair[,1]
     yy <- thisPair[,2]
-    if(xx[1] ==  xx[2])
-      xx[1] <- jitter(xx[1])
+    
     nOut <- max(2, nEdge.points[i]) # at least 2 to preserve orginal points
     # interpolate more points to prevent it from losing its shape by xlim/ylim
-    new.points <- approx(x = xx, y = yy, n = nOut) 
-    #approx tends to goes from left to right regardless of the order of original points
-    #we try to reverse it when needed
-    
-    if(xx[1] > xx[2]){
-      new.points[["x"]] <- rev(new.points[["x"]])
-      new.points[["y"]] <- rev(new.points[["y"]])
+    if(xx[1] == xx[2]){
+      new.points <- list(x = rep(xx[1], nOut)
+                        , y = seq(yy[1], yy[2], (yy[2] - yy[1])/nOut)
+                        )
+    }else{
+      
+      new.points <- approx(x = xx, y = yy, n = nOut) 
+      #approx tends to goes from left to right regardless of the order of original points
+      #we try to reverse it when needed
+      
+      if(xx[1] > xx[2]){
+        new.points[["x"]] <- rev(new.points[["x"]])
+        new.points[["y"]] <- rev(new.points[["y"]])
+      }  
     }
-#       browser()
 #     plot(thisPair, xlim =range(vertices[,1]), ylim =range(vertices[,2]))
 #     text(new.points,labels = 1:nOut,  col = "red")
     as.data.table(new.points)
@@ -159,6 +164,20 @@ fortify.polygonGate <- function(model, data, ...){
   dt <- as.data.table(new.vertices)
   setnames(dt, chnls)
   dt
+}
+
+#' Convert a ellipsoidGate to a data.table useful for ggplot
+#' 
+#' It converts ellipsoidGate to polygongate before fortifying it.
+#' 
+#' @param model ellipsoidGate
+#' @param data not used.
+#' @param ... not used.
+#' 
+#' @export
+fortify.ellipsoidGate <- function(model, data, ...){
+  poly.g <- flowViz:::ell2Polygon(model)  
+  fortify(poly.g, ...)
 }
 
 #' Convert a filterList to a data.table useful for ggplot

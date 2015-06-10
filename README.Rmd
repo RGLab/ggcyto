@@ -28,7 +28,7 @@ autoplot(fs, "CD4")
 #2d
 autoplot(fs, "CD4", "CD8", bins = 64)
 
-autoplot(gs, "singlets", bins = 64)
+autoplot(gs, c("CD4", "CD8"), bins = 64)
 ```
 
 ### More flexibility with **ggcyto** wrapper

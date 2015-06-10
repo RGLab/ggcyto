@@ -29,7 +29,7 @@ autoplot(fs, "CD4", "CD8", bins = 64)
 ![](README_files/figure-html/unnamed-chunk-3-2.png) 
 
 ```r
-autoplot(gs, "singlets", bins = 64)
+autoplot(gs, c("CD4", "CD8"), bins = 64)
 ```
 
 ![](README_files/figure-html/unnamed-chunk-3-3.png) 

@@ -2,8 +2,8 @@
 title: "Visualize GatingSet with ggcyto"
 output:
   html_document:
-    fig_height: 2
-    fig_width: 5
+    fig_height: 3
+    fig_width: 4
     keep_md: yes
 ---
 
@@ -15,13 +15,13 @@ opts_chunk$set(message = FALSE, warning = FALSE)
 
 ```{r echo=FALSE}
 library(ggcyto)
-gs <- load_gs("/fh/fast/gottardo_r/mike_working/HVTN/086/orig/1665-Y-086/")
-gs <- gs[1:2]
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 ```
 
 
 ```{r}
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") 
 # 2d plot 
 p <- p + geom_hex(bins = 64)
 p
@@ -30,27 +30,27 @@ p
 p + theme_ggcyto(limits = "instrument")
 
 #manually set limits
-myTheme <- theme_ggcyto(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
-p <- p  + myTheme# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
+myTheme <- theme_ggcyto(limits = list(x = c(0,3.5e3), y = c(-10, 4.1e3)))
+p <- p + myTheme# or xlim(0,3.5e3) + ylim(-10, 4e3) 
 p
 
 # print the default settings
 theme_ggcyto_default()
 # add gate
-p + geom_gate("4+")
+p + geom_gate("CD4")
 
 # add two gates
-p <- p + geom_gate(c("4+","8+")) # short for geom_gate("8+") + geom_gate("4+")
+p <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p
 
-# add stats (for all gate layers by default)
-p + geom_stats()
+# add stats (for all gate layers by default) and only display marker on axis
+p + geom_stats() + labs_cyto("marker")
 
 # add stats just for one specific gate
-p + geom_stats("4+")
+p + geom_stats("CD4")
 
 # change stats type, background color and position
-p + geom_stats("4+", type = "count", size = 6,  color = "yellow", fill = "black", adjust = 0.3)
+p + geom_stats("CD4", type = "count", size = 6,  color = "white", fill = "black", adjust = 0.3)
 ```
 
 ```{r error=T}
@@ -62,19 +62,13 @@ p
 ```{r}
 
 # it can be instantiated by gate layer
-p + geom_gate(c("4+", "8+"))
+p + geom_gate(c("CD4", "CD8"))
 
-# plot all children of the specified parent
-p <- ggcyto(gs, aes(x = IFN, y = IL2), subset = "4+") + geom_hex(bins = 64)
-p
-
-p + geom_gate() + geom_stats()
+# plot all children of the specified parent and projections
+p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
 
 # add gates to the arbitary(non-parent) node
-p <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex(bins = 64) + geom_gate(c("4+/IFNg+"))
-p
-#print the default theme settings
-theme_ggcyto_default()
+ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myTheme
 
 # inverse transform the axis without affecting the data
 p + axis_x_inverse_trans() + axis_y_inverse_trans()

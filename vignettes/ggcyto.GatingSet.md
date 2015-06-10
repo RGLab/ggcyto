@@ -8,7 +8,7 @@
 
 
 ```r
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") 
 # 2d plot 
 p <- p + geom_hex(bins = 64)
 p
@@ -25,8 +25,8 @@ p + theme_ggcyto(limits = "instrument")
 
 ```r
 #manually set limits
-myTheme <- theme_ggcyto(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
-p <- p  + myTheme# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
+myTheme <- theme_ggcyto(limits = list(x = c(0,3.5e3), y = c(-10, 4.1e3)))
+p <- p + myTheme# or xlim(0,3.5e3) + ylim(-10, 4e3) 
 p
 ```
 
@@ -62,36 +62,36 @@ theme_ggcyto_default()
 
 ```r
 # add gate
-p + geom_gate("4+")
+p + geom_gate("CD4")
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-4.png) 
 
 ```r
 # add two gates
-p <- p + geom_gate(c("4+","8+")) # short for geom_gate("8+") + geom_gate("4+")
+p <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-5.png) 
 
 ```r
-# add stats (for all gate layers by default)
-p + geom_stats()
+# add stats (for all gate layers by default) and only display marker on axis
+p + geom_stats() + labs_cyto("marker")
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-6.png) 
 
 ```r
 # add stats just for one specific gate
-p + geom_stats("4+")
+p + geom_stats("CD4")
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-7.png) 
 
 ```r
 # change stats type, background color and position
-p + geom_stats("4+", type = "count", size = 6,  color = "yellow", fill = "black", adjust = 0.3)
+p + geom_stats("CD4", type = "count", size = 6,  color = "white", fill = "black", adjust = 0.3)
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-8.png) 
@@ -111,67 +111,27 @@ p
 
 ```r
 # it can be instantiated by gate layer
-p + geom_gate(c("4+", "8+"))
+p + geom_gate(c("CD4", "CD8"))
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-1.png) 
 
 ```r
-# plot all children of the specified parent
-p <- ggcyto(gs, aes(x = IFN, y = IL2), subset = "4+") + geom_hex(bins = 64)
-p
+# plot all children of the specified parent and projections
+p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
+
+# add gates to the arbitary(non-parent) node
+ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myTheme
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-2.png) 
-
-```r
-p + geom_gate() + geom_stats()
-```
-
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-3.png) 
-
-```r
-# add gates to the arbitary(non-parent) node
-p <- ggcyto(gs, subset = "3+", aes(x = IFNg, y = IL2)) + geom_hex(bins = 64) + geom_gate(c("4+/IFNg+"))
-p
-```
-
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-4.png) 
-
-```r
-#print the default theme settings
-theme_ggcyto_default()
-```
-
-```
-## $limits
-## [1] "data"
-## 
-## $facet
-## facet_wrap(name) 
-## 
-## $hex_fill
-## continuous_scale(aesthetics = "fill", scale_name = "gradientn", 
-##     palette = gradient_n_pal(colours, values, space), na.value = na.value, 
-##     trans = "sqrt", guide = guide)
-## 
-## $lab
-## $labels
-## [1] "both"
-## 
-## attr(,"class")
-## [1] "labs_cyto"
-## 
-## attr(,"class")
-## [1] "ggcyto_theme"
-```
 
 ```r
 # inverse transform the axis without affecting the data
 p + axis_x_inverse_trans() + axis_y_inverse_trans()
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-5.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-3.png) 
 
 ```r
 #add filter (consistent with `margin` behavior in flowViz)

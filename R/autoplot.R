@@ -67,8 +67,8 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
     if(nDims == 1){
       x <- params
     }else{
-      x <- params[2]
-      y <- params[1]
+      x <- params[1]
+      y <- params[2]
     }    
   }  
   

@@ -4,6 +4,7 @@
 \alias{geom_gate}
 \alias{geom_gate.character}
 \alias{geom_gate.default}
+\alias{geom_gate.ellipsoidGate}
 \alias{geom_gate.filterList}
 \alias{geom_gate.list}
 \alias{geom_gate.polygonGate}
@@ -21,6 +22,8 @@ geom_gate(data, ...)
 \method{geom_gate}{polygonGate}(data, ...)
 
 \method{geom_gate}{rectangleGate}(data, ...)
+
+\method{geom_gate}{ellipsoidGate}(data, ...)
 
 \method{geom_gate}{character}(data, ...)
 }
@@ -41,10 +44,6 @@ pd pData (data.frame) that has rownames represents the sample names used as key 
 When 'data' is a list of gates or a filterList object, to be used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for
 the gates to be dispatched to each panel.
 However It is not necessary when it is used with 'ggcyto' wrapper
-
-construct geom layer for polygonGate
-
-construct geom layer for rectangleGate
 }
 \details{
 When 'data' is a character, it construct an abstract geom layer for a character that represents nodes in a Gating tree
