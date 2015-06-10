@@ -16,8 +16,6 @@
 The gate is used to filter the flow data before it is plotted.}
 
 \item{...}{ignored}
-
-\item{environment}{in which evaluation of aesthetics should occur}
 }
 \description{
 Create a new ggcyto plot from a flowSet

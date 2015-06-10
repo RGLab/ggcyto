@@ -23,6 +23,7 @@ To invoke \code{ggcyto}:
   }
 }
 \examples{
+\dontrun{
 #construct the `ggcyto` object (inherits from `ggplot` class)
 p <- ggcyto(fs, aes(x = `FSC-H`))
 p + geom_histogram()
@@ -34,6 +35,7 @@ p + geom_area(stat = "density")
 # 2d scatter plot
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 p + stat_binhex(bin = 128)
+}
 }
 \keyword{internal}
 

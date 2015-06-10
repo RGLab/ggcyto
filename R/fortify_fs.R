@@ -19,6 +19,9 @@ fortify_fs.default <- function(model, data, ...) {
 
 #' coerce flowFrame to flowSet
 #' The default coerce method does not perserve the sample name.
+#' @param data not used.
+#' @param ... not used.
+#' @param model flowFrame
 #' @export
 fortify_fs.flowFrame <- function(model, data, ...){
   sn <- identifier(model)
@@ -31,6 +34,8 @@ fortify_fs.flowFrame <- function(model, data, ...){
 #' coerce a GatingSet node to flowSet
 #' The default coerce method does not perserve the sample name.
 #' @param model GatingSet object that has 'subset' character attribute that specifies the node name
+#' @param data not used.
+#' @param ... not used.
 #' @export
 fortify_fs.GatingSet <- function(model, data, ...){
   subset <- attr(model, "subset")

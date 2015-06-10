@@ -11,9 +11,12 @@
 #' @inheritParams compute_stats
 #' @export
 #' @examples
+#' \dontrun{
+#' 
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 #' p <- p + geom_hex(bins = 128)
 #' p + geom_gate(rect.gates) + geom_stats()
+#' }
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", data_range = NULL, adjust = 0.5){
   type <- match.arg(type, c("percent", "count"))
   # data_range can be passed in to prevent the data(gs or fs) to be evaluated by compute_stats

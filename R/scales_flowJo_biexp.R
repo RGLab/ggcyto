@@ -39,7 +39,7 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 #' 
 #' @export
 #' @importFrom scales trans_new format_format
-#' @param ... arguments passed to flowJoTrans
+#' @inheritParams flowJo_biexp_breaks
 flowJo_biexp_trans <- function(..., pretty = FALSE){
 #   browser()
   trans <- flowJoTrans(...)
@@ -62,7 +62,7 @@ flowJo_biexp_trans <- function(..., pretty = FALSE){
 #' flowJo biexponential scale
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
-#' @param maxValue, widthBasis see 'help(flowJoTrans')
+#' @param maxValue,widthBasis see 'help(flowJoTrans')
 #' @param pretty whether to display the breaks in pretty format
 #' @export
 scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pretty = FALSE){

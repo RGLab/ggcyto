@@ -28,7 +28,15 @@
 
 \item{gate}{the gate to be plotted}
 
-\item{gate}{the gate to be plotted}
+\item{bool}{whether to plot boolean gates}
+
+\item{arrange.main}{the main title of the arranged plots}
+
+\item{arrange}{whether to use grid.arrange to put multiple plots in the same page}
+
+\item{merge}{wehther to merge multiple gates into the same panel when they share the same parent and projections}
+
+\item{projections}{a list of customized projections}
 }
 \value{
 a ggcyto object
@@ -38,6 +46,7 @@ Overloaded autoplot for the cytomertry data structure: flowFrame or flowSet, Gat
 It plots the cytometry data with geom_histogram, geom_density or geom_hex.
 }
 \examples{
+library(flowCore)
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
 

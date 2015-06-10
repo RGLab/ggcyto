@@ -11,10 +11,6 @@ axis_y_inverse_trans(...)
 }
 \arguments{
 \item{...}{common continuous scale parameters passed to 'continuous_scale' (not used currently)}
-
-\item{gs}{GatingSet}
-
-\item{channel}{the channel or marker name}
 }
 \description{
 It is essentially a dummy continous scale and will be instantiated

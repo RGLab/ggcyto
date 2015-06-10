@@ -9,6 +9,10 @@ The default coerce method does not perserve the sample name.}
 }
 \arguments{
 \item{model}{GatingSet object that has 'subset' character attribute that specifies the node name}
+
+\item{data}{not used.}
+
+\item{...}{not used.}
 }
 \description{
 coerce a GatingSet node to flowSet

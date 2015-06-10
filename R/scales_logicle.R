@@ -25,7 +25,7 @@ logicle_breaks <- function (n = 6, ...)
 
 #' logicle transformation.
 #' 
-#' ... arguments passed to logicleTransform.
+#' @param ... arguments passed to logicleTransform.
 #' @export
 logicle_trans <- function(...){
   trans.obj <- logicleTransform(...)

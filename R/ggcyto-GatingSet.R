@@ -42,8 +42,7 @@ as.GatingSet <- function(gh){
 #' @param e2 A component to add to \code{e1}
 #' 
 #' @method + ggcyto_GatingSet
-#' @rdname ggcyto-add
-#' @import flowWorkspace
+#' @rdname ggcyto_GatingSet_add
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
 #   browser()
@@ -62,7 +61,7 @@ as.GatingSet <- function(gh){
         if(parent == "_parent_")
           stop("either 'subset' in ggcyto object or 'data' in geom_gate layer needs to be specified!")
         
-        nodes <- getChildren_by_projection(gs, parent, x = prj[1], y = prj[2])
+        nodes <- .getChildren_by_projection(gs, parent, x = prj[1], y = prj[2])
       }
       #instantiate the subset/parent info
       if(parent == "_parent_"){
@@ -151,7 +150,7 @@ as.GatingSet <- function(gh){
 }
 
 #' match the subpopulation based on the given projections and parentID
-getChildren_by_projection <- function(gs, parentID, x, y){
+.getChildren_by_projection <- function(gs, parentID, x, y){
   cids <- getChildren(gs[[1]], parentID, showHidden = FALSE, path = "auto")
   if(length(cids)>0)
   {

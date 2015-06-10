@@ -6,7 +6,10 @@
 \usage{
 logicle_trans(...)
 }
+\arguments{
+\item{...}{arguments passed to logicleTransform.}
+}
 \description{
-... arguments passed to logicleTransform.
+logicle transformation.
 }
 

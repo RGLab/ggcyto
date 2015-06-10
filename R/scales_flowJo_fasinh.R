@@ -51,6 +51,7 @@ flowJo_fasinh_breaks <- function (n = 6, ...)
   
 #' flowJo inverse hyperbolic sine transformation.
 #' 
+#' @inheritParams flowJo_fasinh_breaks
 #' @export
 flowJo_fasinh_trans <- function(...){
   trans <- flowJo.fasinh(...)
@@ -64,7 +65,7 @@ flowJo_fasinh_trans <- function(...){
 #' flowJo inverse hyperbolic sine scale
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
-#' @param M, T see 'help(flowJo.fasinh')
+#' @param M,T see 'help(flowJo.fasinh')
 #' @export
 scale_x_flowJo_fasinh <- function(..., M = 4, T = 1200){
   myTrans <- flowJo_fasinh_trans(M = M, T = T)

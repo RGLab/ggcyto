@@ -23,7 +23,7 @@
 ##' @param name A character identifier.
 ##' @param gp An object of class \code{gpar}, typically the output from a call to the function
 ##' \code{gpar}. This is basically a list of graphical parameter settings.
-##' @param draw A logical value indiciating whether graphics output should be produced.
+##' @param gp.rect the graphical parameters for the rectangle background.
 ##' @param vp A Grid viewport object (or \code{NULL}).
 ##' @param widthAdj A width adjustment parameter, to help control how much horizontal padding
 ##' there should be between the text and the background rectangle.

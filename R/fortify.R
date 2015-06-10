@@ -46,6 +46,14 @@
 #' @param data not used.
 #' @param ... not used.
 #' 
+# @import grid
+# @import methods
+#' @import flowCore
+#' @import ncdfFlow
+#' @import flowWorkspace
+#' @import ggplot2
+# @import Biobase 
+# @import BiocGenerics
 #' @export
 fortify.flowFrame <- function(model, data, ...){
   #covert to flowSet
@@ -84,6 +92,7 @@ fortify.flowSet <- function(model, data, ...){
 
 #' coerce a GatingSet node to data.table
 #' @param model GatingSet
+#' @param ... not used.
 #' @export
 fortify.GatingSet <- function(model, ...){
   
@@ -117,7 +126,7 @@ fortify.polygonGate <- function(model, data, ...){
   
   #determine the number of points to be interpolated for each edge
   nEdge.points <- round(edges / unit_length)
-  new.vertices <- ggcyto:::.ldply(1:nVert, function(i){
+  new.vertices <- .ldply(1:nVert, function(i){
     j <- ifelse(i < nVert, i + 1, 1)
     thisPair <- vertices[c(i, j),]
     #we need to jitter the x coordinates in case they are identical which will fail approx
@@ -208,7 +217,7 @@ fortify.rectangleGate <- function(model, data, ...){
     setnames(df, "V1" , param)
     df
   }else
-    stop("rectangelGate with dimension ", dDim, "is not supported!")
+    stop("rectangelGate with dimension ", nDim, "is not supported!")
 #   browser()
 }
 

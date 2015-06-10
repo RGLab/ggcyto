@@ -43,6 +43,8 @@ if \code{x} or \code{y} are only given as numeric vectors.}
 \item{gp}{An object of class \code{gpar}, typically the output from a call to the function
 \code{gpar}. This is basically a list of graphical parameter settings.}
 
+\item{gp.rect}{the graphical parameters for the rectangle background.}
+
 \item{vp}{A Grid viewport object (or \code{NULL}).}
 
 \item{widthAdj}{A width adjustment parameter, to help control how much horizontal padding
@@ -50,8 +52,6 @@ there should be between the text and the background rectangle.}
 
 \item{heightAdj}{A height adjustment parameter, to help control how much
 vertical padding there should be between the text and the background rectangle.}
-
-\item{draw}{A logical value indiciating whether graphics output should be produced.}
 }
 \description{
 Grid Text with a Background (modified based on Kmisc::grid.text2)

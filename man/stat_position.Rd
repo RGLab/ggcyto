@@ -9,21 +9,21 @@
 \usage{
 stat_position(gate, ...)
 
-\method{stat_position}{filter}(gate, adjust = 0.5, abs = FALSE,
-  data_range = NULL)
+\method{stat_position}{filter}(gate, ...)
 
-\method{stat_position}{filterList}(gates, ...)
+\method{stat_position}{filterList}(gate, ...)
 
-\method{stat_position}{list}(gates, ...)
+\method{stat_position}{list}(gate, ...)
 }
 \arguments{
 \item{gate}{a flowCore filter}
 
-\item{adjust}{adjust the position of the centroid}
+\item{...}{other arguments
+       adjust adjust the position of the centroid
 
-\item{abs}{logical}
+       abs logical
 
-\item{data_range}{the actual data range}
+       data_range the actual data range}
 }
 \value{
 the gate centroid coordinates

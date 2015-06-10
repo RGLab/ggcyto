@@ -1,7 +1,8 @@
+#' @importFrom RColorBrewer brewer.pal
 .element_tree <- list(
                       limits = "data" #or "instrument"
                       , facet = facet_wrap(~name, scales = "free") 
-                      , hex_fill = scale_fill_gradientn(colours = rev(RColorBrewer::brewer.pal(11, "Spectral")), trans = "sqrt")  
+                      , hex_fill = scale_fill_gradientn(colours = rev(brewer.pal(11, "Spectral")), trans = "sqrt")  
                       , lab = labs_cyto("both") 
                       )
 .lazy_element <- c("limits")

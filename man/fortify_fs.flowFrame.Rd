@@ -7,6 +7,13 @@ The default coerce method does not perserve the sample name.}
 \usage{
 \method{fortify_fs}{flowFrame}(model, data, ...)
 }
+\arguments{
+\item{model}{flowFrame}
+
+\item{data}{not used.}
+
+\item{...}{not used.}
+}
 \description{
 coerce flowFrame to flowSet
 The default coerce method does not perserve the sample name.

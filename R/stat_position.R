@@ -25,13 +25,22 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   return(x)
 }
 
-#' @param adjust adjust the position of the centroid
-#' @param abs logical
-#' @param data_range the actual data range
+
+#' @param ... other arguments
+#'        adjust adjust the position of the centroid
+#'        
+#'        abs logical
+#'        
+#'        data_range the actual data range
+#'        
 #' @return the gate centroid coordinates
 #' @export
 #' @rdname stat_position
-stat_position.filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL){
+ stat_position.filter <- function(gate, ...){
+   .stat_position_filter(gate, ...)
+ }
+
+.stat_position_filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL){
   
   params <- parameters(gate)
   if(abs)#plot label whithin the boundary by default 
@@ -93,14 +102,14 @@ stat_position.filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = N
 
 #' @export
 #' @rdname stat_position
-stat_position.filterList<- function(gates, ...){
+stat_position.filterList<- function(gate, ...){
   
-  .ldply(gates, stat_position, ..., .id = ".rownames")
+  .ldply(gate, stat_position, ..., .id = ".rownames")
   
 }
 
 #' @export
 #' @rdname stat_position
-stat_position.list<- function(gates, ...){
-  stat_position(filterList(gates), ...)
+stat_position.list<- function(gate, ...){
+  stat_position(filterList(gate), ...)
 }

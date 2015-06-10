@@ -66,7 +66,7 @@ marginalFilter <- function(fs, dims, tol = 1e-5, ...){
                       , dim.max = thisRange[2] - eps
                       )
                 )
-    thisExp <- deparse(thisExp, width =  500) # it will fail if width >500
+    thisExp <- deparse(thisExp, width.cutoff = 500) # it will fail if width >500
     exp <- paste(exp, thisExp, sep = ifelse(is.null(exp), "", "&"))
   }
   

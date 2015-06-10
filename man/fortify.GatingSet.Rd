@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{model}{GatingSet}
+
+\item{...}{not used.}
 }
 \description{
 coerce a GatingSet node to data.table

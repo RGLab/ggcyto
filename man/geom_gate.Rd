@@ -2,17 +2,52 @@
 % Please edit documentation in R/geom_gate.R
 \name{geom_gate}
 \alias{geom_gate}
+\alias{geom_gate.character}
 \alias{geom_gate.default}
+\alias{geom_gate.filterList}
+\alias{geom_gate.list}
+\alias{geom_gate.polygonGate}
+\alias{geom_gate.rectangleGate}
 \title{add a flowCore gate layer}
 \usage{
 geom_gate(data, ...)
 
 \method{geom_gate}{default}(data, ...)
+
+\method{geom_gate}{list}(data, ...)
+
+\method{geom_gate}{filterList}(data, ...)
+
+\method{geom_gate}{polygonGate}(data, ...)
+
+\method{geom_gate}{rectangleGate}(data, ...)
+
+\method{geom_gate}{character}(data, ...)
 }
 \arguments{
-\item{data}{a rectangleGate, polygonGate or ellipsoidGate}
+\item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
+             or a list of these gates
+             or filterList
+             or character specifying a gated cell population in the GatingSet}
+
+\item{...}{other arguments
+mapping, The mapping aesthetic mapping
+data a polygonGate
+fill polygonGate is not filled by default
+colour default is red
+pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
 }
 \description{
-Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.
+When 'data' is a list of gates or a filterList object, to be used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for
+the gates to be dispatched to each panel.
+However It is not necessary when it is used with 'ggcyto' wrapper
+
+construct geom layer for polygonGate
+
+construct geom layer for rectangleGate
+}
+\details{
+When 'data' is a character, it construct an abstract geom layer for a character that represents nodes in a Gating tree
+and will be instanatiated later as a specific geom_gate layer or layers based on the gates extracted from the given GatingSet object.
 }
 

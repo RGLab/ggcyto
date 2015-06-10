@@ -28,8 +28,11 @@ by looking up the geom_gate layer.
 So it is dedicated for ggcyto context and thus can't not be added to ggplot object directly.
 }
 \examples{
+\dontrun{
+
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 p <- p + geom_hex(bins = 128)
 p + geom_gate(rect.gates) + geom_stats()
+}
 }
 

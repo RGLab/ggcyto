@@ -7,7 +7,10 @@
 flowJo_biexp_trans(..., pretty = FALSE)
 }
 \arguments{
-\item{...}{arguments passed to flowJoTrans}
+\item{...}{parameters passed to flowWorkspace::flowJoTrans function}
+
+\item{pretty}{if use log10-like breaks that is normally used in flowJo
+when FALSE, breaks are equally spaced instead.}
 }
 \description{
 flowJo biexponential transformation.

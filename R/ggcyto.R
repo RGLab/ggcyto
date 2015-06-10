@@ -14,6 +14,7 @@
 #' @param ... other arguments passed to specific methods
 #' @examples
 #' 
+#' \dontrun{
 #' #construct the `ggcyto` object (inherits from `ggplot` class)
 #' p <- ggcyto(fs, aes(x = `FSC-H`)) 
 #' p + geom_histogram() 
@@ -25,6 +26,7 @@
 #' # 2d scatter plot
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 #' p + stat_binhex(bin = 128)
+#' }
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 #' Reports whether x is a ggcyto object

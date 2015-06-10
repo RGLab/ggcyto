@@ -1,8 +1,23 @@
 #' add a flowCore gate layer
 #' 
-#' Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.
+#' When 'data' is a list of gates or a filterList object, to be used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for 
+#' the gates to be dispatched to each panel. 
+#' However It is not necessary when it is used with 'ggcyto' wrapper
 #' 
-#' @param data a rectangleGate, polygonGate or ellipsoidGate
+#' When 'data' is a character, it construct an abstract geom layer for a character that represents nodes in a Gating tree
+#' and will be instanatiated later as a specific geom_gate layer or layers based on the gates extracted from the given GatingSet object.
+#'
+#' @param data a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
+#'              or a list of these gates 
+#'              or filterList
+#'              or character specifying a gated cell population in the GatingSet
+#'              
+#' @param ... other arguments
+#'        mapping, The mapping aesthetic mapping
+#'        data a polygonGate
+#'        fill polygonGate is not filled by default
+#'        colour default is red
+#'        pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
 #' @export
 geom_gate <- function(data, ...)UseMethod("geom_gate")
 
@@ -17,24 +32,20 @@ geom_gate.default <- function(data, ...){
     stop("ggcyto doesn't know how to deal with gate of class ", class(data), call. = FALSE)
 }
 
-#' @rdname geom_gate.filterList
-#' @param data a named list
+#' @rdname geom_gate
 #' @export
 geom_gate.list <- function(data, ...){
   data <- filterList(data)
   geom_gate(data, ...)  
 }
 
-#' Add layer for flowCore::filterList
-#' 
-#' pdata of the flow data must be supplied here explicitly in order for 
-#' the gates to be dispatched to each panel.
-#' 
-#' @param data filterList
-#' @param pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
+
+#' @rdname geom_gate
 #' @export
-geom_gate.filterList <- function(data, pd, ...){
-  
+geom_gate.filterList <- function(data, ...){
+  .geom_gate_filterList(data, ...)
+}
+.geom_gate_filterList <- function(data, pd, ...){  
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate(data[[1]], ...)
 #   browser()
@@ -60,25 +71,23 @@ geom_gate.filterList <- function(data, pd, ...){
 #' construct geom layer for polygonGate
 #' 
 #' @export
-#' 
-#' @param The mapping aesthetic mapping
-#' @param data a polygonGate
-#' @param fill polygonGate is not filled by default
-#' @param colour default is red
-geom_gate.polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
+#' @rdname geom_gate
+geom_gate.polygonGate <- function(data, ...){
+  .geom_gate_polygonGate(data, ...)  
+}
+.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
   
   geom_path(mapping = mapping, data = data , fill = fill, colour = colour, ...)  
 }
 
 #' construct geom layer for rectangleGate
 #' 
-#' 
+#' @rdname geom_gate
 #' @export
-#' @param The mapping aesthetic mapping
-#' @param gate a rectangleGate
-#' @param fill rectangleGate is not filled by default
-#' @param colour default is red
-geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
+geom_gate.rectangleGate <- function(data, ...){
+  .geom_gate_rectangleGate(data, ...)
+}
+.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
   
   param <- parameters(data)
   nDim <- length(param)
@@ -89,14 +98,11 @@ geom_gate.rectangleGate <- function(data, mapping = NULL, fill = "transparent", 
       geom_hvline(data = data, fill = fill, colour = colour, ...)
          
   }else
-    stop("rectangelGate with dimension ", dDim, "is not supported!")
+    stop("rectangelGate with dimension ", nDim, "is not supported!")
   
 }
 
-#' construct an abstract geom layer for a character that represents nodes in a Gating tree
-#' 
-#' It will be instanatiated later as a specific geom_gate layer or layers based on the gates
-#' extracted from the given GatingSet object.
+#' @rdname geom_gate
 #' @export
 geom_gate.character <- function(data, ...){
   

@@ -12,6 +12,7 @@
 #' @return a ggcyto object
 #' 
 #' @examples
+#' library(flowCore)
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #'
@@ -45,7 +46,6 @@ autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   p
 }
 
-#' @importFrom ggplot2 autoplot
 #' @export 
 #' @rdname autoplot
 autoplot.flowFrame <- function(object, ...){
@@ -61,7 +61,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
     #determine dimensions from gate
-    g <- getGate(gs[[1]], gate[1])
+    g <- getGate(object[[1]], gate[1])
     params <- parameters(g)
     nDims <- length(params)
     if(nDims == 1){
@@ -81,7 +81,13 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
   
 }
 
-#' @param gate the gate to be plotted
+#' @param bool whether to plot boolean gates
+#' @param arrange.main the main title of the arranged plots
+#' @param arrange whether to use grid.arrange to put multiple plots in the same page
+#' @param merge wehther to merge multiple gates into the same panel when they share the same parent and projections
+#' @param projections a list of customized projections
+#' 
+#' @importFrom gridExtra grid.arrange
 #' @export 
 #' @rdname autoplot
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE

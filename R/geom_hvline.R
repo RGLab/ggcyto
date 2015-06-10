@@ -35,7 +35,7 @@ geom_hvline <- function (mapping = NULL, data = NULL, position = "identity", sho
   # somehow applying this GeomHVline directly doesn't work 
   # it seems that the object created by GeomHVline$new will lose the overriden function
   # (no wonder ggplot is planning to deprecate proto with S3)
-  obj$compute_aesthetics <- my_compute_aesthetics
+  obj$compute_aesthetics <- .my_compute_aesthetics
   obj
 }
 
@@ -93,7 +93,8 @@ GeomHVline <- proto(ggplot2:::Geom, {
 #' It would be nice if we could also hack to associate pData from plot$data here. Unforutntely the data
 #' is already facetted before this step and there is no way to access the facetted plot$data in order to
 #' reassign the 'panel' info for layer data.
-my_compute_aesthetics <- function(., data, plot) {
+#' @importFrom plyr eval.quoted compact empty
+.my_compute_aesthetics <- function(., data, plot) {
   
   aesthetics <- .$layer_mapping(plot$mapping)
   
@@ -107,7 +108,7 @@ my_compute_aesthetics <- function(., data, plot) {
     aesthetics["group"] <- .$geom_params$group
   }
   
-  scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
+  ggplot2:::scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
   
    
   #the hack:  

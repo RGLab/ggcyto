@@ -6,10 +6,8 @@
 #'  @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
 #'                The gate is used to filter the flow data before it is plotted. 
 #' @param ... ignored
-#' @param environment in which evaluation of aesthetics should occur
 #' @method ggcyto flowSet
 #' @export
-#' @importFrom RColorBrewer brewer.pal
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
@@ -62,10 +60,10 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' @param e2 A component to add to \code{e1}
 #' 
 #' @method + ggcyto_flowSet
-#' @rdname ggcyto-add
+#' @rdname ggcyto_flowSet_add
 #' @importFrom plyr defaults
 #' @export
-"+.ggcyto_flowSet" <- function(e1, e2) {
+`+.ggcyto_flowSet` <- function(e1, e2) {
   # Get the name of what was passed in as e2, and pass along so that it
   # can be displayed in error messages
   e2name <- deparse(substitute(e2))
@@ -186,12 +184,12 @@ add_ggcyto <- function(e1, e2, e2name){
   
 }
 
-#' Checking if a layer is geom_gate layer for a filterList
-#' by checking If the layer data is annotated.
-#' 
-#' TODO: It will be more robust to define a new type of proto object to for
-#' this type of idenitiy checking.
-#' 
+# Checking if a layer is geom_gate layer for a filterList
+# by checking If the layer data is annotated.
+# 
+# TODO: It will be more robust to define a new type of proto object to for
+# this type of idenitiy checking.
+# 
 is.geom_gate_filterList <- function(layer){
   isTRUE(attr(layer$data, "annotated"))
 }
