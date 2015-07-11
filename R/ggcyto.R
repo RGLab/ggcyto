@@ -68,10 +68,10 @@ as.ggplot <- function(x){
   dims <- attr(x$data, "dims")
   aes_names <- dims[, axis]
   chnls <- dims[, name]
-#   browser()
+  
   #fortify to fs first in order to get instrument range
   x$data <- fortify_fs(x$data)
-  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, chnls]
+  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, chnls, drop = FALSE]
   x$data <- fortify(x$data)
   
   #####################

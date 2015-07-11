@@ -65,16 +65,16 @@ flowJo_biexp_trans <- function(..., pretty = FALSE){
 #' @param maxValue,widthBasis see 'help(flowJoTrans')
 #' @param pretty whether to display the breaks in pretty format
 #' @export
-scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pretty = FALSE){
-  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pretty = pretty)
+scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, pretty = FALSE){
+  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, pretty = pretty)
 #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("x"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
 
 #' @rdname scale_x_flowJo_biexp
 #' @export
-scale_y_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pretty = FALSE){
-  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pretty = pretty)
+scale_y_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, pretty = FALSE){
+  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, pretty = pretty)
   #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("y"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
