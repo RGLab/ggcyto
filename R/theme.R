@@ -6,15 +6,15 @@
                       , lab = labs_cyto("both") 
                       )
 .lazy_element <- c("limits")
-#' Set ggcyto theme elements
+#' Set some default parameters for ggcyto
 #'
 #'
-#' Use this function to modify theme settings. 
-#' There are not really theme elements but the regular (or to be instantiated as) scales, labs, facet objects.
-#' They are just organized as a cluster of settings that can be added as a single layer to the plot for the convenience.
+#' Use this function to modify ggcyto parameters 
+#' These are the regular (or to be instantiated as) scales, labs, facet objects.
+#' They can be added as a single layer to the plot for the convenience.
 #'
-#' @section Theme elements:
-#' The individual theme elements are:
+#' @section elements:
+#' The individual elements are:
 #'
 #' \tabular{ll}{
 #'   limits             \tab can be "data"(default) or "instrument" or a list of numeric limits for x and y
@@ -26,7 +26,7 @@
 #' }
 #'
 #' @param ... a list of element name, element pairings that modify the
-#'   existing theme.
+#'   existing parameter settings
 #'
 #' @export
 #' @examples
@@ -36,49 +36,49 @@
 #' p <- p + geom_hex(bins = 64)
 #' p
 #' 
-#' #use instrument range by overwritting limits setting in the default theme
-#' p + theme_ggcyto(limits = "instrument")
+#' #use instrument range by overwritting the default limits settings
+#' p + ggcyto_par_set(limits = "instrument")
 #'
 #' #manually set limits
-#' myTheme <- theme_ggcyto(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
-#'  p  + myTheme# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
+#' myPars <- ggcyto_par_set(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
+#'  p  + myPars# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
 #' }
-theme_ggcyto <- function(...) {
+ggcyto_par_set <- function(...) {
   elements <- list(...)
   # Check that all elements have the correct class (element_text, unit, etc)
   mapply(validate_element, elements, names(elements))
-  structure(elements, class = c("ggcyto_theme"))
+  structure(elements, class = c("ggcyto_par"))
     
 }
 
-#' Return The default ggcyto theme
+#' Return The default ggcyto settings
 #' @export
-theme_ggcyto_default <- function(){
-  do.call(theme_ggcyto, .element_tree)
+ggcyto_par_default <- function(){
+  do.call(ggcyto_par_set, .element_tree)
 }
 
 validate_element <- function(el, elname) {
   eldef <- .element_tree[[elname]]
   
   if (is.null(eldef)) {
-    stop('"', elname, '" is not a valid theme element! Print the default theme by "theme_ggcyto_default()"')
+    stop('"', elname, '" is not a valid ggcyo parameter element! Print the default parameters by "ggcyto_par_default()"')
   }
   
   invisible()
 }
 
-#' Reports whether x is a ggcyto_theme object
+#' Reports whether x is a ggcyto_par object
 #' @param x An object to test
 #' @export
-is.ggcyto_theme <- function(x) inherits(x, "ggcyto_theme")
+is.ggcyto_par <- function(x) inherits(x, "ggcyto_par")
 
-add_theme <- function(t1, t2, t2name) {
-  if (!is.ggcyto_theme(t2)) {
-    stop("Don't know how to add ", t2name, " to a ggcyto_theme object",
+add_par <- function(t1, t2, t2name) {
+  if (!is.ggcyto_par(t2)) {
+    stop("Don't know how to add ", t2name, " to a ggcyto_par object",
          call. = FALSE)
   }
   
   t1 <- modifyList(t1, t2)
-  class(t1) <- c("ggcyto_theme")
+  class(t1) <- c("ggcyto_par")
   t1
 }

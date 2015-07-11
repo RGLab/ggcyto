@@ -75,7 +75,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
   mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))
   
   p <- ggcyto(object, mapping) + geom_hex(...) + geom_gate(gate) + geom_stats() 
-  p <- p + theme_ggcyto(limits = "instrument")
+  p <- p + ggcyto_par_set(limits = "instrument")
   p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
   p
   

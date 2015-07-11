@@ -41,8 +41,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   class(p) <- c("ggcyto", class(p))  
   class(p) <- c("ggcyto_flowSet", class(p))  
   #add default the2me
-  p[["ggcyto_theme"]] <- list()
-  p <- p + theme_ggcyto_default()
+  p[["ggcyto_pars"]] <- list()
+  p <- p + ggcyto_par_default()
   
   p
 }
@@ -68,7 +68,7 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
   # can be displayed in error messages
   e2name <- deparse(substitute(e2))
   
-  if      (is.ggcyto_theme(e1))  add_theme(e1, e2, e2name)
+  if      (is.ggcyto_par(e1))  add_par(e1, e2, e2name)
   else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
 }
 
@@ -143,9 +143,9 @@ add_ggcyto <- function(e1, e2, e2name){
       return(e1)
     }
     
-  }else if (is.ggcyto_theme(e2)) {
-    # store the theme for the lazy-eval elements
-    e1$ggcyto_theme <- add_theme(e1$ggcyto_theme, e2, deparse(substitute(e2)))
+  }else if (is.ggcyto_par(e2)) {
+    # store the ggcyto pars for the lazy-eval elements
+    e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
     # apply the non-lazy-eval elements right away
     to_apply <- e2[!names(e2) %in% .lazy_element] 
     

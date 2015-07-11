@@ -92,19 +92,19 @@ as.ggplot <- function(x){
     ind <- which(x$scales$find(this_aes))
     #set the default limits if it has not been set
     if(is.null(x$scales$scales[[ind]][["limits"]])){
-      theme_limits <- x$ggcyto_theme[["limits"]]
-      if(is.list(theme_limits)){
-        this_limits <- theme_limits[[this_aes]]
-      }else if(is.character(theme_limits)){
-        if(theme_limits == "instrument")
+      par_limits <- x$ggcyto_pars[["limits"]]
+      if(is.list(par_limits)){
+        this_limits <- par_limits[[this_aes]]
+      }else if(is.character(par_limits)){
+        if(par_limits == "instrument")
           this_limits <- instrument_range[, dim]
-        else if(theme_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
+        else if(par_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
           this_limits <- range(x$data[, dim, with = FALSE])
         else
           this_limits <- NULL
       }
       
-      if(!is.null(theme_limits))
+      if(!is.null(par_limits))
         x$scales$scales[[ind]][["limits"]] <- this_limits
     }
     #update breaks and labels
