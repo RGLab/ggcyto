@@ -137,7 +137,7 @@ fortify.polygonGate <- function(model, data, ...){
     # interpolate more points to prevent it from losing its shape by xlim/ylim
     if(xx[1] == xx[2]){
       new.points <- list(x = rep(xx[1], nOut)
-                        , y = seq(yy[1], yy[2], (yy[2] - yy[1])/nOut)
+                        , y = seq(yy[1], yy[2], (yy[2] - yy[1])/(nOut-1))
                         )
     }else{
       
