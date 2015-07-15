@@ -48,8 +48,9 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' @method print ggcyto
 print.ggcyto <- function(x, ...) {
   
-    #fortify plot data here instead
-    x <- as.ggplot(x)
+    
+    x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
+    x <- as.ggplot(x) #fortify plot data here instead
     ggplot2:::print.ggplot(x)
 }
 
