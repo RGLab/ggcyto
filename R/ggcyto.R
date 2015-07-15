@@ -105,8 +105,15 @@ as.ggplot <- function(x){
           this_limits <- NULL
       }
       
-      if(!is.null(par_limits))
+      if(!is.null(par_limits)){
+        
+        #trans the given limits if trans is also present
+        thisTrans <- x$scales$scales[[ind]][["trans"]]
+        if(is(thisTrans, "trans"))
+          this_limits <- thisTrans[["transform"]](this_limits)
         x$scales$scales[[ind]][["limits"]] <- this_limits
+      }
+        
     }
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
