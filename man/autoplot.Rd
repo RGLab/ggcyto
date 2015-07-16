@@ -32,7 +32,7 @@
 
 \item{arrange.main}{the main title of the arranged plots}
 
-\item{arrange}{whether to use grid.arrange to put multiple plots in the same page}
+\item{arrange}{whether to use arrangeGrob to put multiple plots in the same page}
 
 \item{merge}{wehther to merge multiple gates into the same panel when they share the same parent and projections}
 

@@ -83,11 +83,11 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
 
 #' @param bool whether to plot boolean gates
 #' @param arrange.main the main title of the arranged plots
-#' @param arrange whether to use grid.arrange to put multiple plots in the same page
+#' @param arrange whether to use arrangeGrob to put multiple plots in the same page
 #' @param merge wehther to merge multiple gates into the same panel when they share the same parent and projections
 #' @param projections a list of customized projections
 #' 
-#' @importFrom gridExtra grid.arrange
+#' @importFrom gridExtra arrangeGrob
 #' @export 
 #' @rdname autoplot
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE
@@ -149,7 +149,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE
   })
   			
   if(arrange)
-    do.call(grid.arrange,c(Objs, main = arrange.main))
+    plot(do.call(arrangeGrob, c(grobs = Objs, top = arrange.main)))
   else
     Objs
   
