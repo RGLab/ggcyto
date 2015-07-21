@@ -5,6 +5,9 @@ output:
     fig_height: 3
     fig_width: 4
     keep_md: yes
+vignette: >    
+  %\VignetteEngine{knitr}
+  %\VignetteIndexEntry{Visualize GatingSet with ggcyto}        
 ---
 
 ```{r, echo=FALSE}

@@ -5,6 +5,9 @@ output:
     fig_height: 2
     fig_width: 5
     keep_md: yes
+vignette: >    
+  %\VignetteEngine{knitr}
+  %\VignetteIndexEntry{Quick plot for cytometry data}    
 ---
 
 ```{r, echo=FALSE}

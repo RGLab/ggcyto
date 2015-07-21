@@ -5,6 +5,9 @@ date: "04/13/2015"
 output:
   html_document:
     keep_md: yes
+vignette: >    
+  %\VignetteEngine{knitr}
+  %\VignetteIndexEntry{Visualize gates on cytometry data with ggplot2}        
 ---
 
 ```{r, echo=FALSE}

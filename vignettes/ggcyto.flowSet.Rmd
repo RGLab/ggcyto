@@ -5,6 +5,9 @@ output:
     fig_height: 3
     fig_width: 5
     keep_md: yes
+vignette: >    
+  %\VignetteEngine{knitr}
+  %\VignetteIndexEntry{Visualize flowSet with ggcyto}
 ---
 
 ```{r, echo=FALSE}
