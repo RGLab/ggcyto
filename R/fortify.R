@@ -106,61 +106,69 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @param model polygonGate
 #' @param data not used.
+#' @param interpolate whether to interpolate polygon with more vertices. Interpolation is mainly 
+#'                    for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
+#'                    But it is not necessary for other purposes like centroid calculation.
 #' @param ... not used.
 #' 
 #' @export
-fortify.polygonGate <- function(model, data, ...){
+fortify.polygonGate <- function(model, data, interpolate = TRUE, ...){
   vertices <- model@boundaries
   chnls <- colnames(vertices)
-  
-  measure_range <- 4096 #should come from the actual range info of the data
-  bins <- 64 # should come from geom_hex 
-  unit_length <- measure_range/bins
-  
-  nVert <- nrow(vertices)
-  # compute distance between each pair of adjacent points
-  edges <- sapply(1:nVert, function(i){
-                   j <- ifelse(i < nVert, i + 1, 1)
-                   dist(vertices[c(i, j), ])[[1]]
-                })
-  
-  #determine the number of points to be interpolated for each edge
-  nEdge.points <- round(edges / unit_length)
-  new.vertices <- .ldply(1:nVert, function(i){
-    j <- ifelse(i < nVert, i + 1, 1)
-    thisPair <- vertices[c(i, j),]
+  if(interpolate){
     
-    xx <- thisPair[,1]
-    yy <- thisPair[,2]
     
-    nOut <- max(2, nEdge.points[i]) # at least 2 to preserve orginal points
-    # interpolate more points to prevent it from losing its shape by xlim/ylim
-    if(xx[1] == xx[2]){
-      new.points <- list(x = rep(xx[1], nOut)
-                        , y = seq(yy[1], yy[2], (yy[2] - yy[1])/(nOut-1))
-                        )
-    }else{
+    measure_range <- 4096 #should come from the actual range info of the data
+    bins <- 64 # should come from geom_hex 
+    unit_length <- measure_range/bins
+    
+    nVert <- nrow(vertices)
+    # compute distance between each pair of adjacent points
+    edges <- sapply(1:nVert, function(i){
+                     j <- ifelse(i < nVert, i + 1, 1)
+                     dist(vertices[c(i, j), ])[[1]]
+                  })
+    
+    #determine the number of points to be interpolated for each edge
+    nEdge.points <- round(edges / unit_length)
+    new.vertices <- .ldply(1:nVert, function(i){
+      j <- ifelse(i < nVert, i + 1, 1)
+      thisPair <- vertices[c(i, j),]
       
-      new.points <- approx(x = xx, y = yy, n = nOut) 
-      #approx tends to goes from left to right regardless of the order of original points
-      #we try to reverse it when needed
+      xx <- thisPair[,1]
+      yy <- thisPair[,2]
       
-      if(xx[1] > xx[2]){
-        new.points[["x"]] <- rev(new.points[["x"]])
-        new.points[["y"]] <- rev(new.points[["y"]])
-      }  
-    }
-#     plot(thisPair, xlim =range(vertices[,1]), ylim =range(vertices[,2]))
-#     text(new.points,labels = 1:nOut,  col = "red")
-    as.data.table(new.points)
-  })
+      nOut <- max(2, nEdge.points[i]) # at least 2 to preserve orginal points
+      # interpolate more points to prevent it from losing its shape by xlim/ylim
+      if(xx[1] == xx[2]){
+        new.points <- list(x = rep(xx[1], nOut)
+                          , y = seq(yy[1], yy[2], (yy[2] - yy[1])/(nOut-1))
+                          )
+      }else{
+        
+        new.points <- approx(x = xx, y = yy, n = nOut) 
+        #approx tends to goes from left to right regardless of the order of original points
+        #we try to reverse it when needed
+        
+        if(xx[1] > xx[2]){
+          new.points[["x"]] <- rev(new.points[["x"]])
+          new.points[["y"]] <- rev(new.points[["y"]])
+        }  
+      }
+  #     plot(thisPair, xlim =range(vertices[,1]), ylim =range(vertices[,2]))
+  #     text(new.points,labels = 1:nOut,  col = "red")
+      as.data.table(new.points)
+    })
+    
+  #   
+  # 
+  # 
+  # #   plot(vertices, type = "l")
+  # #   polygon(new.vertices, col = "red")
+  }else{
+    new.vertices <- vertices
+  }
   
-#   
-# 
-# 
-# #   plot(vertices, type = "l")
-# #   polygon(new.vertices, col = "red")
-
   dt <- as.data.table(new.vertices)
   setnames(dt, chnls)
   dt

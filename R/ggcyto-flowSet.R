@@ -98,7 +98,7 @@ add_ggcyto <- function(e1, e2, e2name){
         gates_parsed <- lapply(e1$layers, function(layer){
           
                               if(is.geom_gate_filterList(layer))
-                                .df2gate(layer$data, colnames(pd))
+                                as.filterList.data.frame(layer$data, colnames(pd))
                               else
                                 NULL
                               })
@@ -210,31 +210,51 @@ is.geom_gate_filterList <- function(layer){
 #  fs
 #}
 #
-#' Convert data.frame back to original gate format
+
+
+#' Convert data.frame back to filterList
 #' 
 #' It is used for gating purporse for geom_stats layer
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
-.df2gate <- function(df, pcols){
+as.filterList.data.frame <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
-  nDim <- length(markers)
   df <- df[, c(markers, ".rownames"), with = FALSE]
   # unfortunately data.table j expression won't return a list
   # instead it will always try to coerce the list back to dt, which is not desirable here
   glist <- dlply(df, .variables = ".rownames", function(sub_df){
     
     sub_df[[".rownames"]] <- NULL
-    if(nDim == 2){
-      g <- polygonGate(sub_df)  
-    }else if (nDim == 1){
-#       browser()
-      g <- rectangleGate(sub_df)
-    }else
-      stop("invalid dimension number!")
-    g
+    
+    as.gate.data.frame(sub_df)    
   })
   
   filterList(glist)
 }
+
+#' Convert data.frame back to original gate format
+as.gate.data.frame <- function(df){
+  markers <- colnames(df)
+  nDim <- length(markers)
+  if(nDim == 2){
+    
+    #check if can be coerced to rectangleGate first
+    #because open-end polygonGate would be problematic
+    #in further operation such as 'filter' or 'fortify' with the interpolation
+    verts <- sapply(markers, function(marker)unique(df[[marker]]), simplify = F)
+    if(all(sapply(verts, length) == 2))
+    {
+     
+     rectangleGate(verts)
+    }else
+      polygonGate(df)  
+    
+  }else if (nDim == 1){
+    rectangleGate(df)
+  }else
+    stop("invalid dimension number!")
+  
+}
+
