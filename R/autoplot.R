@@ -56,7 +56,7 @@ autoplot.flowFrame <- function(object, ...){
 #' @param gate the gate to be plotted
 #' @export 
 #' @rdname autoplot
-autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
+autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", ...){
   if(missing(gate))
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
@@ -90,7 +90,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC", ...){
 #' @importFrom gridExtra arrangeGrob
 #' @export 
 #' @rdname autoplot
-autoplot.GatingHierarchy <- function(object, gate, y = "SSC", bool=FALSE
+autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                          , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
                          , projections = list()
                          , ...){
