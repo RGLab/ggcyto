@@ -129,9 +129,16 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
       p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
     }
     
-    p <- p + guides(fill=FALSE) + labs(title = "")
+    p <- p + guides(fill=FALSE) + labs(title = NULL)
     p <- as.ggplot(p)
-  
+    myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
+                     , axis.text = element_text(color = gray(0.3), size = 6)
+                     , strip.text = element_text(size = 10)
+                     , plot.margin = unit(c(0,0,0,0), "cm")
+                     , panel.margin = unit(0, "cm")
+                    )
+    p <- p + myTheme
+    
     #rename sample name with parent in order to display it in strip
     p$data[, name:= parent]
     
