@@ -229,14 +229,15 @@ fortify.rectangleGate <- function(model, data, ...){
   
   param <- parameters(model)
   nDim <- length(param)
+  l.b <- model@min
+  r.t <- model@max  
   if (nDim ==  2){
-
-    fortify(as(model, "polygonGate"))
     
+    l.t <- c(l.b[1], r.t[2])
+    r.b <- c(r.t[1], l.b[2])
+    
+    as.data.table(do.call(rbind, list(l.b, l.t, r.t, r.b)))
   }else if(nDim ==  1){
-    l.b <- model@min
-    r.t <- model@max  
-    
     coord <- c(l.b, r.t)
     
     df <- data.table(unname(coord), check.names = F)
