@@ -17,16 +17,16 @@ p
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-1.png) 
 
 ```r
-#use instrument range by overwritting limits setting in the default theme
-p + theme_ggcyto(limits = "instrument")
+#use instrument range by overwritting limits setting in the default parameter setting
+p + ggcyto_par_set(limits = "instrument")
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-2.png) 
 
 ```r
 #manually set limits
-myTheme <- theme_ggcyto(limits = list(x = c(0,3.5e3), y = c(-10, 4.1e3)))
-p <- p + myTheme# or xlim(0,3.5e3) + ylim(-10, 4e3) 
+myPars <- ggcyto_par_set(limits = list(x = c(0,3.5e3), y = c(-10, 4.1e3)))
+p <- p + myPars# or xlim(0,3.5e3) + ylim(-10, 4e3) 
 p
 ```
 
@@ -34,7 +34,7 @@ p
 
 ```r
 # print the default settings
-theme_ggcyto_default()
+ggcyto_par_default()
 ```
 
 ```
@@ -57,7 +57,7 @@ theme_ggcyto_default()
 ## [1] "labs_cyto"
 ## 
 ## attr(,"class")
-## [1] "ggcyto_theme"
+## [1] "ggcyto_par"
 ```
 
 ```r
@@ -99,7 +99,7 @@ p + geom_stats("CD4", type = "count", size = 6,  color = "white", fill = "black"
 
 ```r
 # 'subset' is abstract without specifiying it
-p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + myTheme
+p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + myPars
 p
 ```
 
@@ -121,7 +121,7 @@ p + geom_gate(c("CD4", "CD8"))
 p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
 
 # add gates to the arbitary(non-parent) node
-ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myTheme
+ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myPars
 ```
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-2.png) 
@@ -152,7 +152,7 @@ class(p)
 ```r
 # knowing that for 'ggcyto' is the semi-ggplot object since the data slot is NOT fortified to data.frame
 # until it is printed/plotted.
-# (other than this it is completely ggplot compatible in terms of adding layers and themes)
+# (other than this it is completely ggplot compatible in terms of adding layers and parameters)
 class(p$data)
 ```
 

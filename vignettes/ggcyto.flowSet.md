@@ -77,7 +77,7 @@ p
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-2.png) 
 
 ```r
-browser()
+browser()#it is so bizarre that without this knitr failed to proceed here
 ```
 
 ```
