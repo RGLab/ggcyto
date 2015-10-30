@@ -15,7 +15,7 @@
 
 \method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A", bool = FALSE,
   arrange.main = sampleNames(object), arrange = TRUE, merge = TRUE,
-  projections = list(), ...)
+  projections = list(), strip.text = c("parent", "gate"), ...)
 }
 \arguments{
 \item{object}{flowFrame, flowSet, GatingSet object}
@@ -37,6 +37,8 @@
 \item{merge}{wehther to merge multiple gates into the same panel when they share the same parent and projections}
 
 \item{projections}{a list of customized projections}
+
+\item{strip.text}{either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE}
 }
 \value{
 a ggcyto object

@@ -86,14 +86,16 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", ...){
 #' @param arrange whether to use arrangeGrob to put multiple plots in the same page
 #' @param merge wehther to merge multiple gates into the same panel when they share the same parent and projections
 #' @param projections a list of customized projections
-#' 
+#' @param strip.text either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE
 #' @importFrom gridExtra arrangeGrob
 #' @export 
 #' @rdname autoplot
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                          , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
                          , projections = list()
+                         , strip.text = c("parent", "gate")
                          , ...){
+  strip.text <- match.arg(strip.text)
   if(missing(gate)){
     gate <- getNodes(object, path = "auto")
     gate <- setdiff(gate,"root")
@@ -139,13 +141,19 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                     )
     p <- p + myTheme
     
-    #rename sample name with parent in order to display it in strip
-    p$data[, name:= parent]
+    #rename sample name with parent or current pop name in order to display it in strip
+    
+    if(strip.text == "parent"){
+      popName <- parent
+    }else{
+      popName <- paste(gate, collapse = "|")
+    }
+    p$data[, name:= popName]
     
     for(i in 1:length(p$layers)){
       if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
         
-        p$layers[[i]][["data"]][, name:= parent]
+        p$layers[[i]][["data"]][, name:= popName]
       }
         
     }
