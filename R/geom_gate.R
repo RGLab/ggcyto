@@ -59,10 +59,10 @@ geom_gate.filterList <- function(data, ...){
     
   
   #must explicitly fortify it since ggplot only does it during the layer$new method 
-  data <- fortify(data) 
+  # data <- fortify(data) 
 
   #tag this data.table so that ggcyo wrapper can recongnize it
-  class(data) <- c("geom_gate_filterList", class(data))
+  # class(data) <- c("geom_gate_filterList", class(data))
   # update data with pdata
   geom_gate_layer[["data"]] <- data
   geom_gate_layer
@@ -74,9 +74,17 @@ geom_gate.filterList <- function(data, ...){
 geom_gate.polygonGate <- function(data, ...){
   .geom_gate_polygonGate(data, ...)  
 }
+
+
 .geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
   
-  geom_path(mapping = mapping, data = data , fill = fill, colour = colour, ...)  
+  #' To proper interpolate the polygon we need to wailt until the xbin and measure_range are collected from the main ggcyto object
+  #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
+  path_layer <- geom_path(mapping = mapping, data = NULL , fill = fill, colour = colour, ...) 
+  #now we can saftely assign the data
+  path_layer[["data"]] <- data
+  path_layer
+  
 }
 
 
@@ -90,7 +98,7 @@ geom_gate.rectangleGate <- function(data, ...){
   param <- parameters(data)
   nDim <- length(param)
   if (nDim ==  2){
-        geom_path(data = data, mapping = mapping, fill = fill, colour = colour, ...)
+    geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, ...)
   }else if(nDim ==  1){
 #     browser()
       geom_hvline(data = data, fill = fill, colour = colour, ...)

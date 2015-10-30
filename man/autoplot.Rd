@@ -11,9 +11,9 @@
 
 \method{autoplot}{flowFrame}(object, ...)
 
-\method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC", ...)
+\method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC-A", ...)
 
-\method{autoplot}{GatingHierarchy}(object, gate, y = "SSC", bool = FALSE,
+\method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A", bool = FALSE,
   arrange.main = sampleNames(object), arrange = TRUE, merge = TRUE,
   projections = list(), ...)
 }

@@ -48,7 +48,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
     gate_range <- data_range
   }else #specify location by absolute position of the current window
   {
-    df <- fortify(gate, interpolate = FALSE)
+    df <- fortify(gate)
     gate_range <- apply(df, 2, range)
 #     browser()
     #fix the gate range with data range

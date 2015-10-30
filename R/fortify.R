@@ -106,20 +106,35 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @param model polygonGate
 #' @param data not used.
-#' @param interpolate whether to interpolate polygon with more vertices. Interpolation is mainly 
+#' @param bins the plot information collected from flow data and geom_hex used to interpolate polygon with more vertices. Interpolation is mainly 
 #'                    for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
 #'                    But it is not necessary for other purposes like centroid calculation.
 #' @param ... not used.
 #' 
 #' @export
-fortify.polygonGate <- function(model, data, interpolate = TRUE, ...){
+fortify.polygonGate <- function(model, data
+                                # , measure_range = NULL
+                                , bins = NULL, ...){
+  
   vertices <- model@boundaries
   chnls <- colnames(vertices)
-  if(interpolate){
+  
+  
+  #measure_range currently not used
+  if(is.null(bins)){
+    
+    new.vertices <- vertices
+  }else
+  {
+    # browser()
+    #normalize data first
+    vertices <- scale(vertices)
+    sd <- attr(vertices, "scaled:scale")
+    mu <- attr(vertices, "scaled:center")
+
+    measure_range <- diff(range(vertices))
     
     
-    measure_range <- 4096 #should come from the actual range info of the data
-    bins <- 64 # should come from geom_hex 
     unit_length <- measure_range/bins
     
     nVert <- nrow(vertices)
@@ -160,13 +175,12 @@ fortify.polygonGate <- function(model, data, interpolate = TRUE, ...){
       as.data.table(new.points)
     })
     
-  #   
-  # 
-  # 
-  # #   plot(vertices, type = "l")
-  # #   polygon(new.vertices, col = "red")
-  }else{
-    new.vertices <- vertices
+  
+    new.vertices <- sweep(new.vertices , 2L,  sd, "*")
+    new.vertices <- sweep(new.vertices , 2L,  mu, "+")
+    
+#     plot(vertices, type = "l")
+#     polygon(new.vertices, col = "red")
   }
   
   dt <- as.data.table(new.vertices)
@@ -194,19 +208,26 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' 
 #' @param model filterList
 #' @param data not used
+#' @param bins used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @param ... not used.
 #' 
 #' @importFrom plyr name_rows
 #' @export
-fortify.filterList <- function(model, data, ...){
+fortify.filterList <- function(model, data
+                               # , measure_range = NULL
+                               , bins = NULL, ...){
   
   # convert each filter to df
-  df <- .ldply(model, fortify, .id = ".rownames")
+  df <- .ldply(model, fortify
+               # , measure_range = measure_range
+               , bins = bins, .id = ".rownames")
   
   pd <- attr(model,"pd")
   if(!is.null(pd)){
     # merge with pd
-    pd <- .pd2dt(pd)
+    
+    if(!is(pd, "data.table"))
+      pd <- .pd2dt(pd)
     df <- merge(df, pd, by = ".rownames")  
     attr(df, "annotated") <- TRUE
   }
@@ -229,15 +250,12 @@ fortify.rectangleGate <- function(model, data, ...){
   
   param <- parameters(model)
   nDim <- length(param)
-  l.b <- model@min
-  r.t <- model@max  
   if (nDim ==  2){
-    
-    l.t <- c(l.b[1], r.t[2])
-    r.b <- c(r.t[1], l.b[2])
-    
-    as.data.table(do.call(rbind, list(l.b, l.t, r.t, r.b)))
+    fortify(as(model, "polygonGate"), ...)
   }else if(nDim ==  1){
+    l.b <- model@min
+    r.t <- model@max  
+    
     coord <- c(l.b, r.t)
     
     df <- data.table(unname(coord), check.names = F)

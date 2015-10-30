@@ -21,6 +21,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     frm <- getFlowFrame(data)
     dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
     
+    
     for(axis_name in names(dims))
       mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
     #update dims
@@ -29,6 +30,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     nDims <- length(dims)
     #attach dims to data for more efficient fortify
     attr(p$data, "dims") <- dims.tbl
+    # attr(p$data, "measure_range") <- range(frm)[, dims.tbl[, name]] #for polygon interpolation
     attr(p$data, "filter") <- filter
     
   }else
@@ -81,13 +83,37 @@ add_ggcyto <- function(e1, e2, e2name){
   if(is.proto(e2)){
     layer_data <- e2$data
     pd <- .pd2dt(pData(e1$data))
-    if(is(layer_data, "geom_gate_filterList")){
-        if(!isTRUE(attr(layer_data, "annotated"))){
-          
-          layer_data <- merge(layer_data, pd, by = ".rownames")  
-          attr(layer_data, "annotated") <- TRUE
-          e2$data <- layer_data
+    if(is(layer_data, "filterList")){
+        if(!isTRUE(attr(layer_data, "pd")))
+          attr(layer_data, "pd") <- pd
+        #collect range info from flow data
+        # measure_range <- attr(e1$data, "measure_range")
+        #collect bins info from geom_hex
+        bins <- unlist(lapply(e1$layers, function(layer){
+                        if(layer$geom$objname == "hex"){
+                          
+                          bins <- layer$stat_params[["bins"]]
+                          if(is.null(bins)){
+                            bins <- 30
+                          }
+                          bins
+                        }
+                      }))
+        
+        if(length(bins) > 1){
+        
+          stop("multiple geom_hex layers detected!")
         }
+        
+        #do the lazy-fortify here since we need the range info from main flow data
+        layer_data <- fortify(layer_data
+                              # , measure_range = measure_range
+                              , bins = bins
+                              ) 
+        
+        attr(layer_data, "annotated") <- TRUE
+        e2$data <- layer_data
+      
       
     }else if(e2$geom$objname == "popStats"){
       gate <- e2$stat_params[["gate"]]
@@ -97,13 +123,13 @@ add_ggcyto <- function(e1, e2, e2name){
         
         gates_parsed <- lapply(e1$layers, function(layer){
           
-                              if(is.geom_gate_filterList(layer))
+                              if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
                                 as.filterList.data.frame(layer$data, colnames(pd))
                               else
                                 NULL
                               })
         #remove NULL elements
-        gates_parsed <- Filter(function(x)!is.null(x), gates_parsed)
+        gates_parsed <- flowWorkspace:::compact(gates_parsed)
       }else{
         gates_parsed <- list(gate)
       }             
