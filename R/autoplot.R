@@ -163,9 +163,49 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
 
   })
   			
-  if(arrange)
-    plot(do.call(arrangeGrob, c(grobs = Objs, top = arrange.main)))
-  else
-    Objs
+  if(arrange){
+    #convert it to a special class to dispatch the dedicated print method
+    Objs <- as(Objs, "ggcyto_gate_layout")
+    Objs@arrange.main <- arrange.main
+  }
+  
+  Objs
   
 }
+
+#' print method for ggcyto_gate_layout class
+#' It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_layout object
+#' @param x ggcyto_gate_layout, which is essentially a list of ggplot objects
+#' @param ... not used
+#' @export
+print.ggcyto_gate_layout <- function(x, ...){
+  arrange.main <- x@arrange.main
+  plot(do.call(arrangeGrob, c(grobs = x, top = arrange.main)))  
+}
+
+#' overloaded '+' method for ggcyto_gate_layout
+#' 
+#' It adds the layer specified by 'e2' to each individual ggplot object stored in ggcyto_gate_layout
+#' @param e1 ggcyto_gate_layout
+#' @param e2 any ggplot layer
+#' @return a modified ggcyto_gate_layout object
+#' @export
+`+.ggcyto_gate_layout` <- function(e1, e2){
+  # browser()
+  for(i in seq_along(e1)){
+    e1[[i]] <- e1[[i]] + e2
+  }
+  e1
+}
+
+setMethod("+", "ggcyto_gate_layout", `+.ggcyto_gate_layout`)
+
+#' @rdname print.ggcyto
+#' @method show ggcyto_gate_layout
+#' @export
+show.ggcyto_gate_layout <- function(object){print(object)}
+
+#' @rdname print.ggcyto
+#' @method show ggcyto
+#' @export
+setMethod("show", "ggcyto_gate_layout", show.ggcyto_gate_layout)
