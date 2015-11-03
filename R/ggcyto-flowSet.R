@@ -40,10 +40,11 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()
   # prepend the ggcyto class attribute
-  class(p) <- c("ggcyto", class(p))  
-  class(p) <- c("ggcyto_flowSet", class(p))  
+  
+  p <- as(p, "ggcyto_flowSet")  
   #add default the2me
   p[["ggcyto_pars"]] <- list()
+  
   p <- p + ggcyto_par_default()
   
   p
@@ -53,6 +54,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
 #' @export
 is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 
+
+
 #' overloaded '+' method for ggcyto
 #' 
 #' It tries to copy pData from ggcyto object to the gate layers
@@ -61,18 +64,23 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' @param e1 An object of class \code{ggcyto_flowSet}
 #' @param e2 A component to add to \code{e1}
 #' 
-#' @method + ggcyto_flowSet
 #' @rdname ggcyto_flowSet_add
 #' @importFrom plyr defaults
 #' @export
-`+.ggcyto_flowSet` <- function(e1, e2) {
-  # Get the name of what was passed in as e2, and pass along so that it
-  # can be displayed in error messages
-  e2name <- deparse(substitute(e2))
-  
-  if      (is.ggcyto_par(e1))  add_par(e1, e2, e2name)
-  else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
+`+.ggcyto_flowSet` <- function(e1, e2){
+    # Get the name of what was passed in as e2, and pass along so that it
+    # can be displayed in error messages
+    e2name <- deparse(substitute(e2))
+      
+    if      (is.ggcyto_par(e1))  add_par(e1, e2, e2name)
+    else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
+    
 }
+
+#' @rdname ggcyto_flowSet_add
+#' @export
+setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
+
 
 add_ggcyto <- function(e1, e2, e2name){
 #   browser()  
@@ -203,6 +211,11 @@ add_ggcyto <- function(e1, e2, e2name){
     }
     e2 <- labs(lab_txt)
     
+  }else if(is.theme(e2)){
+    #have to take care of theme object since it inherits gg class and will
+    #cause the dispatch conflicts due to the special rule of groupGeneric
+    e1$theme <- ggplot2:::update_theme(e1$theme, e2)
+    return(e1)
   }
   
   ggplot2:::`+.gg`(e1, e2)

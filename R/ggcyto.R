@@ -29,6 +29,7 @@
 #' }
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
+
 #' Reports whether x is a ggcyto object
 #' @param x An object to test
 #' @export
@@ -53,6 +54,10 @@ print.ggcyto <- function(x, ...) {
     x <- as.ggplot(x) #fortify plot data here instead
     ggplot2:::print.ggplot(x)
 }
+
+#' @export
+#' @rdname print.ggcyto
+setMethod("print", c("ggcyto"), print.ggcyto)
 
 #' It fortifies the data, fills some default settings and returns a regular ggplot object.
 #' 
@@ -125,10 +130,19 @@ as.ggplot <- function(x){
   }
     
   #strip the ggcyto class attributes
-  class(x) <- c("gg", "ggplot")
-  x
+  asS3(x)
 }
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
 plot.ggcyto <- print.ggcyto
+
+#' @rdname print.ggcyto
+#' @method show ggcyto
+#' @export
+show.ggcyto <- function(object){print(object)}
+
+#' @rdname print.ggcyto
+#' @method show ggcyto
+#' @export
+setMethod("show", "ggcyto", show.ggcyto)

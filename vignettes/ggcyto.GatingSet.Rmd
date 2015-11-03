@@ -69,6 +69,7 @@ p + geom_gate(c("CD4", "CD8"))
 
 # plot all children of the specified parent and projections
 p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
+p
 
 # add gates to the arbitary(non-parent) node
 ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myPars

@@ -14,11 +14,11 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
 #   browser()
   p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
   p <- p + labs(title  = subset)
-  #somehow p + theme won't work here
-  p <- `+.ggcyto_flowSet`(p, theme(plot.title = element_text(face="bold")))
   
   # prepend the ggcyto class attribute
-  class(p) <- c("ggcyto_GatingSet", class(p))  
+  p <- as(p, "ggcyto_GatingSet")  
+  
+  p <- p + theme(plot.title = element_text(face="bold"))
   
   p
 }
@@ -33,6 +33,8 @@ ggcyto.GatingHierarchy <- function(data, ...){
 as.GatingSet <- function(gh){
   as(gh, "GatingSet")[sampleNames(gh)]
 }
+
+
 #' overloaded '+' method for ggcyto.gs
 #' 
 #' It tries to copy pData from ggcyto object to the gate layers
@@ -41,11 +43,9 @@ as.GatingSet <- function(gh){
 #' @param e1 An object of class \code{ggcyto}
 #' @param e2 A component to add to \code{e1}
 #' 
-#' @method + ggcyto_GatingSet
 #' @rdname ggcyto_GatingSet_add
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
-#   browser()
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, as.character)
   gs <- e1$data
@@ -145,10 +145,12 @@ as.GatingSet <- function(gh){
 #     e2[["labels"]] <- res[["label"]]
   }
   
-    
-  `+.ggcyto_flowSet`(e1, e2)
+  callNextMethod()
+  
 }
-
+#' @export
+#' @rdname ggcyto_GatingSet_add
+setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
 #' match the subpopulation based on the given projections and parentID
 .getChildren_by_projection <- function(gs, parentID, x, y){
   cids <- getChildren(gs[[1]], parentID, showHidden = FALSE, path = "auto")
