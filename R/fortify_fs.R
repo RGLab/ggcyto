@@ -23,8 +23,6 @@ fortify_fs.default <- function(model, data, ...) {
 #' @param ... not used.
 #' @param model flowFrame
 #' @export
-#' @importFrom flowCore identifier pData sampleNames
-#' @importFrom flowWorkspace pData
 fortify_fs.flowFrame <- function(model, data, ...){
   sn <- identifier(model)
   fs <- as(model, "flowSet")

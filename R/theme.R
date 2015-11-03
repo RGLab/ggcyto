@@ -1,5 +1,4 @@
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom ggplot2 facet_wrap scale_fill_gradientn
 .element_tree <- list(
                       limits = "data" #or "instrument"
                       , facet = facet_wrap(~name, scales = "free") 

@@ -37,7 +37,6 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' 
 #' @inheritParams compute_stats
 #' @param digits control the percent format
-#' @importFrom flowCore filter
 .stat_percent <- function(fs, gates, digits = 3, value = NULL, ...){
   if(is.null(value)){
     # compute the stats

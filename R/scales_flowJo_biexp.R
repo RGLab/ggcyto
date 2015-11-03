@@ -5,7 +5,6 @@
 #' @param pretty if use log10-like breaks that is normally used in flowJo
 #'        when FALSE, breaks are equally spaced instead.
 #' @param ... parameters passed to flowWorkspace::flowJoTrans function
-#' @importFrom flowWorkspace flowJoTrans
 flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...) 
 {
   
@@ -41,7 +40,6 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 #' @export
 #' @importFrom scales trans_new format_format
 #' @inheritParams flowJo_biexp_breaks
-#' @importFrom scales format_format trans_new
 flowJo_biexp_trans <- function(..., pretty = FALSE){
 #   browser()
   trans <- flowJoTrans(...)

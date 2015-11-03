@@ -8,8 +8,6 @@
 #' @inheritParams ggcyto.flowSet
 #' @method ggcyto GatingSet
 #' @export
-#' @importFrom ggplot2 theme element_text labs
-#' @importFrom flowWorkspace GatingSet GatingHierarchy
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   
   attr(data, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
@@ -32,7 +30,6 @@ ggcyto.GatingHierarchy <- function(data, ...){
   data <- as.GatingSet(data)
   ggcyto(data, ...)  
 }
-#' @importFrom flowWorkspace sampleNames
 as.GatingSet <- function(gh){
   as(gh, "GatingSet")[sampleNames(gh)]
 }
@@ -48,8 +45,6 @@ as.GatingSet <- function(gh){
 #' 
 #' @rdname ggcyto_GatingSet_add
 #' @export
-#' @importFrom proto is.proto proto
-#' @importFrom flowWorkspace getParent getGate getData getTotal getProp prettyAxis
 `+.ggcyto_GatingSet` <- function(e1, e2){
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, as.character)
@@ -157,7 +152,6 @@ as.GatingSet <- function(gh){
 #' @rdname ggcyto_GatingSet_add
 setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
 #' match the subpopulation based on the given projections and parentID
-#' @importFrom flowWorkspace getChildren
 .getChildren_by_projection <- function(gs, parentID, x, y){
   cids <- getChildren(gs[[1]], parentID, showHidden = FALSE, path = "auto")
   if(length(cids)>0)
