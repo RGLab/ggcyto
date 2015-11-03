@@ -10,5 +10,5 @@ setClass("ggcyto_flowSet", contains = "ggcyto")
 setClass("ggcyto_GatingSet", contains = "ggcyto_flowSet")
 #' @export
 #' @rdname ggcyto
-setClass("ggcyto_gate_layout", contains = "list", slots = c(arrange.main = "character"))
+setClass("ggcyto_GatingLayout", contains = "list", slots = c(arrange.main = "character"))
 

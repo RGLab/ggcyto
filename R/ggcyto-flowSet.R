@@ -132,7 +132,7 @@ add_ggcyto <- function(e1, e2, e2name){
         gates_parsed <- lapply(e1$layers, function(layer){
           
                               if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-                                as.filterList.data.frame(layer$data, colnames(pd))
+                                .filterList2dataframe(layer$data, colnames(pd))
                               else
                                 NULL
                               })
@@ -257,7 +257,7 @@ is.geom_gate_filterList <- function(layer){
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
-as.filterList.data.frame <- function(df, pcols = ".rownames"){
+.filterList2dataframe <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
   df <- df[, c(markers, ".rownames"), with = FALSE]
@@ -267,14 +267,14 @@ as.filterList.data.frame <- function(df, pcols = ".rownames"){
     
     sub_df[[".rownames"]] <- NULL
     
-    as.gate.data.frame(sub_df)    
+    .gate2dataframe(sub_df)    
   })
   
   filterList(glist)
 }
 
-#' Convert data.frame back to original gate format
-as.gate.data.frame <- function(df){
+# Convert data.frame back to original gate format
+.gate2dataframe <- function(df){
   markers <- colnames(df)
   nDim <- length(markers)
   if(nDim == 2){

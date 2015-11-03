@@ -4,9 +4,9 @@
 \name{ggcyto-class}
 \alias{ggcyto}
 \alias{ggcyto-class}
+\alias{ggcyto_GatingLayout-class}
 \alias{ggcyto_GatingSet-class}
 \alias{ggcyto_flowSet-class}
-\alias{ggcyto_gate_layout-class}
 \title{Create a new ggcyto plot}
 \usage{
 ggcyto(data = NULL, ...)

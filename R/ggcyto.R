@@ -137,6 +137,7 @@ as.ggplot <- function(x){
 #' @export
 plot.ggcyto <- print.ggcyto
 
+#' @param object ggcyto object
 #' @rdname print.ggcyto
 #' @method show ggcyto
 #' @export

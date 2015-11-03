@@ -14,7 +14,7 @@ scale_y_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
 \arguments{
 \item{...}{common continuous scale parameters passed to 'continuous_scale' (not used currently)}
 
-\item{maxValue,widthBasis}{see 'help(flowJoTrans')}
+\item{maxValue,widthBasis,pos,neg}{see 'help(flowJoTrans')}
 
 \item{pretty}{whether to display the breaks in pretty format}
 }
