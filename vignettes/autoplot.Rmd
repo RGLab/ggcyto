@@ -52,7 +52,7 @@ nodes
 autoplot(gh, nodes, bins = 64)
 
 # disable arrange and receive a list of ggplot objects to manually arrange
-objs <- autoplot(gh, nodes, bins = 64, arrange = F)
+objs <- autoplot(gh, nodes, bins = 64, arrange = FALSE)
 length(objs)
 class(objs[[1]])
 class(objs[[2]])

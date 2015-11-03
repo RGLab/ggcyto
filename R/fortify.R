@@ -258,7 +258,7 @@ fortify.rectangleGate <- function(model, data, ...){
     
     coord <- c(l.b, r.t)
     
-    df <- data.table(unname(coord), check.names = F)
+    df <- data.table(unname(coord), check.names = FALSE)
     setnames(df, "V1" , param)
     df
   }else

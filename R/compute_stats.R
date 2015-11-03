@@ -22,7 +22,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
   stats <- stat_func(fs, gates, value = value, ...)  
   
   if(is.null(data_range))
-    data_range <- range(fs[[1, use.exprs = F]])
+    data_range <- range(fs[[1, use.exprs = FALSE]])
 
   #add default density range
 

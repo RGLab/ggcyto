@@ -92,7 +92,7 @@ as.GatingSet <- function(gh){
       # cal range here
       if(is.null(e2$stat_params[["data_range"]])){
         fs <- getData(gs, parent)
-        e2$stat_params[["data_range"]] <- range(fs[[1, use.exprs = F]])  
+        e2$stat_params[["data_range"]] <- range(fs[[1, use.exprs = FALSE]])  
       }
       #grab the nodes info from previous gate layers
       nodes.geom_gate <- e1[["nodes"]]

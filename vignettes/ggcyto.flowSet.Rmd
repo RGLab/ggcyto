@@ -55,7 +55,6 @@ p
 p <- p + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 p
 
-browser()#it is so bizarre that without this knitr failed to proceed here
 
 # overwrite the default fill gradien
 p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")

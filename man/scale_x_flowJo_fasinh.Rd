@@ -5,14 +5,14 @@
 \alias{scale_y_flowJo_fasinh}
 \title{flowJo inverse hyperbolic sine scale}
 \usage{
-scale_x_flowJo_fasinh(..., M = 4, T = 1200)
+scale_x_flowJo_fasinh(..., m = 4, t = 1200)
 
-scale_y_flowJo_fasinh(..., M = 4, T = 1200)
+scale_y_flowJo_fasinh(..., m = 4, t = 1200)
 }
 \arguments{
 \item{...}{common continuous scale parameters passed to 'continuous_scale' (not used currently)}
 
-\item{M,T}{see 'help(flowJo.fasinh')}
+\item{m,t}{see 'help(flowJo.fasinh')}
 }
 \description{
 flowJo inverse hyperbolic sine scale

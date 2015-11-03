@@ -77,14 +77,8 @@ p
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-2.png) 
 
 ```r
-browser()#it is so bizarre that without this knitr failed to proceed here
-```
+# browser()#it is so bizarre that without this knitr failed to proceed here
 
-```
-## Called from: eval(expr, envir, enclos)
-```
-
-```r
 # overwrite the default fill gradien
 p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
 ```

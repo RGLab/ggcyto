@@ -5,16 +5,16 @@
 \alias{flowJo.fsinh}
 \title{hyperbolic sine/inverse hyperbolic sine (flowJo-version) transform function constructor}
 \usage{
-flowJo.fasinh(M = 4, T = 12000, A = 0.7, length = 256)
+flowJo.fasinh(m = 4, t = 12000, a = 0.7, length = 256)
 
-flowJo.fsinh(M = 4, T = 12000, A = 0.7, length = 256)
+flowJo.fsinh(m = 4, t = 12000, a = 0.7, length = 256)
 }
 \arguments{
-\item{M}{numeric the full width of the transformed display in asymptotic decades}
+\item{m}{numeric the full width of the transformed display in asymptotic decades}
 
-\item{T}{numeric the maximum value of input data}
+\item{t}{numeric the maximum value of input data}
 
-\item{A}{numeric Additional negative range to be included in the display in asymptotic decades}
+\item{a}{numeric Additional negative range to be included in the display in asymptotic decades}
 
 \item{length}{numeric the maximum value of transformed data}
 }

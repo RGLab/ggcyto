@@ -5,23 +5,23 @@
 #'  hyperbolic sine/inverse hyperbolic sine (flowJo-version) transform function constructor
 #' 
 #' @rdname flowJo.fasinh
-#' @param M numeric the full width of the transformed display in asymptotic decades
-#' @param T numeric the maximum value of input data
-#' @param A numeric Additional negative range to be included in the display in asymptotic decades
+#' @param m numeric the full width of the transformed display in asymptotic decades
+#' @param t numeric the maximum value of input data
+#' @param a numeric Additional negative range to be included in the display in asymptotic decades
 #' @param length numeric the maximum value of transformed data
 #' @export
-flowJo.fasinh <- function (M = 4.0, T = 12000, A =  0.7, length = 256) 
+flowJo.fasinh <- function (m = 4.0, t = 12000, a =  0.7, length = 256) 
 {
   function(x){
-    length * ((asinh(x * sinh(M * log(10)) / T) + A * log(10)) / ((M + A) * log(10)))
+    length * ((asinh(x * sinh(m * log(10)) / t) + a * log(10)) / ((m + a) * log(10)))
   }
 }
 
 #' @rdname flowJo.fasinh
 #' @export
-flowJo.fsinh <- function(M = 4.0, T = 12000, A =  0.7, length = 256){
+flowJo.fsinh <- function(m = 4.0, t = 12000, a =  0.7, length = 256){
   function(x){
-    sinh(((M + A) * log(10)) * x/length - A * log(10)) * T / sinh(M * log(10)) 
+    sinh(((m + a) * log(10)) * x/length - a * log(10)) * t / sinh(m * log(10)) 
   }
 }
 
@@ -65,18 +65,18 @@ flowJo_fasinh_trans <- function(...){
 #' flowJo inverse hyperbolic sine scale
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
-#' @param M,T see 'help(flowJo.fasinh')
+#' @param m,t see 'help(flowJo.fasinh')
 #' @export
-scale_x_flowJo_fasinh <- function(..., M = 4, T = 1200){
-  myTrans <- flowJo_fasinh_trans(M = M, T = T)
+scale_x_flowJo_fasinh <- function(..., m = 4, t = 1200){
+  mytrans <- flowJo_fasinh_trans(m = m, t = t)
 #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("x"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
 
 #' @rdname scale_x_flowJo_fasinh
 #' @export
-scale_y_flowJo_fasinh <- function(..., M = 4, T = 1200){
-  myTrans <- flowJo_fasinh_trans(M = M, T = T)
+scale_y_flowJo_fasinh <- function(..., m = 4, t = 1200){
+  mytrans <- flowJo_fasinh_trans(m = m, t = t)
   #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("y"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }

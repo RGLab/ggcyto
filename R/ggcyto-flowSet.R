@@ -282,7 +282,7 @@ is.geom_gate_filterList <- function(layer){
     #check if can be coerced to rectangleGate first
     #because open-end polygonGate would be problematic
     #in further operation such as 'filter' or 'fortify' with the interpolation
-    verts <- sapply(markers, function(marker)unique(df[[marker]]), simplify = F)
+    verts <- sapply(markers, function(marker)unique(df[[marker]]), simplify = FALSE)
     if(all(sapply(verts, length) == 2))
     {
      
