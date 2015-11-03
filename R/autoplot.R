@@ -23,6 +23,7 @@
 #' autoplot(fs, x = 'FSC-H', y ='SSC-H')
 #' 
 #' @export 
+#' @importFrom ggplot2 geom_density geom_hex aes_q aes autoplot
 autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   
   # check the dimensions
@@ -90,6 +91,9 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", ...){
 #' @importFrom gridExtra arrangeGrob
 #' @export 
 #' @rdname autoplot
+#' @importFrom flowWorkspace getNodes
+#' @importFrom ggplot2 guides
+#' @importFrom grid unit
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                          , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
                          , projections = list()

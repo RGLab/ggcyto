@@ -5,6 +5,7 @@
 #' @param x flowSet or GatingSet/GatingHierarchy
 #' @return an empty flowFrame
 #' @export
+#' @importFrom flowCore flowFrame [[
 getFlowFrame <- function(x)UseMethod("getFlowFrame")
 
 #' @rdname getFlowFrame

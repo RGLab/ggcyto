@@ -66,6 +66,7 @@ setMethod("print", c("ggcyto"), print.ggcyto)
 #' @param x ggcyto object with the data that has not yet been fortified to data.frame.
 #' 
 #' @export
+#' @importFrom flowCore range
 as.ggplot <- function(x){
 #   browser()
   #####################

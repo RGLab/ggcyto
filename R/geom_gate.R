@@ -75,7 +75,7 @@ geom_gate.polygonGate <- function(data, ...){
   .geom_gate_polygonGate(data, ...)  
 }
 
-
+#' @importFrom ggplot2 geom_path
 .geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
   
   #' To proper interpolate the polygon we need to wailt until the xbin and measure_range are collected from the main ggcyto object
@@ -110,6 +110,7 @@ geom_gate.rectangleGate <- function(data, ...){
 
 #' @rdname geom_gate
 #' @export
+#' @importFrom flowCore ellipsoidGate
 geom_gate.ellipsoidGate <- function(data, ...){
   
   geom_gate.polygonGate(data, ...)

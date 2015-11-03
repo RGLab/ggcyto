@@ -8,6 +8,8 @@
 #' @param ... ignored
 #' @method ggcyto flowSet
 #' @export
+#' @importFrom flowCore flowSet getChannelMarker colnames
+#' @importFrom ncdfFlow ncdfFlowSet ncdfFlowList [ [[ fsApply filter sampleNames pData colnames
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
@@ -65,8 +67,9 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' @param e2 A component to add to \code{e1}
 #' 
 #' @rdname ggcyto_flowSet_add
-#' @importFrom plyr defaults
 #' @export
+#' @importFrom ggplot2 aes_string
+#' @importFrom plyr defaults
 `+.ggcyto_flowSet` <- function(e1, e2){
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
@@ -257,6 +260,7 @@ is.geom_gate_filterList <- function(layer){
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
+#' @importFrom flowCore filterList
 as.filterList.data.frame <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
@@ -274,6 +278,7 @@ as.filterList.data.frame <- function(df, pcols = ".rownames"){
 }
 
 #' Convert data.frame back to original gate format
+#' @importFrom flowCore rectangleGate polygonGate
 as.gate.data.frame <- function(df){
   markers <- colnames(df)
   nDim <- length(markers)

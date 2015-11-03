@@ -2,6 +2,7 @@
 #' @param n desired number of breaks
 #' @param ... parameters passed to flowJo.fasinh
 #' @export
+#' @importFrom flowCore logicleTransform inverseLogicleTransform
 logicle_breaks <- function (n = 6, ...) 
 {
   
@@ -42,6 +43,7 @@ logicle_trans <- function(...){
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param w,t,m,a see 'help(logicleTransform')
 #' @export
+#' @importFrom ggplot2 continuous_scale waiver
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
   #   scale_x_continuous(..., trans = myTrans)

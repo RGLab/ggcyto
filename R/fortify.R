@@ -19,6 +19,8 @@
 #' @param x flowSet
 #' @return data.table
 #' @export
+#' @importFrom flowCore Subset
+#' @importFrom ncdfFlow Subset
 .fs2dt <- function(x, ...){
   # subset by columns if applicable
   dims <- attr(x, "dims")

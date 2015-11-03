@@ -1,14 +1,13 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.5
+Version: 0.9
 Date: 2015-04-22
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
 Description: Visualize Cytometry data with ggplot
 VignetteBuilder: knitr
-Depends: grid, ggplot2, flowCore, ncdfFlow, flowWorkspace(>= 3.15.6)
-Imports: plyr, scales, proto, data.table, RColorBrewer, gridExtra
+Imports: grid, ggplot2, flowCore, ncdfFlow, flowWorkspace(>= 3.15.6), plyr, scales, proto, data.table, RColorBrewer, gridExtra
 Suggests: testthat, flowWorkspaceData, knitr
 License: Artistic-2.0
-biocViews: Infrastructure, Visualization
+biocViews: FlowCytometry, Infrastructure, Visualization
