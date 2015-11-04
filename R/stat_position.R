@@ -1,6 +1,16 @@
 #' compute the positions of the population statistics based on the geometic gate centroid
+#' 
+#' It is usually not called directly by user but mainly used by compute_stats function (which is called by ggcyto add method when geom_states layer is added).
+#' 
 #' @param gate a flowCore filter
+#' @return a data.table
 #' @export
+#' @examples 
+#' data(GvHD)
+#' fs <- GvHD[1:4]
+#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+#' stat_position(rect.gates)
 stat_position <- function(gate, ...)UseMethod("stat_position")
 
 

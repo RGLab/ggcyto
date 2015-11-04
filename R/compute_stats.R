@@ -1,7 +1,9 @@
 #' compute the statistics of the cell population defined by gates
 #' 
-#' It calls the underlining stats routine and merge it with the lable position calculated by stat_position
+#' It calls the underlining stats routine and merge it with the label position calculated by stat_position
 #' as well as the pData of flowSet.
+#' 
+#' This function is usually not called directly by user but used by ggcyto when geom_stat layer is added.
 #' 
 #' @param fs flowSet. can be NULL when precaculated 'value' is provided
 #' @param gates a list of filters
@@ -13,6 +15,12 @@
 #' a data.table that contains percent and centroid locations as well as pData
 #' that used as data for geom_btext layer.
 #' @export
+#' @examples 
+#' data(GvHD)
+#' fs <- GvHD[1:4]
+#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+#' compute_stats(fs, rect.gates)
 compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data_range = NULL, ...){
   
   if(is.null(fs)&&(is.null(value)||is.null(data_range)))

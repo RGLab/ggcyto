@@ -7,7 +7,7 @@
 \method{ggcyto}{flowSet}(data, mapping, filter = NULL, ...)
 }
 \arguments{
-\item{data}{default flowSet/GatingSet for plot}
+\item{data}{default flowSet for plot}
 
 \item{mapping}{default list of aesthetic mappings (these can be colour,
  size, shape, line type -- see individual geom functions for more details)}
@@ -17,7 +17,32 @@ The gate is used to filter the flow data before it is plotted.}
 
 \item{...}{ignored}
 }
+\value{
+a ggcyto_GatingSet object which is a subclass of ggcyto class.
+}
 \description{
 Create a new ggcyto plot from a flowSet
+}
+\examples{
+\dontrun{
+data(GvHD)
+fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
+# 1d histogram/densityplot
+p <- ggcyto(fs, aes(x = `FSC-H`))
+#facet_wrap(~name)` is used automatically
+p1 <- p + geom_histogram()
+p1
+#overwriting the default faceeting
+p1 + facet_grid(Patient~Visit)
+
+#display density
+p + geom_density()
+
+# 2d scatter/dot plot
+p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+p <- p + geom_hex(bins = 128)
+p
+
+}
 }
 

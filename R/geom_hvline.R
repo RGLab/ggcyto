@@ -20,6 +20,7 @@
 #'   \code{\link{layer}} for more details.
 #' @param show_guide should a legend be drawn? (defaults to \code{FALSE})
 #' @export
+#' @return a geom_hvline layer
 #' @examples
 #' 
 #' 

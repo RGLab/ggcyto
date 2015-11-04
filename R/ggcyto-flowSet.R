@@ -1,13 +1,36 @@
 #' Create a new ggcyto plot from a flowSet
 #'
-#' @param data default flowSet/GatingSet for plot
+#' @param data default flowSet for plot
 #' @param mapping default list of aesthetic mappings (these can be colour,
 #'   size, shape, line type -- see individual geom functions for more details)
 #'  @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
 #'                The gate is used to filter the flow data before it is plotted. 
 #' @param ... ignored
 #' @method ggcyto flowSet
+#' @return a ggcyto_GatingSet object which is a subclass of ggcyto class.
 #' @export
+#' @examples
+#' 
+#' \dontrun{
+#' data(GvHD)
+#' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+#' # 1d histogram/densityplot
+#' p <- ggcyto(fs, aes(x = `FSC-H`)) 
+#' #facet_wrap(~name)` is used automatically
+#' p1 <- p + geom_histogram() 
+#' p1
+#' #overwriting the default faceeting
+#' p1 + facet_grid(Patient~Visit)
+#'
+#' #display density
+#' p + geom_density()
+#'
+#' # 2d scatter/dot plot
+#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+#' p <- p + geom_hex(bins = 128)
+#' p
+#'
+#' }
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
@@ -49,8 +72,9 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   
   p
 }
-#' Reports whether x is a ggplot object
+#' Reports whether x is a ggcyto_flowSet object
 #' @param x An object to test
+#' @return TRUE or FALSE
 #' @export
 is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 
@@ -60,13 +84,26 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' 
 #' It tries to copy pData from ggcyto object to the gate layers
 #' so that the gate layer does not need to have `pd` to be supplied explicitly by users.
+#' It also calculates population statistics when geom_stats layer is added.
+#' It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'.
 #' 
 #' @param e1 An object of class \code{ggcyto_flowSet}
 #' @param e2 A component to add to \code{e1}
-#' 
+#' @return ggcyto_flowSet object
 #' @rdname ggcyto_flowSet_add
 #' @importFrom plyr defaults
 #' @export
+#' @examples
+#' 
+#' \dontrun{
+#' data(GvHD)
+#' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_hex(bins = 128)
+#' #add rectangleGate layer (2d)
+#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+#' p + geom_gate(rect.gates) + geom_stats()
+#'}
 `+.ggcyto_flowSet` <- function(e1, e2){
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages

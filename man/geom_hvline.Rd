@@ -24,6 +24,9 @@ on this layer}
 include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
 }
+\value{
+a geom_hvline layer
+}
 \description{
 This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
 }

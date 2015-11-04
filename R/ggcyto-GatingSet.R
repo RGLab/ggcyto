@@ -1,5 +1,5 @@
 
-#' Create a new ggcyto plot from a flowSet
+#' Create a new ggcyto plot from a GatingSet
 #'
 #' @param data GatingSet to plot
 #' @param subset character that specifies the node path or node name in the GatingSet. 
@@ -7,7 +7,20 @@
 #'                based on the geom_gate layer to be added later.
 #' @inheritParams ggcyto.flowSet
 #' @method ggcyto GatingSet
+#' @return a ggcyto_GatingSet object which is a subclass of ggcyto_flowSet class.
 #' @export
+#' @examples
+#' 
+#' \dontrun{
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' # 2d plot 
+#' ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' 
+#' # 1d plot
+#' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
+#'
+#' }
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   
   attr(data, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
@@ -37,13 +50,20 @@ as.GatingSet <- function(gh){
 
 #' overloaded '+' method for ggcyto.gs
 #' 
-#' It tries to copy pData from ggcyto object to the gate layers
-#' so that the gate layer does not need to have `pd` to be supplied explicitly by users.
-#' 
+#' It takes care the speical format of some ggcyto layers. For example geom_gate or geom_stats layer with just gate(population) name specified,
+#' It only supports some special axis transformations. (See examples below)
+#'
 #' @param e1 An object of class \code{ggcyto}
 #' @param e2 A component to add to \code{e1}
-#' 
+#' @return ggcyto_GatingSet object
 #' @rdname ggcyto_GatingSet_add
+#' @examples 
+#' \dontrun{
+#'  p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#'  p <- p + geom_gate("CD4") + geom_stats() #plot CD4 gate and it is stats
+#'  p
+#'  p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
+#' }
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
   plot_mapping <- e1$mapping

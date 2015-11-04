@@ -52,7 +52,7 @@ p  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks)
 p  + scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
 
 # other scales: flowJo_fasinh, flowJo_biexp
-p + scale_x_flowJo_fasinh(T = 1e4)
+p + scale_x_flowJo_fasinh(t = 1e4)
 p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 
 # save the scales

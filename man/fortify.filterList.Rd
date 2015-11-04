@@ -15,7 +15,17 @@
 
 \item{...}{not used.}
 }
+\value{
+data.table
+}
 \description{
-It tries to merge with pData
+It tries to merge with pData that is associated with filterList as attribute 'pd'
+}
+\examples{
+\dontrun{
+gates <- getGate(gs, "CD4")
+gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
+fortify(gates)
+}
 }
 

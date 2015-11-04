@@ -8,6 +8,8 @@
 #' \itemize{
 #'    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
 #'   }
+#'   
+#' @import methods 
 #' @export
 #' @keywords internal
 #' @param data default cytometry data set.(flowSet,flowFrame)
@@ -32,19 +34,25 @@ ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 #' Reports whether x is a ggcyto object
 #' @param x An object to test
+#' @return TRUE/FALSE
 #' @export
 is.ggcyto <- function(x) inherits(x, "ggcyto")
 
 #' @export
+#' @rdname  ggcyto
 ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
   ggcyto.flowSet(fortify_fs(data, ...), mapping)
 }
 
 #' Draw ggcyto on current graphics device.
 #'
-#' A wrapper for print.ggplot. 
+#' A wrapper for print.ggplot. It converts the ggcyto to conventional ggplot object before printing it.
+#' This is usually invoked automatically when a ggcyto object is returned to R console.
+#' 
+#' @return nothing
 #' @param x ggcyto object to display
 #' @param ... other arguments not used by this method
+#' 
 #' @export
 #' @method print ggcyto
 print.ggcyto <- function(x, ...) {
@@ -55,16 +63,48 @@ print.ggcyto <- function(x, ...) {
     ggplot2:::print.ggplot(x)
 }
 
+#' @rdname print.ggcyto
+#' @method plot ggcyto
+#' @export
+plot.ggcyto <- print.ggcyto
+
+#--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
 #' @export
 #' @rdname print.ggcyto
 setMethod("print", c("ggcyto"), print.ggcyto)
 
+
+#' @param object ggcyto object
+#' @rdname print.ggcyto
+#' @method show ggcyto
+#' @export
+show.ggcyto <- function(object){print(object)}
+
+#' @rdname print.ggcyto
+#' @method show ggcyto
+#' @export
+setMethod("show", "ggcyto", show.ggcyto)
+
 #' It fortifies the data, fills some default settings and returns a regular ggplot object.
 #' 
 #' The orginal data format is preserved during the ggcyo constructor because they still need to be used during the plot building process.
+#' This function is usually called automatically in the print/plot method of ggycyto. Sometime it is useful to coerce it to ggplot explictily 
+#' by user so that it can be used as a regular ggplot object.
 #' 
 #' @param x ggcyto object with the data that has not yet been fortified to data.frame.
 #' 
+#' @return ggplot object
+#' @examples 
+#' \dontrun{
+#' #construct the `ggcyto` object (inherits from `ggplot` class)
+#' p <- ggcyto(fs, aes(x = `FSC-H`)) + geom_histogram() 
+#' class(p) # a ggcyto object
+#' p$data # data has not been fortified
+#' p1 <- as.ggplot(p) # convert it to a ggplot object explictily 
+#' class(p1) 
+#' p1$data # datra is fortified
+#' }
+
 #' @export
 as.ggplot <- function(x){
 #   browser()
@@ -132,18 +172,3 @@ as.ggplot <- function(x){
   #strip the ggcyto class attributes
   asS3(x)
 }
-#' @rdname print.ggcyto
-#' @method plot ggcyto
-#' @export
-plot.ggcyto <- print.ggcyto
-
-#' @param object ggcyto object
-#' @rdname print.ggcyto
-#' @method show ggcyto
-#' @export
-show.ggcyto <- function(object){print(object)}
-
-#' @rdname print.ggcyto
-#' @method show ggcyto
-#' @export
-setMethod("show", "ggcyto", show.ggcyto)

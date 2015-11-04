@@ -9,6 +9,9 @@ logicle_trans(...)
 \arguments{
 \item{...}{arguments passed to logicleTransform.}
 }
+\value{
+a logicle transformation object
+}
 \description{
 logicle transformation.
 }

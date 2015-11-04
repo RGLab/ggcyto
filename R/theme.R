@@ -27,7 +27,7 @@
 #'
 #' @param ... a list of element name, element pairings that modify the
 #'   existing parameter settings
-#'
+#' @return a list of new settings for ggycto
 #' @export
 #' @examples
 #' \dontrun{
@@ -52,7 +52,12 @@ ggcyto_par_set <- function(...) {
 }
 
 #' Return The default ggcyto settings
+#' @return a list of default settings for ggycto
 #' @export
+#' @examples
+#' \dontrun{
+#' ggcyto_par_default()
+#' }
 ggcyto_par_default <- function(){
   do.call(ggcyto_par_set, .element_tree)
 }
@@ -68,6 +73,7 @@ validate_element <- function(el, elname) {
 }
 
 #' Reports whether x is a ggcyto_par object
+#' @return TRUE or FALSE
 #' @param x An object to test
 #' @export
 is.ggcyto_par <- function(x) inherits(x, "ggcyto_par")

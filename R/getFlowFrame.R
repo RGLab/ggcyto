@@ -5,6 +5,11 @@
 #' @param x flowSet or GatingSet/GatingHierarchy
 #' @return an empty flowFrame
 #' @export
+#' @examples 
+#' \dontrun{
+#' getFlowFrame(fs)# fs is a flowSet
+#' getFlowFrame(gs)# gs is a GatingSet
+#' }
 getFlowFrame <- function(x)UseMethod("getFlowFrame")
 
 #' @rdname getFlowFrame

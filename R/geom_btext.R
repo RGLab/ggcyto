@@ -8,6 +8,7 @@
 #' @param parse If TRUE, the labels will be parsed into expressions and
 #'   displayed as described in ?plotmath
 #' @export
+#' @return a geom_btext layer
 #' @examples
 #' \donttest{
 #' ggplot(mtcars, aes(x=wt, y=mpg, label=rownames(mtcars))) + geom_btext(size = 5, fill = "gray")

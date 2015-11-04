@@ -14,6 +14,9 @@ when FALSE, breaks are equally spaced instead.}
 
 \item{...}{parameters passed to flowWorkspace::flowJoTrans function}
 }
+\value{
+a function generates biexponential space
+}
 \description{
 flowJo biexponential breaks (integer breaks on biexp-transformed scales)
 }

@@ -9,7 +9,23 @@ as.ggplot(x)
 \arguments{
 \item{x}{ggcyto object with the data that has not yet been fortified to data.frame.}
 }
+\value{
+ggplot object
+}
 \description{
 The orginal data format is preserved during the ggcyo constructor because they still need to be used during the plot building process.
+This function is usually called automatically in the print/plot method of ggycyto. Sometime it is useful to coerce it to ggplot explictily
+by user so that it can be used as a regular ggplot object.
+}
+\examples{
+\dontrun{
+#construct the `ggcyto` object (inherits from `ggplot` class)
+p <- ggcyto(fs, aes(x = `FSC-H`)) + geom_histogram()
+class(p) # a ggcyto object
+p$data # data has not been fortified
+p1 <- as.ggplot(p) # convert it to a ggplot object explictily
+class(p1)
+p1$data # datra is fortified
+}
 }
 

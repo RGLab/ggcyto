@@ -11,9 +11,9 @@
 \usage{
 \method{print}{ggcyto}(x, ...)
 
-\S4method{print}{ggcyto}(x, ...)
-
 \method{plot}{ggcyto}(x, ...)
+
+\S4method{print}{ggcyto}(x, ...)
 
 \method{show}{ggcyto}(object)
 
@@ -26,7 +26,11 @@
 
 \item{object}{ggcyto object}
 }
+\value{
+nothing
+}
 \description{
-A wrapper for print.ggplot.
+A wrapper for print.ggplot. It converts the ggcyto to conventional ggplot object before printing it.
+This is usually invoked automatically when a ggcyto object is returned to R console.
 }
 

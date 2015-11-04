@@ -25,7 +25,17 @@ a data.table that contains percent and centroid locations as well as pData
 that used as data for geom_btext layer.
 }
 \description{
-It calls the underlining stats routine and merge it with the lable position calculated by stat_position
+It calls the underlining stats routine and merge it with the label position calculated by stat_position
 as well as the pData of flowSet.
+}
+\details{
+This function is usually not called directly by user but used by ggcyto when geom_stat layer is added.
+}
+\examples{
+data(GvHD)
+fs <- GvHD[1:4]
+rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+compute_stats(fs, rect.gates)
 }
 

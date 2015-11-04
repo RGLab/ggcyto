@@ -6,7 +6,15 @@
 \usage{
 ggcyto_par_default()
 }
+\value{
+a list of default settings for ggycto
+}
 \description{
 Return The default ggcyto settings
+}
+\examples{
+\dontrun{
+ggcyto_par_default()
+}
 }
 

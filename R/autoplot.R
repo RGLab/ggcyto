@@ -12,6 +12,7 @@
 #' @return a ggcyto object
 #' 
 #' @examples
+#' \dontrun{
 #' library(flowCore)
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
@@ -22,6 +23,15 @@
 #' #2d plot: default geom_hex plot
 #' autoplot(fs, x = 'FSC-H', y ='SSC-H')
 #' 
+#' #autplot for GatingSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' autoplot(gs, "CD3+")
+#' 
+#' #autplot for GatingHierarchy
+#' gh <- gs[[1]]
+#' autoplot(gh)
+#' }
 #' @export 
 autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   

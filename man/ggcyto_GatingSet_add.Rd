@@ -15,8 +15,19 @@
 
 \item{e2}{A component to add to \code{e1}}
 }
+\value{
+ggcyto_GatingSet object
+}
 \description{
-It tries to copy pData from ggcyto object to the gate layers
-so that the gate layer does not need to have `pd` to be supplied explicitly by users.
+It takes care the speical format of some ggcyto layers. For example geom_gate or geom_stats layer with just gate(population) name specified,
+It only supports some special axis transformations. (See examples below)
+}
+\examples{
+\dontrun{
+ p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+ p <- p + geom_gate("CD4") + geom_stats() #plot CD4 gate and it is stats
+ p
+ p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
+}
 }
 

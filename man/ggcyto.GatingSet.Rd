@@ -3,7 +3,7 @@
 \name{ggcyto.GatingSet}
 \alias{ggcyto.GatingHierarchy}
 \alias{ggcyto.GatingSet}
-\title{Create a new ggcyto plot from a flowSet}
+\title{Create a new ggcyto plot from a GatingSet}
 \usage{
 \method{ggcyto}{GatingSet}(data, mapping, subset = "_parent_", ...)
 
@@ -21,7 +21,22 @@ based on the geom_gate layer to be added later.}
 
 \item{...}{ignored}
 }
+\value{
+a ggcyto_GatingSet object which is a subclass of ggcyto_flowSet class.
+}
 \description{
-Create a new ggcyto plot from a flowSet
+Create a new ggcyto plot from a GatingSet
+}
+\examples{
+\dontrun{
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+# 2d plot
+ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+
+# 1d plot
+ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
+
+}
 }
 

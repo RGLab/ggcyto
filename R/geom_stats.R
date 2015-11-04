@@ -10,6 +10,7 @@
 #' @param adjust adjust the position of the centroid. from 0 to 1.             
 #' @inheritParams compute_stats
 #' @export
+#' @return  a geom_popStats layer 
 #' @examples
 #' \dontrun{
 #' 

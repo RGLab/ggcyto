@@ -9,6 +9,9 @@ is.ggcyto_par(x)
 \arguments{
 \item{x}{An object to test}
 }
+\value{
+TRUE or FALSE
+}
 \description{
 Reports whether x is a ggcyto_par object
 }

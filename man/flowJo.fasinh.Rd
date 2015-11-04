@@ -18,6 +18,9 @@ flowJo.fsinh(m = 4, t = 12000, a = 0.7, length = 256)
 
 \item{length}{numeric the maximum value of transformed data}
 }
+\value{
+fasinh/fsinh transform function
+}
 \description{
 hyperbolic sine/inverse hyperbolic sine (flowJo-version) transform function constructor
 }

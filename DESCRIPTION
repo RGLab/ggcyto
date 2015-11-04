@@ -7,8 +7,8 @@ Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
 Description: Visualize Cytometry data with ggplot
 VignetteBuilder: knitr
-Depends: grid, ggplot2, flowCore, ncdfFlow, flowWorkspace(>= 3.15.6)
-Imports: plyr, scales, proto, data.table, RColorBrewer, gridExtra, flowViz
+Depends: methods, grid, ggplot2, flowCore, ncdfFlow, flowWorkspace(>= 3.15.6)
+Imports: BiocGenerics, plyr, scales, proto, data.table, RColorBrewer, gridExtra, flowViz
 Suggests: testthat, flowWorkspaceData, knitr
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues

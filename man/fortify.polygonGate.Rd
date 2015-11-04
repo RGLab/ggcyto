@@ -17,7 +17,19 @@ But it is not necessary for other purposes like centroid calculation.}
 
 \item{...}{not used.}
 }
+\value{
+data.table
+}
 \description{
 It converts the boundaries slot into a data.table
+When 'bins' is supplied, the method tries to interpolate the polygon with more verticies.
+The number of verticies increases if larger `bins` is specified. (represents resolution of geom_hex).
+}
+\examples{
+sqrcut <- matrix(c(300,300,600,600,50,300,300,50),ncol=2,nrow=4)
+colnames(sqrcut) <- c("FSC-H","SSC-H")
+pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
+fortify(pg) #no interpolation
+fortify(pg, bins = 30) # with interpolation
 }
 

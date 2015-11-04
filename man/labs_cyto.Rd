@@ -9,6 +9,9 @@ labs_cyto(labels = "both")
 \arguments{
 \item{labels}{default labels for x, y axis. Can be "channel" , "marker", or "both" (default)}
 }
+\value{
+a list
+}
 \description{
 The actual labels text will be instantiated when it is added to ggcyto plot.
 }

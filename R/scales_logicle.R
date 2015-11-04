@@ -1,6 +1,7 @@
 #' flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
 #' @param n desired number of breaks
 #' @param ... parameters passed to flowJo.fasinh
+#' @return a function that generates logicle space
 #' @export
 logicle_breaks <- function (n = 6, ...) 
 {
@@ -26,6 +27,7 @@ logicle_breaks <- function (n = 6, ...)
 #' logicle transformation.
 #' 
 #' @param ... arguments passed to logicleTransform.
+#' @return a logicle transformation object
 #' @export
 logicle_trans <- function(...){
   trans.obj <- logicleTransform(...)

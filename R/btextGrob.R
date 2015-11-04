@@ -1,5 +1,6 @@
 ##' Grid Text with a Background (modified based on Kmisc::grid.text2)
 ##' 
+##' It is used by geom_btext layer.
 ##' 
 ##' @importFrom grid unit gpar is.unit stringWidth stringHeight grid.rect grid.text gList
 ##' @param label A character or \code{\link{expression}} vector. 
@@ -31,6 +32,7 @@
 ##' vertical padding there should be between the text and the background rectangle.
 ##' @seealso \code{\link{grid.text}} and \code{\link{grid.rect}}
 ##' @export
+##' @return a gList object
 btextGrob <- function(label, 
                       x=unit(0.5, "npc"), 
                       y=unit(0.5, "npc"),

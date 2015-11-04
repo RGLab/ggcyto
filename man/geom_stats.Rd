@@ -21,6 +21,9 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 
 \item{adjust}{adjust the position of the centroid. from 0 to 1.}
 }
+\value{
+a geom_popStats layer
+}
 \description{
 It is a dummy layer that simply inherits GeomBText.
 The actual data for geom_text layer will be instanatiated within ggycto.+ operatoer

@@ -37,24 +37,10 @@
 }
 
 
-#' Convert a flowFrame to a ggplot-compatible data.table
-#' 
-#' It actually converts the flowFrame to flowSet first and
-#' then dispatch to the fority method for flowSet.
-#' 
-#' @param model flowFrame
-#' @param data not used.
-#' @param ... not used.
-#' 
-# @import grid
-# @import methods
-#' @import flowCore
-#' @import ncdfFlow
-#' @import flowWorkspace
-#' @import ggplot2
-# @import Biobase 
-# @import BiocGenerics
+
 #' @export
+#' @return data.table
+#' @rdname fortify.flowSet
 fortify.flowFrame <- function(model, data, ...){
   #covert to flowSet
   fs <- fortify_fs(model)
@@ -68,17 +54,24 @@ fortify.flowFrame <- function(model, data, ...){
   setnames(pd, "rn", ".rownames")
   pd
 }
-#' Convert a flowSet to a ggplot-compatible data.table
+#' Convert a flowFrame/flowSet/GatingSet to a ggplot-compatible data.table
 #' 
-#' It invokes as.data.table.flowSet and append the pData
-#' to it so that ggplot can use the pData for facetting.
+#' It extracts events matrices and appends the pData to it so that ggplot can use the pData for facetting.
 #' 
-#' @param model flowSet
+#' @param model flowFrame, flowSet or GatingSet
 #' @param data not used.
 #' @param ... not used.
 #' 
 #' @export
 #' @aliases fortify
+#' @return data.table
+#' @examples 
+#' \dontrun{
+#' fortify(fr)#fr is a flowFrame
+#' fortify(fs)#fs is a flowSet/ncdfFlowSet
+#' attr(gs, "subset") <- "CD4" #must attach subset information to GatingSet object before foritfying it
+#' fortify(gs)
+#' }
 fortify.flowSet <- function(model, data, ...){
   #convert to data.table
   df <- .fs2dt(model)
@@ -90,10 +83,9 @@ fortify.flowSet <- function(model, data, ...){
 
 }
 
-#' coerce a GatingSet node to data.table
-#' @param model GatingSet
-#' @param ... not used.
 #' @export
+#' @return data.table
+#' @rdname fortify.flowSet
 fortify.GatingSet <- function(model, ...){
   
   fs <- fortify_fs(model, ...)
@@ -103,6 +95,8 @@ fortify.GatingSet <- function(model, ...){
 #' Convert a polygonGate to a data.table useful for ggplot
 #' 
 #' It converts the boundaries slot into a data.table
+#' When 'bins' is supplied, the method tries to interpolate the polygon with more verticies.
+#' The number of verticies increases if larger `bins` is specified. (represents resolution of geom_hex).
 #' 
 #' @param model polygonGate
 #' @param data not used.
@@ -112,6 +106,13 @@ fortify.GatingSet <- function(model, ...){
 #' @param ... not used.
 #' 
 #' @export
+#' @return data.table
+#' @examples 
+#' sqrcut <- matrix(c(300,300,600,600,50,300,300,50),ncol=2,nrow=4)
+#' colnames(sqrcut) <- c("FSC-H","SSC-H")
+#' pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
+#' fortify(pg) #no interpolation
+#' fortify(pg, bins = 30) # with interpolation
 fortify.polygonGate <- function(model, data
                                 # , measure_range = NULL
                                 , bins = NULL, ...){
@@ -190,13 +191,21 @@ fortify.polygonGate <- function(model, data
 
 #' Convert a ellipsoidGate to a data.table useful for ggplot
 #' 
-#' It converts ellipsoidGate to polygongate before fortifying it.
+#' It interpolates the ellipsoidGate to polygongate before fortifying it.
 #' 
 #' @param model ellipsoidGate
 #' @param data not used.
 #' @param ... not used.
 #' 
 #' @export
+#' @return data.table
+#' @examples 
+#' ## Defining the gate
+#' cov <- matrix(c(6879, 3612, 3612, 5215), ncol=2,
+#'               dimnames=list(c("FSC-H", "SSC-H"), c("FSC-H", "SSC-H")))
+#' mean <- c("FSC-H"=430, "SSC-H"=175)
+#' eg <- ellipsoidGate(filterId= "myEllipsoidGate", .gate=cov, mean=mean)
+#' fortify(eg)
 fortify.ellipsoidGate <- function(model, data, ...){
   poly.g <- flowViz:::ell2Polygon(model)  
   fortify(poly.g, ...)
@@ -204,7 +213,7 @@ fortify.ellipsoidGate <- function(model, data, ...){
 
 #' Convert a filterList to a data.table useful for ggplot
 #' 
-#' It tries to merge with pData
+#' It tries to merge with pData that is associated with filterList as attribute 'pd'
 #' 
 #' @param model filterList
 #' @param data not used
@@ -213,6 +222,13 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' 
 #' @importFrom plyr name_rows
 #' @export
+#' @return data.table
+#' @examples 
+#' \dontrun{
+#' gates <- getGate(gs, "CD4")
+#' gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
+#' fortify(gates)
+#' }
 fortify.filterList <- function(model, data
                                # , measure_range = NULL
                                , bins = NULL, ...){
@@ -238,7 +254,7 @@ fortify.filterList <- function(model, data
 
 #' Convert a rectangleGate to a data.table useful for ggplot
 #' 
-#' For 2d rectangelGate, it is converted to a geom_polygon format
+#' For 2d rectangelGate, it is converted to a polygonGate first and then dispatch to the fortify method for polygonGate.
 #' for 1d, uses geom_vline/hline format.
 #' 
 #' @param model rectangleGate
@@ -246,6 +262,15 @@ fortify.filterList <- function(model, data
 #' @param ... not used.
 #' 
 #' @export
+#' @examples 
+#' #2d rectangleGate
+#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#' fortify(rect.g)
+#' #1d gate
+#' rg <- rectangleGate(list("FSC-H" =  c(300,500)))
+#' fortify(rg)
+#' 
+#' @return data.table
 fortify.rectangleGate <- function(model, data, ...){
   
   param <- parameters(model)

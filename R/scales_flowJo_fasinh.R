@@ -9,6 +9,7 @@
 #' @param t numeric the maximum value of input data
 #' @param a numeric Additional negative range to be included in the display in asymptotic decades
 #' @param length numeric the maximum value of transformed data
+#' @return fasinh/fsinh transform function
 #' @export
 flowJo.fasinh <- function (m = 4.0, t = 12000, a =  0.7, length = 256) 
 {
@@ -28,6 +29,7 @@ flowJo.fsinh <- function(m = 4.0, t = 12000, a =  0.7, length = 256){
 #' flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
 #' @param n desired number of breaks
 #' @param ... parameters passed to flowJo.fasinh
+#' @return a function generates fasinh or fsinh space
 #' @export
 flowJo_fasinh_breaks <- function (n = 6, ...) 
 {
@@ -52,6 +54,7 @@ flowJo_fasinh_breaks <- function (n = 6, ...)
 #' flowJo inverse hyperbolic sine transformation.
 #' 
 #' @inheritParams flowJo_fasinh_breaks
+#' @return fasinh transformation object
 #' @export
 flowJo_fasinh_trans <- function(...){
   trans <- flowJo.fasinh(...)

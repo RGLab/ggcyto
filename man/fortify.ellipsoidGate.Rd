@@ -13,7 +13,18 @@
 
 \item{...}{not used.}
 }
+\value{
+data.table
+}
 \description{
-It converts ellipsoidGate to polygongate before fortifying it.
+It interpolates the ellipsoidGate to polygongate before fortifying it.
+}
+\examples{
+## Defining the gate
+cov <- matrix(c(6879, 3612, 3612, 5215), ncol=2,
+              dimnames=list(c("FSC-H", "SSC-H"), c("FSC-H", "SSC-H")))
+mean <- c("FSC-H"=430, "SSC-H"=175)
+eg <- ellipsoidGate(filterId= "myEllipsoidGate", .gate=cov, mean=mean)
+fortify(eg)
 }
 

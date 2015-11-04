@@ -1,28 +1,36 @@
 #' Fortify a model into flowSet object
 #'
-#' Method to convert a generic R object into a flowSet useful for ggcyto
+#' The method provides a universe interface to convert a generic R object into a flowSet useful for ggcyto
 #'
-#' @param model model or other R object to convert to data table
+#' @param model flow object(flowFrame or GatingSet) to be converted to flowSet. when it is a GatingSet, it must contain the subset information stored as  'subset' attribute.
 #' @param data original dataset, if needed
 #' @param ... other arguments passed to methods
+#' @return a flowSet/ncdfFlowSet object
+#' @examples 
+#' \dontrun{
+#' fortify_fs(fr)
+#' attr(gs, "subset") <- "CD4"
+#' fortify_fs(gs)
+#' }
 #' @export
 fortify_fs <- function(model, data, ...) UseMethod("fortify_fs")
 
+#' @rdname fortify_fs
 #' @export
 fortify_fs.flowSet <- function(model, data, ...) model
 
+#' @rdname fortify_fs
 #' @export
 fortify_fs.default <- function(model, data, ...) {
   
   stop("ggcyto doesn't know how to deal with data of class ", class(model), call. = FALSE)
 }
 
-#' coerce flowFrame to flowSet
-#' The default coerce method does not perserve the sample name.
-#' @param data not used.
-#' @param ... not used.
-#' @param model flowFrame
+
+
+
 #' @export
+#' @rdname fortify_fs
 fortify_fs.flowFrame <- function(model, data, ...){
   sn <- identifier(model)
   fs <- as(model, "flowSet")
@@ -31,12 +39,9 @@ fortify_fs.flowFrame <- function(model, data, ...){
   fs
 }
 
-#' coerce a GatingSet node to flowSet
-#' The default coerce method does not perserve the sample name.
-#' @param model GatingSet object that has 'subset' character attribute that specifies the node name
-#' @param data not used.
-#' @param ... not used.
+
 #' @export
+#' @rdname fortify_fs
 fortify_fs.GatingSet <- function(model, data, ...){
   subset <- attr(model, "subset")
   if(is.null(subset))

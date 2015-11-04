@@ -12,6 +12,9 @@ flowJo_biexp_trans(..., pretty = FALSE)
 \item{pretty}{if use log10-like breaks that is normally used in flowJo
 when FALSE, breaks are equally spaced instead.}
 }
+\value{
+biexponential transformation object
+}
 \description{
 flowJo biexponential transformation.
 }

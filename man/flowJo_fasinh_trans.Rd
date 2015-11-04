@@ -9,6 +9,9 @@ flowJo_fasinh_trans(...)
 \arguments{
 \item{...}{parameters passed to flowJo.fasinh}
 }
+\value{
+fasinh transformation object
+}
 \description{
 flowJo inverse hyperbolic sine transformation.
 }

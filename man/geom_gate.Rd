@@ -40,13 +40,29 @@ fill polygonGate is not filled by default
 colour default is red
 pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
 }
+\value{
+a geom_gate layer
+}
 \description{
-When 'data' is a list of gates or a filterList object, to be used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for
+When 'data' is a gate (or flowCore filter) or a list of gates or a filterList object.
+When it is used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for
 the gates to be dispatched to each panel.
-However It is not necessary when it is used with 'ggcyto' wrapper
+However It is not necessary when used with 'ggcyto' wrapper since the latter will attach pData automatically.
 }
 \details{
 When 'data' is a character, it construct an abstract geom layer for a character that represents nodes in a Gating tree
 and will be instanatiated later as a specific geom_gate layer or layers based on the gates extracted from the given GatingSet object.
+}
+\examples{
+\dontrun{
+data(GvHD)
+fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
+p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+p <- p + geom_hex(bins = 128)
+rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#constuctor for a list of filters
+rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+p + geom_gate(rect.gates)
+}
 }
 

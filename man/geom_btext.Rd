@@ -28,6 +28,9 @@ displayed as described in ?plotmath}
 include aesthetics whose values you want to set, not map. See
 \code{\link{layer}} for more details.}
 }
+\value{
+a geom_btext layer
+}
 \description{
 Limitation: It does not support rotation.
 }

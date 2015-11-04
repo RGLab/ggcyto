@@ -4,6 +4,7 @@
 #'
 #' @param labels default labels for x, y axis. Can be "channel" , "marker", or "both" (default)
 #' @export
+#' @return a list 
 #' @examples
 #' \dontrun{
 #' 

@@ -4,12 +4,15 @@
 \name{ggcyto-class}
 \alias{ggcyto}
 \alias{ggcyto-class}
+\alias{ggcyto.default}
 \alias{ggcyto_GatingLayout-class}
 \alias{ggcyto_GatingSet-class}
 \alias{ggcyto_flowSet-class}
 \title{Create a new ggcyto plot}
 \usage{
 ggcyto(data = NULL, ...)
+
+\method{ggcyto}{default}(data = NULL, mapping = aes(), ...)
 }
 \arguments{
 \item{data}{default cytometry data set.(flowSet,flowFrame)}

@@ -8,7 +8,10 @@ ggcyto_par_set(...)
 }
 \arguments{
 \item{...}{a list of element name, element pairings that modify the
-  existing parameter settings}
+existing parameter settings}
+}
+\value{
+a list of new settings for ggycto
 }
 \description{
 Use this function to modify ggcyto parameters

@@ -53,8 +53,11 @@ there should be between the text and the background rectangle.}
 \item{heightAdj}{A height adjustment parameter, to help control how much
 vertical padding there should be between the text and the background rectangle.}
 }
+\value{
+a gList object
+}
 \description{
-Grid Text with a Background (modified based on Kmisc::grid.text2)
+It is used by geom_btext layer.
 }
 \seealso{
 \code{\link{grid.text}} and \code{\link{grid.rect}}

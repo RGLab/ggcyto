@@ -2,14 +2,17 @@
 % Please edit documentation in R/ggcyto-flowSet.R
 \name{is.ggcyto_flowSet}
 \alias{is.ggcyto_flowSet}
-\title{Reports whether x is a ggplot object}
+\title{Reports whether x is a ggcyto_flowSet object}
 \usage{
 is.ggcyto_flowSet(x)
 }
 \arguments{
 \item{x}{An object to test}
 }
+\value{
+TRUE or FALSE
+}
 \description{
-Reports whether x is a ggplot object
+Reports whether x is a ggcyto_flowSet object
 }
 

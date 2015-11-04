@@ -11,6 +11,9 @@ logicle_breaks(n = 6, ...)
 
 \item{...}{parameters passed to flowJo.fasinh}
 }
+\value{
+a function that generates logicle space
+}
 \description{
 flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
 }

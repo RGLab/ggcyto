@@ -2,18 +2,40 @@
 % Please edit documentation in R/fortify_fs.R
 \name{fortify_fs}
 \alias{fortify_fs}
+\alias{fortify_fs.GatingSet}
+\alias{fortify_fs.default}
+\alias{fortify_fs.flowFrame}
+\alias{fortify_fs.flowSet}
 \title{Fortify a model into flowSet object}
 \usage{
 fortify_fs(model, data, ...)
+
+\method{fortify_fs}{flowSet}(model, data, ...)
+
+\method{fortify_fs}{default}(model, data, ...)
+
+\method{fortify_fs}{flowFrame}(model, data, ...)
+
+\method{fortify_fs}{GatingSet}(model, data, ...)
 }
 \arguments{
-\item{model}{model or other R object to convert to data table}
+\item{model}{flow object(flowFrame or GatingSet) to be converted to flowSet. when it is a GatingSet, it must contain the subset information stored as  'subset' attribute.}
 
 \item{data}{original dataset, if needed}
 
 \item{...}{other arguments passed to methods}
 }
+\value{
+a flowSet/ncdfFlowSet object
+}
 \description{
-Method to convert a generic R object into a flowSet useful for ggcyto
+The method provides a universe interface to convert a generic R object into a flowSet useful for ggcyto
+}
+\examples{
+\dontrun{
+fortify_fs(fr)
+attr(gs, "subset") <- "CD4"
+fortify_fs(gs)
+}
 }
 

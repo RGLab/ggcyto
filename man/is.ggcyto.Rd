@@ -9,6 +9,9 @@ is.ggcyto(x)
 \arguments{
 \item{x}{An object to test}
 }
+\value{
+TRUE/FALSE
+}
 \description{
 Reports whether x is a ggcyto object
 }

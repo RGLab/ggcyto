@@ -24,4 +24,10 @@ an empty flowFrame
 \description{
 Mainly to get the channel and marker information.
 }
+\examples{
+\dontrun{
+getFlowFrame(fs)# fs is a flowSet
+getFlowFrame(gs)# gs is a GatingSet
+}
+}
 
