@@ -9,7 +9,7 @@
 #'    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
 #'   }
 #'   
-#' @import methods 
+#' @import methods BiocGenerics
 #' @export
 #' @keywords internal
 #' @param data default cytometry data set.(flowSet,flowFrame)
