@@ -71,7 +71,7 @@ flowJo_fasinh_trans <- function(...){
 #' @param m,t see 'help(flowJo.fasinh')
 #' @export
 scale_x_flowJo_fasinh <- function(..., m = 4, t = 1200){
-  mytrans <- flowJo_fasinh_trans(m = m, t = t)
+  myTrans <- flowJo_fasinh_trans(m = m, t = t)
 #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("x"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
@@ -79,7 +79,7 @@ scale_x_flowJo_fasinh <- function(..., m = 4, t = 1200){
 #' @rdname scale_x_flowJo_fasinh
 #' @export
 scale_y_flowJo_fasinh <- function(..., m = 4, t = 1200){
-  mytrans <- flowJo_fasinh_trans(m = m, t = t)
+  myTrans <- flowJo_fasinh_trans(m = m, t = t)
   #   scale_x_continuous(..., trans = myTrans)
   continuous_scale(aesthetics = c("y"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
 }
