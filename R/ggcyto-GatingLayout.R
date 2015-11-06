@@ -4,6 +4,7 @@
 #' @param ... not used
 #' @export
 #' @return nothing
+#' @method print ggcyto_GatingLayout
 print.ggcyto_GatingLayout <- function(x, ...){
   arrange.main <- x@arrange.main
   plot(do.call(arrangeGrob, c(grobs = x, top = arrange.main)))  

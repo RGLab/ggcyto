@@ -8,7 +8,7 @@
 \title{print method for ggcyto_gate_layout class
 It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_layout object}
 \usage{
-print.ggcyto_GatingLayout(x, ...)
+\method{print}{ggcyto_GatingLayout}(x, ...)
 
 \method{show}{ggcyto_GatingLayout}(object)
 
