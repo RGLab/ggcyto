@@ -100,7 +100,7 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @param model polygonGate
 #' @param data not used.
-#' @param bins the plot information collected from flow data and geom_hex used to interpolate polygon with more vertices. Interpolation is mainly 
+#' @param measure_range,bins the plot information collected from flow data and geom_hex used to interpolate polygon with more vertices. Interpolation is mainly 
 #'                    for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
 #'                    But it is not necessary for other purposes like centroid calculation.
 #' @param ... not used.
@@ -114,14 +114,24 @@ fortify.GatingSet <- function(model, ...){
 #' fortify(pg) #no interpolation
 #' fortify(pg, bins = 30) # with interpolation
 fortify.polygonGate <- function(model, data
-                                # , measure_range = NULL
+                                , measure_range = NULL#actual data_range might be necessary for more accurate interpolation
                                 , bins = NULL, ...){
   
   vertices <- model@boundaries
   chnls <- colnames(vertices)
   
   
-  #measure_range currently not used
+  #reset the boundaries based on the current measure range
+  #to prevent it from interpolating on too large space (thus lose the point when display is still at the scale of measured range)
+  #it is mainly for the infinity vetices from rectangle or the extended vertices during the gate parsing 
+  
+  for(chnl in chnls){
+    thisVal <- vertices[, chnl] 
+    thisRg <- measure_range[, chnl]
+    vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
+    vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
+  }
+  
   if(is.null(bins)){
     
     new.vertices <- vertices
@@ -217,7 +227,7 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' 
 #' @param model filterList
 #' @param data not used
-#' @param bins used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
+#' @param measure_range,bins used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @param ... not used.
 #' 
 #' @importFrom plyr name_rows
@@ -230,12 +240,12 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' fortify(gates)
 #' }
 fortify.filterList <- function(model, data
-                               # , measure_range = NULL
+                               , measure_range = NULL
                                , bins = NULL, ...){
   
   # convert each filter to df
   df <- .ldply(model, fortify
-               # , measure_range = measure_range
+               , measure_range = measure_range
                , bins = bins, .id = ".rownames")
   
   pd <- attr(model,"pd")

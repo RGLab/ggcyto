@@ -4,14 +4,15 @@
 \alias{fortify.polygonGate}
 \title{Convert a polygonGate to a data.table useful for ggplot}
 \usage{
-\method{fortify}{polygonGate}(model, data, bins = NULL, ...)
+\method{fortify}{polygonGate}(model, data, measure_range = NULL,
+  bins = NULL, ...)
 }
 \arguments{
 \item{model}{polygonGate}
 
 \item{data}{not used.}
 
-\item{bins}{the plot information collected from flow data and geom_hex used to interpolate polygon with more vertices. Interpolation is mainly
+\item{measure_range,bins}{the plot information collected from flow data and geom_hex used to interpolate polygon with more vertices. Interpolation is mainly
 for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
 But it is not necessary for other purposes like centroid calculation.}
 

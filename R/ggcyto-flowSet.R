@@ -53,7 +53,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     nDims <- length(dims)
     #attach dims to data for more efficient fortify
     attr(p$data, "dims") <- dims.tbl
-    # attr(p$data, "measure_range") <- range(frm)[, dims.tbl[, name]] #for polygon interpolation
+    attr(p$data, "measure_range") <- range(frm)[, dims.tbl[, name]] #for polygon interpolation
     attr(p$data, "filter") <- filter
     
   }else
@@ -132,7 +132,7 @@ add_ggcyto <- function(e1, e2, e2name){
         if(!isTRUE(attr(layer_data, "pd")))
           attr(layer_data, "pd") <- pd
         #collect range info from flow data
-        # measure_range <- attr(e1$data, "measure_range")
+        measure_range <- attr(e1$data, "measure_range")
         #collect bins info from geom_hex
         bins <- unlist(lapply(e1$layers, function(layer){
                         if(layer$geom$objname == "hex"){
@@ -151,8 +151,9 @@ add_ggcyto <- function(e1, e2, e2name){
         }
         
         #do the lazy-fortify here since we need the range info from main flow data
+        # and bin info from geom_hex layer
         layer_data <- fortify(layer_data
-                              # , measure_range = measure_range
+                              , measure_range = measure_range
                               , bins = bins
                               ) 
         
