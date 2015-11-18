@@ -33,8 +33,9 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
     data_range <- range(fs[[1, use.exprs = FALSE]])
 
   #add default density range
-
-  data_range[["density"]] <- c(0,1)
+  #In order to ensure the stats visiblity
+  #try to put it closer to zero because we don't know the actual density range
+  data_range[["density"]] <- c(0,1e-4)
   centroids <- stat_position(gates, data_range = data_range, ...)
   
   stats <- merge(centroids, stats, by = ".rownames") # merge stats with centroid
