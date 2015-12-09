@@ -119,18 +119,20 @@ fortify.polygonGate <- function(model, data
   
   vertices <- model@boundaries
   chnls <- colnames(vertices)
+  # browser()
   
   
   #reset the boundaries based on the current measure range
   #to prevent it from interpolating on too large space (thus lose the point when display is still at the scale of measured range)
   #it is mainly for the infinity vetices from rectangle or the extended vertices during the gate parsing 
+  ##EDIT:unfortunately this won't work , since the actual data range (meaningful data) could be beyond the measure_range
   
-  for(chnl in chnls){
-    thisVal <- vertices[, chnl] 
-    thisRg <- measure_range[, chnl]
-    vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
-    vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
-  }
+#   for(chnl in chnls){
+#     thisVal <- vertices[, chnl] 
+#     thisRg <- measure_range[, chnl]
+#     vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
+#     vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
+#   }
   
   if(is.null(bins)){
     
