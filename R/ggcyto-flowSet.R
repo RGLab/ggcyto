@@ -123,19 +123,25 @@ add_ggcyto <- function(e1, e2, e2name){
 #   browser()  
   
   dims <- attr(e1$data, "dims")
+  
+  
+  
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
-  if(is.proto(e2)){
-    layer_data <- e2$data
-    pd <- .pd2dt(pData(e1$data))
+  if(is.ggproto(e2)){
+    layer_data <- e2$data  
+    if(!is.null(layer_data))
+      pd <- .pd2dt(pData(e1$data))
     if(is(layer_data, "filterList")){
         if(!isTRUE(attr(layer_data, "pd")))
           attr(layer_data, "pd") <- pd
+        
         #collect range info from flow data
         measure_range <- attr(e1$data, "measure_range")
         #collect bins info from geom_hex
         bins <- unlist(lapply(e1$layers, function(layer){
-                        if(layer$geom$objname == "hex"){
+          
+                        if(is(layer$geom, "GeomHex")){
                           
                           bins <- layer$stat_params[["bins"]]
                           if(is.null(bins)){
@@ -161,60 +167,60 @@ add_ggcyto <- function(e1, e2, e2name){
         e2$data <- layer_data
       
       
-    }else if(e2$geom$objname == "popStats"){
-      gate <- e2$stat_params[["gate"]]
-      #parse the gate from the each gate layer if it is not present in the current geom_stats layer
-      if(is.null(gate))
-      {
-        
-        gates_parsed <- lapply(e1$layers, function(layer){
-          
-                              if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-                                .filterList2dataframe(layer$data, colnames(pd))
-                              else
-                                NULL
-                              })
-        #remove NULL elements
-        gates_parsed <- flowWorkspace:::compact(gates_parsed)
-      }else{
-        gates_parsed <- list(gate)
-      }             
-      
-      
-      if(length(gates_parsed) == 0)
-        stop("geom_gate layer must be added before geom_stats!")
-      
-    
-      # compute pop stats for each gate layer and 
-      value <- e2$stat_params[["value"]]
-      stat_type <- e2$stat_params[["type"]]
-      data_range <- e2$stat_params[["data_range"]]
-      adjust <- e2$stat_params[["adjust"]]
-      fs <- e1$data
-      for(gate in gates_parsed){
-        stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust)
-        
-        # instantiate the new stats layer(somehow direct clone by proto doesn't work here)
-        e2.new <- geom_stats(data = stats)
-        # copy all the other parameters
-        e2.new$geom_params <- defaults(e2.new$geom_params, e2$geom_params)
-        e2.new$stat_params <- defaults(e2.new$stat_params, e2$stat_params)
-        
-        # update aes
-        stats_mapping <- aes_string(label = stat_type)
-        #add y aes for 1d density plot
-        dims <- sapply(e1$mapping,as.character)
-        dims <- dims[grepl("[x|y]", names(dims))]
-        if(length(dims) == 1)
-          stats_mapping <- defaults(stats_mapping, aes(y = density))
-        e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
-      
-        e1 <- ggplot2:::`+.gg`(e1, e2.new)      
-      }
-      
-      return(e1)
     }
     
+  }else if(is(e2, "GeomStats")){
+    gate <- e2[["gate"]]
+    #parse the gate from the each gate layer if it is not present in the current geom_stats layer
+    if(is.null(gate))
+    {
+      pd <- .pd2dt(pData(e1$data))
+      gates_parsed <- lapply(e1$layers, function(layer){
+        
+        if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
+          .filterList2dataframe(layer$data, colnames(pd))
+        else
+          NULL
+      })
+      #remove NULL elements
+      gates_parsed <- flowWorkspace:::compact(gates_parsed)
+    }else{
+      gates_parsed <- list(gate)
+    }             
+    
+    
+    if(length(gates_parsed) == 0)
+      stop("geom_gate layer must be added before geom_stats!")
+    
+    
+    # compute pop stats for each gate layer and 
+    value <- e2[["value"]]
+    stat_type <- e2[["type"]]
+    data_range <- e2[["data_range"]]
+    adjust <- e2[["adjust"]]
+    fs <- e1$data
+    for(gate in gates_parsed){
+      stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust)
+      
+      # instantiate the new stats layer
+      thisCall <- quote(geom_label(data = stats))
+      # copy all the other parameters
+      thisCall <-  as.call(c(as.list(thisCall), e2[["geom_label_params"]]))
+      e2.new <- eval(thisCall)
+      
+      # update aes
+      stats_mapping <- aes_string(label = stat_type)
+      #add y aes for 1d density plot
+      dims <- sapply(e1$mapping,as.character)
+      dims <- dims[grepl("[x|y]", names(dims))]
+      if(length(dims) == 1)
+        stats_mapping <- defaults(stats_mapping, aes(y = density))
+      e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
+      
+      e1 <- ggplot2:::`+.gg`(e1, e2.new)      
+    }
+    
+    return(e1)
   }else if (is.ggcyto_par(e2)) {
     # store the ggcyto pars for the lazy-eval elements
     e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))

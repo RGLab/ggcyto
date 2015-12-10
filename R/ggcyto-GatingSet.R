@@ -66,88 +66,103 @@ as.GatingSet <- function(gh){
 #' }
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
+  add_ggcyto_gs(e1,e2)
+}
+add_ggcyto_gs <- function(e1, e2){
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, as.character)
   gs <- e1$data
-  if(is.proto(e2)){
+  
     
-    parent <- attr(gs, "subset")
-    if(e2$geom$objname=="gs.node"){
-      #instantiate e2 layer as a specific gate layer
+  parent <- attr(gs, "subset")
+  if(is(e2, "gs.node")){
+    #instantiate e2 layer as a specific gate layer
 #       browser()      
-      nodes <- e2$stat_params[["node"]]  
-      #instantiate the parent by the first node if it is not yet been done
-      if(isTRUE(nodes == "_child_")){
-        if(parent == "_parent_")
-          stop("either 'subset' in ggcyto object or 'data' in geom_gate layer needs to be specified!")
-        
-        nodes <- .getChildren_by_projection(gs, parent, x = prj[1], y = prj[2])
-      }
-      #instantiate the subset/parent info
-      if(parent == "_parent_"){
-        parent <- getParent(gs[[1]], nodes[[1]])
-        attr(e1$data, "subset") <- parent
-      }
+    nodes <- e2[["node"]]  
+    #instantiate the parent by the first node if it is not yet been done
+    if(isTRUE(nodes == "_child_")){
+      if(parent == "_parent_")
+        stop("either 'subset' in ggcyto object or 'data' in geom_gate layer needs to be specified!")
+      
+      nodes <- .getChildren_by_projection(gs, parent, x = prj[1], y = prj[2])
+    }
+    #instantiate the subset/parent info
+    if(parent == "_parent_"){
+      parent <- getParent(gs[[1]], nodes[[1]])
+      attr(e1$data, "subset") <- parent
+    }
 #       browser()
-      if(e1$labels[["title"]] == "_parent_")
-        e1$labels[["title"]] <- parent
+    if(e1$labels[["title"]] == "_parent_")
+      e1$labels[["title"]] <- parent
+    
+    for(node in nodes)
+    {
+      gate <- getGate(gs, node)
       
-      for(node in nodes)
-      {
-        gate <- getGate(gs, node)
-        #can't clone directly from e2 since geom_gate is a speical layer 
-        #that is different from 'GeomGsNode' and needs to be constructed explicitly 
-        e2.new <- geom_gate(gate) 
-        # copy all the other parameters
-        e2.new$geom_params <- defaults(e2.new$geom_params, e2$geom_params)
-        e2.new$stat_params <- defaults(e2.new$stat_params, e2$stat_params)
-        e1 <- `+.ggcyto_flowSet`(e1, e2.new)
-      }
-      
-      #store nodes so that geom_stats layers can use it
-      e1[["nodes"]] <- c(e1[["nodes"]], nodes)
-     return (e1) 
-      
-    }else if(e2$geom$objname == "popStats"){
-      # cal range here
-      if(is.null(e2$stat_params[["data_range"]])){
-        fs <- getData(gs, parent)
-        e2$stat_params[["data_range"]] <- range(fs[[1, use.exprs = FALSE]])  
-      }
-      #grab the nodes info from previous gate layers
-      nodes.geom_gate <- e1[["nodes"]]
-      if(is.null(nodes.geom_gate))
-        stop("geom_gate must be added before adding geom_stats!")
-      gates <- e2$stat_params[["gate"]]      
-      #when gate argument is absent from the stats layer, substitute it with nodes from gates layers
-      if(is.null(gates))
-        gates <- nodes.geom_gate
-      #if it is character then use it as node names
-      if(is.character(gates)){
-        #update the gate argument with the actual gates
-        for(node in gates){
-          gates <- getGate(gs, node)
-          #clone e2
-          
-          e2.new <- proto(e2)#as.proto(as.list(e2), parent = GeomStats)
-          e2.new$stat_params[["gate"]] <- gates
-          stat_type <- e2.new$stat_params[["type"]]
-          #grab the pre-calculated stats
-          if(is.null(e2$stat_params[["value"]])){
-            if(stat_type == "count")
-              e2.new$stat_params[["value"]] <- lapply(gs, getTotal, y = node)
-            else if(stat_type == "percent")
-              e2.new$stat_params[["value"]] <- lapply(gs, getProp, y = node)
-          }
-#           browser()
-         e1 <- `+.ggcyto_flowSet`(e1, e2.new) 
-        }
-        return(e1)
-      }
-      
+      thisCall <- quote(geom_gate(gate))
+      thisCall <- as.call(c(as.list(thisCall), e2[["gate_params"]]))
+      e2.new <- eval(thisCall)
+      e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     }
     
-  }else if(inherits(e2, "raw_scale")){
+    #store nodes so that geom_stats layers can use it
+    e1[["nodes"]] <- c(e1[["nodes"]], nodes)
+   return (e1) 
+    
+  }else if(is(e2, "GeomStats")){
+    data_range <- e2[["data_range"]]
+    adjust <- e2[["adjust"]]
+    # cal range here
+    if(is.null(data_range)){
+      fs <- getData(gs, parent)
+      data_range <- range(fs[[1, use.exprs = FALSE]])  
+    }
+    #grab the nodes info from previous gate layers
+    nodes.geom_gate <- e1[["nodes"]]
+    if(is.null(nodes.geom_gate))
+      stop("geom_gate must be added before adding geom_stats!")
+    gates <- e2[["gate"]]      
+    #when gate argument is absent from the stats layer, substitute it with nodes from gates layers
+    if(is.null(gates))
+      gates <- nodes.geom_gate
+    #if it is character then use it as node names
+    if(is.character(gates)){
+      #update the gate argument with the actual gates
+      for(node in gates){
+        gates <- getGate(gs, node)
+       
+        stat_type <- e2[["type"]]
+        value <- e2[["value"]]
+        #grab the pre-calculated stats
+        if(is.null(value)){
+          if(stat_type == "count")
+            value <- lapply(gs, getTotal, y = node)
+          else if(stat_type == "percent")
+            value <- lapply(gs, getProp, y = node)
+        }
+        
+       thisCall <- quote(geom_stats(gates))
+       
+       thisCall <- as.call(c(as.list(thisCall)
+                             , list(value = value
+                                    , type = stat_type
+                                    , data_range = data_range
+                                    , adjust = adjust
+                                    )
+                             , e2[["geom_label_params"]]
+                             )
+                           )
+       e2.new <- eval(thisCall)
+        
+       
+       e1 <- `+.ggcyto_flowSet`(e1, e2.new) 
+      }
+      return(e1)
+    }
+    
+  }
+    
+  if(inherits(e2, "raw_scale")){
     #get channel name
     axis_name <- ifelse(any(grepl("^x$", e2[["aesthetics"]])), "x", "y")
     channel <- prj[[axis_name]]
@@ -206,4 +221,10 @@ setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
     ind<-which(unlist(isMatched))
     cids[ind]
   }
+}
+
+#TODO: more efficient cloning the existing ggproto object
+ggproto.copy <- function(x){
+  y <- serialize(x, NULL)
+  unserialize(y)
 }

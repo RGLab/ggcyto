@@ -18,7 +18,7 @@
 #' @param ... other arguments passed on to \code{\link{layer}}. This can
 #'   include aesthetics whose values you want to set, not map. See
 #'   \code{\link{layer}} for more details.
-#' @param show_guide should a legend be drawn? (defaults to \code{FALSE})
+#' @param show.legend should a legend be drawn? (defaults to \code{FALSE})
 #' @export
 #' @return a geom_hvline layer
 #' @examples
@@ -29,56 +29,50 @@
 #' p + geom_hvline(data = data.frame(wt= 3))
 #' # hline
 #' p + geom_hvline(data = data.frame(mpg= 20))
-geom_hvline <- function (mapping = NULL, data = NULL, position = "identity", show_guide = FALSE, ...) {
-  obj <- GeomHVline$new(mapping = mapping, data = data, position = position, show_guide = show_guide, ...)
+geom_hvline <- function (mapping = NULL, data = NULL, position = "identity", show.legend = FALSE, ...) {
+  obj <- layer(geom = GeomHVline, mapping = mapping, data = data
+               , position = position, show.legend = show.legend
+               , stat = StatIdentity
+               , params  = list(na.rm = FALSE
+                                ,...)
+  )
   
-  
-  # somehow applying this GeomHVline directly doesn't work 
-  # it seems that the object created by GeomHVline$new will lose the overriden function
-  # (no wonder ggplot is planning to deprecate proto with S3)
+  # browser()
   obj$compute_aesthetics <- .my_compute_aesthetics
   obj
 }
 
-#' @import proto 
-GeomHVline <- proto(ggplot2:::Geom, {
-  objname <- "hvline"
-  
-  new <- function(., data = NULL, mapping = NULL, ...) {
-    #inherit.aes must be TRUE to get original aes
-    .super$new(., data = data, mapping = mapping, inherit.aes = TRUE, ...)
-  }
-  
-  
-  draw <- function(., data, scales, coordinates, ...) {
-    
-    ranges <- coord_range(coordinates, scales)
-    
-    # determien wether x or y 
-    if("x"%in% colnames(data)){
-      axis.used <- "x"
-      axis.missing <- "y"
-    }else{
-      axis.used <- "y"
-      axis.missing <- "x"
-    }
-    #fill values for the missing axis
-    thisRange <- ranges[[axis.missing]]  
-    data[[axis.missing]]    <- thisRange[1]
-    data[[paste0(axis.missing, "end")]] <- thisRange[2]
-    #fill end point for the used axis
-    data[[paste0(axis.used, "end")]] <- data[[axis.used]]
-
-    #remove Inf lines
-    data <- data[!is.infinite(data[,axis.used]), ]
-    GeomSegment$draw(unique(data), scales, coordinates)
-  }
-  
-  default_stat <- function(.) StatIdentity
-  default_aes <- function(.) aes(colour="black", size=0.5, linetype=1, alpha = NA)
-  guide_geom <- function(.) "path"
-  
-})
+GeomHVline <- ggproto("hvline", Geom,
+                    draw_panel = function(data, panel_scales, coord) {
+                      ranges <- coord$range(panel_scales)
+                      
+                      # determien wether x or y 
+                      if("x"%in% colnames(data)){
+                        axis.used <- "x"
+                        axis.missing <- "y"
+                      }else{
+                        axis.used <- "y"
+                        axis.missing <- "x"
+                      }
+                      
+                      #fill values for the missing axis
+                      thisRange <- ranges[[axis.missing]]  
+                      data[[axis.missing]]    <- thisRange[1]
+                      data[[paste0(axis.missing, "end")]] <- thisRange[2]
+                      #fill values for the used axis
+                      data[[paste0(axis.used, "end")]] <- data[[axis.used]] #<- data[[paste0(axis.used, "intercept")]]
+                      
+                      #remove Inf lines
+                      data <- data[!is.infinite(data[,axis.used]), ] 
+                      
+                      GeomSegment$draw_panel(unique(data), panel_scales, coord)
+                    },
+                    
+                    default_aes = aes(colour = "black", size = 0.5, linetype = 1, alpha = NA)
+                    # ,required_aes = "yintercept"
+                    
+                    ,draw_key = draw_key_path
+)
 
 #' override the original Layer$compute_aesthetics method so that it could make it for the layer
 #' that contains 1d data but uses the 2d aes
@@ -95,48 +89,59 @@ GeomHVline <- proto(ggplot2:::Geom, {
 #' is already facetted before this step and there is no way to access the facetted plot$data in order to
 #' reassign the 'panel' info for layer data.
 #' @importFrom plyr eval.quoted compact empty
-.my_compute_aesthetics <- function(., data, plot) {
-  
-  aesthetics <- .$layer_mapping(plot$mapping)
-  
-  if (!is.null(.$subset)) {
-    include <- data.frame(eval.quoted(.$subset, data, plot$env))
-    data <- data[rowSums(include, na.rm = TRUE) == ncol(include), ]
+.my_compute_aesthetics <- function(self, data, plot) {
+  # browser()
+  # For annotation geoms, it is useful to be able to ignore the default aes
+  if (self$inherit.aes) {
+    aesthetics <- defaults(self$mapping, plot$mapping)
+  } else {
+    aesthetics <- self$mapping
   }
   
-  # Override grouping if set in layer.
-  if (!is.null(.$geom_params$group)) {
-    aesthetics["group"] <- .$geom_params$group
+  # Drop aesthetics that are set or calculated
+  set <- 
+    names(aesthetics) %in% names(self$aes_params)
+  calculated <- ggplot2:::is_calculated_aes(aesthetics)
+  aesthetics <- aesthetics[!set & !calculated]
+  
+  # Override grouping if set in layer
+  if (!is.null(self$geom_params$group)) {
+    aesthetics[["group"]] <- self$aes_params$group
+  }
+  
+  # Old subsetting method
+  if (!is.null(self$subset)) {
+    include <- data.frame(plyr::eval.quoted(self$subset, data, plot$env))
+    data <- data[rowSums(include, na.rm = TRUE) == ncol(include), ]
   }
   
   ggplot2:::scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
   
-   
-  #the hack:  
+  # browser()
+  #the two lines of hack for hvline:  
   # rm the missing axis from mapping aes so that 
   # it won't fail the following aesthetics evaluation 
   aes_matched <-  sapply(aesthetics, as.character) %in% colnames(data)
   aesthetics <- aesthetics[aes_matched]
   
+  # Evaluate and check aesthetics
+  aesthetics <- compact(aesthetics)
+  evaled <- lapply(aesthetics, eval, envir = data, enclos = plot$plot_env)
   
-  # Evaluate aesthetics in the context of their data frame
-  evaled <- compact(
-    eval.quoted(aesthetics, data, plot$plot_env))
-  
-  lengths <- vapply(evaled, length, integer(1))
-  n <- if (length(lengths) > 0) max(lengths) else 0
-  
-  wrong <- lengths != 1 & lengths != n
-  if (any(wrong)) {
-    stop("Aesthetics must either be length one, or the same length as the data",
-         "Problems:", paste(aesthetics[wrong], collapse = ", "), call. = FALSE)
+  n <- nrow(data)
+  if (n == 0) {
+    # No data, so look at longest evaluated aesthetic
+    n <- max(vapply(evaled, length, integer(1)))
   }
+  ggplot2:::check_aesthetics(evaled, n)
   
+  # Set special group and panel vars
   if (empty(data) && n > 0) {
-    # No data, and vectors suppled to aesthetics
     evaled$PANEL <- 1
   } else {
     evaled$PANEL <- data$PANEL
   }
-  data.frame(evaled)
+  evaled <- data.frame(evaled, stringsAsFactors = FALSE)
+  evaled <- ggplot2:::add_group(evaled)
+  evaled
 }

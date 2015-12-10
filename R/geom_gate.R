@@ -90,10 +90,10 @@ geom_gate.polygonGate <- function(data, ...){
 
 
 .geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
-  
+  # browser()
   #' To proper interpolate the polygon we need to wailt until the xbin and measure_range are collected from the main ggcyto object
   #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
-  path_layer <- geom_path(mapping = mapping, data = NULL , fill = fill, colour = colour, ...) 
+  path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
   #now we can saftely assign the data
   path_layer[["data"]] <- data
   path_layer
@@ -114,7 +114,7 @@ geom_gate.rectangleGate <- function(data, ...){
     geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, ...)
   }else if(nDim ==  1){
 #     browser()
-      geom_hvline(data = data, fill = fill, colour = colour, ...)
+      geom_hvline(data = data, colour = colour, ...)
          
   }else
     stop("rectangelGate with dimension ", nDim, "is not supported!")
@@ -131,11 +131,11 @@ geom_gate.ellipsoidGate <- function(data, ...){
 #' @rdname geom_gate
 #' @export
 geom_gate.character <- function(data, ...){
-  
-  GeomGsNode$new(data = NULL, node = data, ...)
+        structure(
+                 list(node = data
+                      , gate_params = list(...)
+                  )
+                , class = c("gs.node", "ggcyto_virtual_layer")
+                )
 }
 
-GeomGsNode <- proto(ggplot2:::Geom, {
-  objname <- "gs.node"
-  default_stat <- function(.) StatIdentity
-})
