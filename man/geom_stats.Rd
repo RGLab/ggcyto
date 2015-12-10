@@ -5,13 +5,14 @@
 \title{Popluation statistics layer}
 \usage{
 geom_stats(gate = NULL, ..., value = NULL, type = "percent",
-  data_range = NULL, adjust = 0.5)
+  data_range = NULL, adjust = 0.5, label.padding = unit(0.05, "lines"),
+  label.size = 0)
 }
 \arguments{
 \item{gate}{a 'filterList` or character (represent as a population node in GatingSet)
-if not supplied, ggcyto then tries to parse the gate from the first geom_gate layer}
+if not supplied, ggcyto then tries to parse the gate from the first geom_gate layer.}
 
-\item{...}{other arguments passed to stat_position function}
+\item{...}{other arguments passed to geom_label layer}
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
@@ -20,14 +21,16 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 \item{data_range}{the data range for each channels}
 
 \item{adjust}{adjust the position of the centroid. from 0 to 1.}
+
+\item{label.padding,label.size}{arguments passed to geom_label layer}
 }
 \value{
 a geom_popStats layer
 }
 \description{
-It is a dummy layer that simply inherits GeomBText.
-The actual data for geom_text layer will be instanatiated within ggycto.+ operatoer
-by looking up the geom_gate layer.
+It is a virtual layer and will be instanatiated as geom_label layer within ggycto.+ operator.
+}
+\details{
 So it is dedicated for ggcyto context and thus can't not be added to ggplot object directly.
 }
 \examples{

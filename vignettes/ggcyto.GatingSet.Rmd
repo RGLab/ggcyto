@@ -45,6 +45,9 @@ p + geom_gate("CD4")
 # add two gates
 p <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p
+```
+
+```{r}
 
 # add stats (for all gate layers by default) and only display marker on axis
 p + geom_stats() + labs_cyto("marker")

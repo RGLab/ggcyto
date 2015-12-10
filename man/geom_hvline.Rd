@@ -5,7 +5,7 @@
 \title{Vertical or horizontal line.}
 \usage{
 geom_hvline(mapping = NULL, data = NULL, position = "identity",
-  show_guide = FALSE, ...)
+  show.legend = FALSE, ...)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with
@@ -18,7 +18,7 @@ the plot defaults.}
 \item{position}{The position adjustment to use for overlapping points
 on this layer}
 
-\item{show_guide}{should a legend be drawn? (defaults to \code{FALSE})}
+\item{show.legend}{should a legend be drawn? (defaults to \code{FALSE})}
 
 \item{...}{other arguments passed on to \code{\link{layer}}. This can
 include aesthetics whose values you want to set, not map. See

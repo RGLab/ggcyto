@@ -32,7 +32,7 @@ norm.filter <- lg$n2gate
 #extract the polygonGate
 poly.g <- flowViz:::norm2Polygon(filterDetails(lg[["n2gateResults"]], identifier(norm.filter)))
 p <- ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`))
-p <- p + stat_binhex(bin = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2))   
+p <- p + stat_binhex(bins = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 
 # add polygonGate layer
 p1 <- p + geom_path(data = poly.g, colour = "red")#can't use geom_gate since it is specialized layer to be used with ggcyto wrapper
@@ -51,7 +51,7 @@ p1 + geom_hvline(data = rectangleGate("SSC-H" = c(550, Inf)), colour = "red") #h
 # n samples + 1 gate
 myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
 myColor_scale_fill <- scale_fill_gradientn(colours = myColor)
-p <- ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + myColor_scale_fill + stat_binhex(bin = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2)) + facet_wrap(~name)    
+p <- ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + myColor_scale_fill + stat_binhex(bins = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2)) + facet_wrap(~name)    
 p + geom_path(data = poly.g, colour = "red")
     
 # n samples + n gates
@@ -67,7 +67,7 @@ p + geom_path(data = poly.gates, colour = "red")
 
 # add stats
 stats <- compute_stats(fs, poly.gates, type = "percent")# calculate cell % and ccentroid of the gates
-p + geom_path(data = poly.gates, colour = "red") + geom_btext(data = stats , aes(label = percent))
+p + geom_path(data = poly.gates, colour = "red") + geom_label(data = stats , aes(label = percent))
 
 # a list of 1d gate
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
@@ -82,13 +82,13 @@ attr(den.gates, "pd") <- pData(fs)
 
 # add stats
 stats <- compute_stats(fs, den.gates)# calculate cell % and ccentroid of the gates
-p + geom_hvline(data = den.gates, colour = "red") + geom_btext(data = stats , aes(label = percent), bgfill = "yellow")
+p + geom_hvline(data = den.gates, colour = "red") + geom_label(data = stats , aes(label = percent), fill = "yellow")
 
 # 1d gate on density plot
 p1 <- ggplot(fs, aes(x = `SSC-H`)) + geom_density(aes(y = ..scaled..),fill = "black") + facet_wrap(~name) 
-p1 <- p1 + geom_hvline(data = den.gates, colour = "red", limit = c(0, 1e3)) 
+p1 <- p1 + geom_hvline(data = den.gates, colour = "red") 
 #must define y aes here since ggplot object does not have y defined in aes
-p1 + geom_btext(data = stats , aes(label = percent, y = density))
+p1 + geom_label(data = stats , aes(label = percent, y = density))
 
 ```
 

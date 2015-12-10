@@ -56,24 +56,24 @@ p + scale_x_flowJo_fasinh(t = 1e4)
 p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 
 # save the scales
-myScales <- scale_x_logicle(t = 1e4, w = 0, breaks = myBreaks, limits = c(2, 1e4))
+# myScales <- scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 
 
 # density  (default y is density)
-p <- ggplot(fr, aes(x = `FL1-H`)) + myScales
-p + geom_density() 
+p <- ggplot(fr, aes(x = `FL1-H`)) 
+p + geom_density() + scale_x_log10()
 
 # display area
-p + geom_area(stat = "density") 
+p + geom_area(stat = "density") + scale_x_log10()
 
 # display y as count
-p + geom_area(stat = "density", aes(y = ..count..))
+p + geom_area(stat = "density", aes(y = ..count..))+ scale_x_log10()
   
 # histogram + density line
-ggplot(fr, aes(x = `FL1-H`, y = ..density..)) + geom_histogram(colour = "white") + geom_density(color = "red") + myScales
+ggplot(fr, aes(x = `FL1-H`, y = ..density..)) + geom_histogram(colour = "white") + geom_density(color = "red") + scale_x_log10()
 
 # plot multiple samples
-p <- ggplot(fs, aes(x = `FL1-H`)) + myScales + geom_area(stat = "density")
+p <- ggplot(fs, aes(x = `FL1-H`)) + geom_area(stat = "density")+ scale_x_log10()
 # facetting by sample names
 p + facet_wrap(~name) 
 
@@ -81,9 +81,9 @@ p + facet_wrap(~name)
 p + facet_grid(Patient~Visit)
 
 # fill with different colors
-ggplot(fs, aes(x = `FL1-H`, fill = name)) + facet_wrap(~name) +  geom_density(alpha = 0.2) + myScales
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + facet_wrap(~name) +  geom_density(alpha = 0.2)+ scale_x_log10()
 
 # or plot in the same panel
-ggplot(fs, aes(x = `FL1-H`, fill = name)) + geom_density(alpha = 0.2) + myScales
+ggplot(fs, aes(x = `FL1-H`, fill = name)) + geom_density(alpha = 0.2) + scale_x_log10()
 ```
 

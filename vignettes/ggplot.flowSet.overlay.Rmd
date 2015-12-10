@@ -38,7 +38,7 @@ norm.filter <- lg$n2gate
 overlay.fr <- lg$x
 
 # add the overlay and dim the background
-p1 <- p + stat_binhex(bin = 64, alpha = 0.2)
+p1 <- p + stat_binhex(bins = 64, alpha = 0.2)
 p1 <- p1 + geom_point(data = overlay.fr, color = "red", cex = 0.5, pch = 19)
 p1
 
@@ -52,7 +52,7 @@ overlay.fs1 <- Subset(fs, norm.filter)
 overlay.fs2 <- Subset(fs, rect.g)
 ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + 
           scale_fill_gradientn(colours = myColor)  +
-          stat_binhex(bin = 64, alpha = 0.2) +
+          stat_binhex(bins = 64, alpha = 0.2) +
           geom_point(data = overlay.fs1, color = "red", cex = 0.5, pch = 19) +
           geom_point(data = overlay.fs2, color = "black", cex = 0.5, pch = 19) +
           facet_grid(Patient ~ Visit)
