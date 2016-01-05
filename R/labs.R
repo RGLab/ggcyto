@@ -6,10 +6,12 @@
 #' @export
 #' @return a list 
 #' @examples
-#' \dontrun{
+#' 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' 
 #' # default is "both"
-#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") + geom_hex(bins = 64)
+#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
 #' p
 #' 
 #' #use marker name as x,y labs
@@ -17,7 +19,6 @@
 #' 
 #' use channel name as x,y labs
 #' p + labs_cyto("channel")
-#' }
 labs_cyto <- function(labels = "both") {
   
   structure(list(labels = labels), class = "labs_cyto")

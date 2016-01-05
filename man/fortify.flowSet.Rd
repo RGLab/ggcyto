@@ -31,11 +31,16 @@ data.table
 It extracts events matrices and appends the pData to it so that ggplot can use the pData for facetting.
 }
 \examples{
-\dontrun{
-fortify(fr)#fr is a flowFrame
-fortify(fs)#fs is a flowSet/ncdfFlowSet
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+
 attr(gs, "subset") <- "CD4" #must attach subset information to GatingSet object before foritfying it
 fortify(gs)
-}
+
+fs <- getData(gs, "CD8")
+fortify(fs)#fs is a flowSet/ncdfFlowSet
+
+fr <- fs[[1]]
+fortify(fr)#fr is a flowFrame
 }
 

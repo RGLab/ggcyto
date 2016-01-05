@@ -66,12 +66,17 @@ fortify.flowFrame <- function(model, data, ...){
 #' @aliases fortify
 #' @return data.table
 #' @examples 
-#' \dontrun{
-#' fortify(fr)#fr is a flowFrame
-#' fortify(fs)#fs is a flowSet/ncdfFlowSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' 
 #' attr(gs, "subset") <- "CD4" #must attach subset information to GatingSet object before foritfying it
 #' fortify(gs)
-#' }
+#' 
+#' fs <- getData(gs, "CD8")
+#' fortify(fs)#fs is a flowSet/ncdfFlowSet
+#' 
+#' fr <- fs[[1]]
+#' fortify(fr)#fr is a flowFrame
 fortify.flowSet <- function(model, data, ...){
   #convert to data.table
   df <- .fs2dt(model)
@@ -236,11 +241,11 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' @export
 #' @return data.table
 #' @examples 
-#' \dontrun{
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' gates <- getGate(gs, "CD4")
 #' gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
 #' fortify(gates)
-#' }
 fortify.filterList <- function(model, data
                                , measure_range = NULL
                                , bins = NULL, ...){

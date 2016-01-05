@@ -7,11 +7,14 @@
 #' @param ... other arguments passed to methods
 #' @return a flowSet/ncdfFlowSet object
 #' @examples 
-#' \dontrun{
+#' data(GvHD)
+#' fr <- GvHD[[1]]
 #' fortify_fs(fr)
+#' 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' attr(gs, "subset") <- "CD4"
 #' fortify_fs(gs)
-#' }
 #' @export
 fortify_fs <- function(model, data, ...) UseMethod("fortify_fs")
 

@@ -24,7 +24,6 @@ a ggcyto_GatingSet object which is a subclass of ggcyto class.
 Create a new ggcyto plot from a flowSet
 }
 \examples{
-\dontrun{
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
 # 1d histogram/densityplot
@@ -42,7 +41,5 @@ p + geom_density()
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 p <- p + geom_hex(bins = 128)
 p
-
-}
 }
 

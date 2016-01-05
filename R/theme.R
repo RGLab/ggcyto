@@ -29,9 +29,12 @@
 #'   existing parameter settings
 #' @return a list of new settings for ggycto
 #' @export
-#' @examples
-#' \dontrun{
-#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+") 
+#' @examples 
+#' library(ggcyto)
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' 
+#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") 
 #' # 2d plot 
 #' p <- p + geom_hex(bins = 64)
 #' p
@@ -42,7 +45,6 @@
 #' #manually set limits
 #' myPars <- ggcyto_par_set(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
 #'  p  + myPars# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
-#' }
 ggcyto_par_set <- function(...) {
   elements <- list(...)
   # Check that all elements have the correct class (element_text, unit, etc)
@@ -55,9 +57,7 @@ ggcyto_par_set <- function(...) {
 #' @return a list of default settings for ggycto
 #' @export
 #' @examples
-#' \dontrun{
 #' ggcyto_par_default()
-#' }
 ggcyto_par_default <- function(){
   do.call(ggcyto_par_set, .element_tree)
 }

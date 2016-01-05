@@ -13,8 +13,6 @@ a list of default settings for ggycto
 Return The default ggcyto settings
 }
 \examples{
-\dontrun{
 ggcyto_par_default()
-}
 }
 

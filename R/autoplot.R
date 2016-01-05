@@ -12,7 +12,6 @@
 #' @return a ggcyto object
 #' 
 #' @examples
-#' \dontrun{
 #' library(flowCore)
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
@@ -30,8 +29,10 @@
 #' 
 #' #autplot for GatingHierarchy
 #' gh <- gs[[1]]
-#' autoplot(gh)
-#' }
+#' autoplot(gh) # by default the strip.text shows the parent population
+#'
+#' #To display the gate name
+#' #autoplot(gh , strip.text = "gate")
 #' @export 
 autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   

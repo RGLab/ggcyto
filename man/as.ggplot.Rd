@@ -18,7 +18,8 @@ This function is usually called automatically in the print/plot method of ggycyt
 by user so that it can be used as a regular ggplot object.
 }
 \examples{
-\dontrun{
+data(GvHD)
+fs <- GvHD[1:3]
 #construct the `ggcyto` object (inherits from `ggplot` class)
 p <- ggcyto(fs, aes(x = `FSC-H`)) + geom_histogram()
 class(p) # a ggcyto object
@@ -26,6 +27,5 @@ p$data # data has not been fortified
 p1 <- as.ggplot(p) # convert it to a ggplot object explictily
 class(p1)
 p1$data # datra is fortified
-}
 }
 

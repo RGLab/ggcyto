@@ -20,11 +20,11 @@ It is essentially a dummy continous scale and will be instantiated
 by '+.ggcyto_GatingSet' with 'breaks` and 'lables' customized.
 }
 \examples{
-\dontrun{
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
  p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
  p <- p + geom_gate("CD4") + geom_stats() #plot CD4 gate and it is stats
  p
  p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
-}
 }
 

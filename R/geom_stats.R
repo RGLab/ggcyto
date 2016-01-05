@@ -13,12 +13,12 @@
 #' @export
 #' @return  a geom_popStats layer 
 #' @examples
-#' \dontrun{
-#' 
-#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-#' p <- p + geom_hex(bins = 128)
-#' p + geom_gate(rect.gates) + geom_stats()
-#' }
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' p
+#' # add gate and stats layer
+#' p + geom_gate("CD4") + geom_stats()
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", data_range = NULL, adjust = 0.5
                        , label.padding = unit(0.05, "lines"), label.size = 0){
   type <- match.arg(type, c("percent", "count"))

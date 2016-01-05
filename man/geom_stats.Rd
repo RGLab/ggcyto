@@ -34,11 +34,11 @@ It is a virtual layer and will be instanatiated as geom_label layer within ggyct
 So it is dedicated for ggcyto context and thus can't not be added to ggplot object directly.
 }
 \examples{
-\dontrun{
-
-p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-p <- p + geom_hex(bins = 128)
-p + geom_gate(rect.gates) + geom_stats()
-}
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+p
+# add gate and stats layer
+p + geom_gate("CD4") + geom_stats()
 }
 

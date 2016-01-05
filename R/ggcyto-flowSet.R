@@ -11,7 +11,6 @@
 #' @export
 #' @examples
 #' 
-#' \dontrun{
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #' # 1d histogram/densityplot
@@ -30,7 +29,6 @@
 #' p <- p + geom_hex(bins = 128)
 #' p
 #'
-#' }
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
@@ -95,7 +93,6 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' @export
 #' @examples
 #' 
-#' \dontrun{
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_hex(bins = 128)
@@ -103,7 +100,6 @@ is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
 #' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' p + geom_gate(rect.gates) + geom_stats()
-#'}
 `+.ggcyto_flowSet` <- function(e1, e2){
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages

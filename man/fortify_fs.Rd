@@ -32,10 +32,13 @@ a flowSet/ncdfFlowSet object
 The method provides a universe interface to convert a generic R object into a flowSet useful for ggcyto
 }
 \examples{
-\dontrun{
+data(GvHD)
+fr <- GvHD[[1]]
 fortify_fs(fr)
+
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 attr(gs, "subset") <- "CD4"
 fortify_fs(gs)
-}
 }
 

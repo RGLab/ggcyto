@@ -31,7 +31,6 @@ setMethod("show", "ggcyto_GatingLayout", show.ggcyto_GatingLayout)
 #' @export
 #' @return a GatingLayout object
 #' @examples 
-#' \dontrun{
 #' #autplot for GatingSet
 #' dataDir <- system.file("extdata",package="flowWorkspaceData")
 #' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
@@ -40,7 +39,6 @@ setMethod("show", "ggcyto_GatingLayout", show.ggcyto_GatingLayout)
 #' class(p)
 #' # customize the font size of strip text for each ggcyo plots contained in GatingLayout object
 #' p + theme(strip.text = element_text(size = 14))
-#' }
 `+.ggcyto_GatingLayout` <- function(e1, e2){
   # browser()
   for(i in seq_along(e1)){

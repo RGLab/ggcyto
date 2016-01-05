@@ -22,7 +22,6 @@
 #' @export
 #' @return a geom_gate layer
 #' @examples 
-#' \dontrun{
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
@@ -31,7 +30,12 @@
 #' #constuctor for a list of filters
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' p + geom_gate(rect.gates)
-#' }
+#' 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' # add gate layer by gate name
+#' p + geom_gate("CD4")
 geom_gate <- function(data, ...)UseMethod("geom_gate")
 
 #' @export

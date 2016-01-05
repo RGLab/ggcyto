@@ -32,8 +32,11 @@ The individual elements are:
 }
 }
 \examples{
-\dontrun{
-p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+")
+library(ggcyto)
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+
+p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+")
 # 2d plot
 p <- p + geom_hex(bins = 64)
 p
@@ -44,6 +47,5 @@ p + ggcyto_par_set(limits = "instrument")
 #manually set limits
 myPars <- ggcyto_par_set(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
  p  + myPars# or xlim(0,3.2e3) + ylim(-10, 3.5e3)
-}
 }
 

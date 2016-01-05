@@ -23,10 +23,10 @@ data.table
 It tries to merge with pData that is associated with filterList as attribute 'pd'
 }
 \examples{
-\dontrun{
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 gates <- getGate(gs, "CD4")
 gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
 fortify(gates)
-}
 }
 

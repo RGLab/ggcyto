@@ -48,7 +48,6 @@ Overloaded autoplot for the cytomertry data structure: flowFrame or flowSet, Gat
 It plots the cytometry data with geom_histogram, geom_density or geom_hex.
 }
 \examples{
-\dontrun{
 library(flowCore)
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
@@ -66,7 +65,9 @@ autoplot(gs, "CD3+")
 
 #autplot for GatingHierarchy
 gh <- gs[[1]]
-autoplot(gh)
-}
+autoplot(gh) # by default the strip.text shows the parent population
+
+#To display the gate name
+#autoplot(gh , strip.text = "gate")
 }
 

@@ -16,7 +16,8 @@
 #' @param ... other arguments passed to specific methods
 #' @examples
 #' 
-#' \dontrun{
+#' data(GvHD)
+#' fs <- GvHD[1:3]
 #' #construct the `ggcyto` object (inherits from `ggplot` class)
 #' p <- ggcyto(fs, aes(x = `FSC-H`)) 
 #' p + geom_histogram() 
@@ -27,8 +28,7 @@
 #' 
 #' # 2d scatter plot
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-#' p + stat_binhex(bin = 128)
-#' }
+#' p + geom_hex(bins = 128)
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 
@@ -95,7 +95,8 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' 
 #' @return ggplot object
 #' @examples 
-#' \dontrun{
+#' data(GvHD)
+#' fs <- GvHD[1:3]
 #' #construct the `ggcyto` object (inherits from `ggplot` class)
 #' p <- ggcyto(fs, aes(x = `FSC-H`)) + geom_histogram() 
 #' class(p) # a ggcyto object
@@ -103,8 +104,6 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' p1 <- as.ggplot(p) # convert it to a ggplot object explictily 
 #' class(p1) 
 #' p1$data # datra is fortified
-#' }
-
 #' @export
 as.ggplot <- function(x){
 #   browser()

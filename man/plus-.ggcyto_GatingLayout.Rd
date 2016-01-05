@@ -24,7 +24,6 @@ a GatingLayout object
 It adds the layer specified by 'e2' to each individual ggplot object stored in ggcyto_gate_layout
 }
 \examples{
-\dontrun{
 #autplot for GatingSet
 dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
@@ -33,6 +32,5 @@ p <- autoplot(gh)
 class(p)
 # customize the font size of strip text for each ggcyo plots contained in GatingLayout object
 p + theme(strip.text = element_text(size = 14))
-}
 }
 

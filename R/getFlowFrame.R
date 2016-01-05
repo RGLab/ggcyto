@@ -3,13 +3,17 @@
 #' Mainly to get the channel and marker information.
 #' 
 #' @param x flowSet or GatingSet/GatingHierarchy
-#' @return an empty flowFrame
+#' @return a flowFrame. When x is a ncdfFlowSet or GatingSet that is associated with ncdfFlowSet, the raw event data
+#' is not read and an empty flowFrame is returned. 
 #' @export
 #' @examples 
-#' \dontrun{
+#' datra(GvHD)
+#' fs <- GvHD[1:2]
 #' getFlowFrame(fs)# fs is a flowSet
+#' 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' getFlowFrame(gs)# gs is a GatingSet
-#' }
 getFlowFrame <- function(x)UseMethod("getFlowFrame")
 
 #' @rdname getFlowFrame

@@ -25,7 +25,6 @@ It also calculates population statistics when geom_stats layer is added.
 It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'.
 }
 \examples{
-\dontrun{
 data(GvHD)
 fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_hex(bins = 128)
@@ -33,6 +32,5 @@ p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_hex(bins = 128)
 rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 p + geom_gate(rect.gates) + geom_stats()
-}
 }
 
