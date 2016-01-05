@@ -36,8 +36,6 @@ geom_hvline <- function (mapping = NULL, data = NULL, position = "identity", sho
                , params  = list(na.rm = FALSE
                                 ,...)
   )
-  
-  # browser()
   obj$compute_aesthetics <- .my_compute_aesthetics
   obj
 }
@@ -46,7 +44,7 @@ GeomHVline <- ggproto("hvline", Geom,
                     draw_panel = function(data, panel_scales, coord) {
                       ranges <- coord$range(panel_scales)
                       
-                      # determien wether x or y 
+                      # determien whether x or y 
                       if("x"%in% colnames(data)){
                         axis.used <- "x"
                         axis.missing <- "y"
@@ -90,7 +88,6 @@ GeomHVline <- ggproto("hvline", Geom,
 #' reassign the 'panel' info for layer data.
 #' @importFrom plyr eval.quoted compact empty
 .my_compute_aesthetics <- function(self, data, plot) {
-  # browser()
   # For annotation geoms, it is useful to be able to ignore the default aes
   if (self$inherit.aes) {
     aesthetics <- defaults(self$mapping, plot$mapping)
@@ -117,7 +114,6 @@ GeomHVline <- ggproto("hvline", Geom,
   
   ggplot2:::scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
   
-  # browser()
   #the two lines of hack for hvline:  
   # rm the missing axis from mapping aes so that 
   # it won't fail the following aesthetics evaluation 

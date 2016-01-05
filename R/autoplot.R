@@ -120,7 +120,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
     sapply(thisPrj, function(thisAxis)getChannelMarker(fr, thisAxis)[["name"]])
   })
   
-#   browser()
+
   plotList <- flowWorkspace:::.mergeGates(object, gate, bool, merge, projections = projections)
   Objs <- lapply(plotList,function(plotObjs){
     
@@ -135,7 +135,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
       myPrj <- projections[[as.character(gate)]]
     }
     
-#     browser()
+
     if(is.null(myPrj)){
       p <- autoplot.GatingSet(object, gate, ...)
     }else{
@@ -161,7 +161,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
     }
     p$data[, name:= popName]
     
-    for(i in 1:length(p$layers)){
+    for(i in seq_along(p$layers)){
       if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
         
         p$layers[[i]][["data"]][, name:= popName]

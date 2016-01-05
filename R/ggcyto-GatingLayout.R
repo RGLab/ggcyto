@@ -40,7 +40,7 @@ setMethod("show", "ggcyto_GatingLayout", show.ggcyto_GatingLayout)
 #' # customize the font size of strip text for each ggcyo plots contained in GatingLayout object
 #' p + theme(strip.text = element_text(size = 14))
 `+.ggcyto_GatingLayout` <- function(e1, e2){
-  # browser()
+  
   for(i in seq_along(e1)){
     e1[[i]] <- e1[[i]] + e2
   }

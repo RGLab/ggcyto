@@ -116,8 +116,7 @@ setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
 
 add_ggcyto <- function(e1, e2, e2name){
-#   browser()  
-  
+
   dims <- attr(e1$data, "dims")
   
   

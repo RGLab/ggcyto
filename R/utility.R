@@ -7,7 +7,7 @@
 {
   index <- names(.data)
   if(is.null(index)){
-    index <- 1:length(.data)
+    index <- seq_along(.data)
     .id <- NULL
   }
   
@@ -23,7 +23,7 @@
 #' @param ... other arguments passed to .fun
 #' @param .id see help(ldply)
 .do_loop <- function(index, .data, .fun = NULL, ..., .id = NA){
-#   browser()
+
   lapply(index, function(i){
     
         dt <- .fun(.data[[i]], ...)
@@ -63,7 +63,6 @@
 marginalFilter <- function(fs, dims, tol = 1e-5, ...){
   r <- range(fs[[1, use.exprs = FALSE]], dims)
   
-#   browser()
   exp <- NULL
   for(dim in dims){
     thisRange <- r[, dim]

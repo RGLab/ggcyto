@@ -65,7 +65,7 @@ geom_gate.filterList <- function(data, ...){
 .geom_gate_filterList <- function(data, pd, ...){  
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate(data[[1]], ...)
-#   browser()
+
   
   
   # assuming it is already attached to attribute
@@ -94,7 +94,7 @@ geom_gate.polygonGate <- function(data, ...){
 
 
 .geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
-  # browser()
+  
   #' To proper interpolate the polygon we need to wailt until the xbin and measure_range are collected from the main ggcyto object
   #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
   path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
@@ -117,7 +117,7 @@ geom_gate.rectangleGate <- function(data, ...){
   if (nDim ==  2){
     geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, ...)
   }else if(nDim ==  1){
-#     browser()
+
       geom_hvline(data = data, colour = colour, ...)
          
   }else

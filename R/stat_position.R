@@ -24,7 +24,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
 #' replace infinite values 
 .fixInf <- function(x)
 {
-  #  browser()
+
   for(i in seq_along(x)){
     y <- x[i]
     if(is.infinite(y) && y<0)
@@ -60,7 +60,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   {
     df <- fortify(gate)
     gate_range <- apply(df, 2, range)
-#     browser()
+
     #fix the gate range with data range
     if(!is.null(data_range)){
       gate_range <- sapply(colnames(data_range), function(dim){
@@ -82,7 +82,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
     }
     
   }
-#       browser() 
+
   #calculate centroid
   centroids <- colMeans(gate_range)
   
@@ -103,7 +103,6 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
 #   if (nDim ==  2){
 #     stat_position.polygonGate(gate)
 #   }else if(nDim ==  1){
-#       browser()
 #     
 #  }
 #   

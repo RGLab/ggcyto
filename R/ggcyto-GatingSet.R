@@ -22,7 +22,7 @@
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   
   attr(data, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
-#   browser()
+
   p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
   p <- p + labs(title  = subset)
   
@@ -76,7 +76,7 @@ add_ggcyto_gs <- function(e1, e2){
   parent <- attr(gs, "subset")
   if(is(e2, "gs.node")){
     #instantiate e2 layer as a specific gate layer
-#       browser()      
+
     nodes <- e2[["node"]]  
     #instantiate the parent by the first node if it is not yet been done
     if(isTRUE(nodes == "_child_")){
@@ -90,7 +90,7 @@ add_ggcyto_gs <- function(e1, e2){
       parent <- getParent(gs[[1]], nodes[[1]])
       attr(e1$data, "subset") <- parent
     }
-#       browser()
+
     if(e1$labels[["title"]] == "_parent_")
       e1$labels[["title"]] <- parent
     
@@ -191,7 +191,7 @@ setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
   if(length(cids)>0)
   {
     #try to match to projections
-    #  	browser()
+    
     isMatched<-lapply(cids,function(cid){
       g<-getGate(gs[[1]],cid)
       if(class(g)!="booleanFilter") 

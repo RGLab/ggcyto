@@ -106,7 +106,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' p1$data # datra is fortified
 #' @export
 as.ggplot <- function(x){
-#   browser()
+
   #####################
   #lazy-fortifying the plot data
   #####################

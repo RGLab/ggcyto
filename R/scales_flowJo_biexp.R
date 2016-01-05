@@ -4,7 +4,7 @@
 #' @param n desired number of breaks
 #' @param pretty if use log10-like breaks that is normally used in flowJo
 #'        when FALSE, breaks are equally spaced instead.
-#' @param ... parameters passed to flowWorkspace::flowJoTrans function
+#' @param ... parameters passed to \code{\link[flowWorkspace]{flowJoTrans}}
 #' @return a function generates biexponential space
 flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...) 
 {
@@ -13,7 +13,7 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
     transFunc <- flowJoTrans(...)
     invFunc <- flowJoTrans(..., inverse = TRUE)
     rng.raw <- range(x, na.rm = TRUE)
-      if(pretty){
+    if(pretty){
       #log10 (e.g. 0, 10, 1000, ...)
       base10raw <- unlist(lapply(2:n,function(e)10^e))
       base10raw <- c(0,base10raw)
@@ -43,7 +43,7 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 #' @inheritParams flowJo_biexp_breaks
 #' @return biexponential transformation object
 flowJo_biexp_trans <- function(..., pretty = FALSE){
-#   browser()
+
   trans <- flowJoTrans(...)
   inv <- flowJoTrans(..., inverse = TRUE)
   brk <- flowJo_biexp_breaks(pretty = pretty, ...)
@@ -52,7 +52,7 @@ flowJo_biexp_trans <- function(..., pretty = FALSE){
     formals(fmt)[["drop.1"]] <- TRUE
   }else
     fmt <- format_format(digits = 0)
-#   debug(brk)
+
   trans_new("flowJo_biexp", transform = trans, inverse = inv
             , breaks = brk
 #             , format = fmt

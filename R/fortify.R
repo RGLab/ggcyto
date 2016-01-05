@@ -124,7 +124,7 @@ fortify.polygonGate <- function(model, data
   
   vertices <- model@boundaries
   chnls <- colnames(vertices)
-  # browser()
+  
   
   
   #reset the boundaries based on the current measure range
@@ -144,7 +144,7 @@ fortify.polygonGate <- function(model, data
     new.vertices <- vertices
   }else
   {
-    # browser()
+    
     #normalize data first
     vertices <- scale(vertices)
     sd <- attr(vertices, "scaled:scale")
@@ -305,6 +305,6 @@ fortify.rectangleGate <- function(model, data, ...){
     df
   }else
     stop("rectangelGate with dimension ", nDim, "is not supported!")
-#   browser()
+
 }
 
