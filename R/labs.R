@@ -17,7 +17,7 @@
 #' #use marker name as x,y labs
 #' p + labs_cyto("marker")
 #' 
-#' use channel name as x,y labs
+#' #use channel name as x,y labs
 #' p + labs_cyto("channel")
 labs_cyto <- function(labels = "both") {
   

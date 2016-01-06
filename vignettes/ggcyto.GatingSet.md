@@ -5,7 +5,7 @@
 
 
 
-
+By specifying the dimensions through `aes` and selecting the cell population through `subset`, `ggcyto` can easily visualize the gated data stored in `GatingSet`.
 
 ```r
 p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") 
@@ -16,24 +16,27 @@ p
 
 ![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-1.png) 
 
+We can use the instrument range to automatically filter out these outlier cell events
+
 ```r
-#use instrument range by overwritting limits setting in the default parameter setting
 p + ggcyto_par_set(limits = "instrument")
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-2.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-4-1.png) 
+
+Or by setting limits manually
 
 ```r
-#manually set limits
 myPars <- ggcyto_par_set(limits = list(x = c(0,3.5e3), y = c(-10, 4.1e3)))
 p <- p + myPars# or xlim(0,3.5e3) + ylim(-10, 4e3) 
 p
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-3.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-1.png) 
+
+To check what kind of visualization parameters can be changed through `ggcyto_par_set`, simply print the default settings
 
 ```r
-# print the default settings
 ggcyto_par_default()
 ```
 
@@ -45,9 +48,9 @@ ggcyto_par_default()
 ## facet_wrap(name) 
 ## 
 ## $hex_fill
-## continuous_scale(aesthetics = "fill", scale_name = "gradientn", 
-##     palette = gradient_n_pal(colours, values, space), na.value = na.value, 
-##     trans = "sqrt", guide = guide)
+## <ScaleContinuous>
+##  Range:  
+##  Limits:    0 --    1
 ## 
 ## $lab
 ## $labels
@@ -60,45 +63,53 @@ ggcyto_par_default()
 ## [1] "ggcyto_par"
 ```
 
+To plot a gate, simply pass the gate name to the `geom_gate` layer
+
 ```r
-# add gate
 p + geom_gate("CD4")
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-4.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-7-1.png) 
+
+
+More than one gate can be added as long as they share the same parent and dimensions
 
 ```r
-# add two gates
 p <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-5.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-8-1.png) 
+
+By default, stats for all gate layers are added through empty `geom_stats` layer. 
 
 ```r
-# add stats (for all gate layers by default) and only display marker on axis
 p + geom_stats() + labs_cyto("marker")
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-6.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-9-1.png) 
+
+Note that we choose to only display marker on axis through `labs_cyto` layer here.
+
+To add stats just for one specific gate, we can pass the gate name to `geom_gate`
 
 ```r
-# add stats just for one specific gate
 p + geom_stats("CD4")
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-7.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-10-1.png) 
+
+stats type, background color and position are all adjustable.
 
 ```r
-# change stats type, background color and position
 p + geom_stats("CD4", type = "count", size = 6,  color = "white", fill = "black", adjust = 0.3)
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-3-8.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-11-1.png) 
 
+When 'subset' is not specified, it is at abstract status thus can not be visualized 
 
 ```r
-# 'subset' is abstract without specifiying it
 p <- ggcyto(gs, aes(x = CD4, y = CD8)) + geom_hex() + myPars
 p
 ```
@@ -108,51 +119,60 @@ p
 ## Make sure either 'subset' is specified or the 'geom_gate' layer is added.
 ```
 
+unless it is instantiated by the gate layer, i.e. lookup the gating tree for the parent node based on the given gates in `geom_gate`
 
 ```r
-# it can be instantiated by gate layer
 p + geom_gate(c("CD4", "CD8"))
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-1.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-13-1.png) 
+
+
+Alternatively, we can choose to plot all children of one specified parent and projections
 
 ```r
-# plot all children of the specified parent and projections
 p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
+p
+```
 
-# add gates to the arbitary(non-parent) node
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-14-1.png) 
+
+
+Or we can add gate layer to any arbitary node instead of its parent node
+
+```r
 ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myPars
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-2.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-15-1.png) 
+
+
+Sometime it is helpful to display the axis label in raw scale by inverse transforming the axis without affecting the data
 
 ```r
-# inverse transform the axis without affecting the data
 p + axis_x_inverse_trans() + axis_y_inverse_trans()
 ```
 
-![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-5-3.png) 
+![](ggcyto.GatingSet_files/figure-html/unnamed-chunk-16-1.png) 
 
 ```r
 #add filter (consistent with `margin` behavior in flowViz)
 # ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
 ```
 
-
+`ggcyto` is the semi-ggplot object since the data slot is NOT fully fortified to data.frame until it is printed/plotted.
 
 ```r
 class(p)
 ```
 
 ```
-## [1] "ggcyto_GatingSet" "ggcyto_flowSet"   "ggcyto"          
-## [4] "gg"               "ggplot"
+## [1] "ggcyto_GatingSet"
+## attr(,"package")
+## [1] "ggcyto"
 ```
 
 ```r
-# knowing that for 'ggcyto' is the semi-ggplot object since the data slot is NOT fortified to data.frame
-# until it is printed/plotted.
-# (other than this it is completely ggplot compatible in terms of adding layers and parameters)
 class(p$data)
 ```
 
@@ -162,8 +182,10 @@ class(p$data)
 ## [1] "flowWorkspace"
 ```
 
+However it is still completely ggplot compatible in terms of adding layers and parameters.
+We can convert it to a pure ggplot object
+
 ```r
-# To return a regular ggplot object
 p <- as.ggplot(p)
 
 class(p)

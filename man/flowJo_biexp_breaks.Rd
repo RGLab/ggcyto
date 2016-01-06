@@ -12,7 +12,7 @@ flowJo_biexp_breaks(n = 6, pretty = FALSE, ...)
 \item{pretty}{if use log10-like breaks that is normally used in flowJo
 when FALSE, breaks are equally spaced instead.}
 
-\item{...}{parameters passed to flowWorkspace::flowJoTrans function}
+\item{...}{parameters passed to \code{\link[flowWorkspace]{flowJoTrans}}}
 }
 \value{
 a function generates biexponential space

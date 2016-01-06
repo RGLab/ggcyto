@@ -26,7 +26,7 @@ is not read and an empty flowFrame is returned.
 Mainly to get the channel and marker information.
 }
 \examples{
-datra(GvHD)
+data(GvHD)
 fs <- GvHD[1:2]
 getFlowFrame(fs)# fs is a flowSet
 

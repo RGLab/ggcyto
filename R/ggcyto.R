@@ -103,7 +103,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' p$data # data has not been fortified
 #' p1 <- as.ggplot(p) # convert it to a ggplot object explictily 
 #' class(p1) 
-#' p1$data # datra is fortified
+#' p1$data # data is fortified
 #' @export
 as.ggplot <- function(x){
 

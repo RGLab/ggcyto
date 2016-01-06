@@ -11,53 +11,94 @@ fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 fr <- fs[[1]]
 ```
 
-## 1d histogram/densityplot
+### 1d histogram/densityplot
+`ggcyto` wrapper will construct the `ggcyto` object that inherits from `ggplot` class.
 
 ```r
-# construct the `ggcyto` object (inherits from `ggplot` class)
 p <- ggcyto(fs, aes(x = `FSC-H`)) 
-# `facet_wrap(~name)` is used automatically
+class(p)
+```
+
+```
+## [1] "ggcyto_flowSet"
+## attr(,"package")
+## [1] "ggcyto"
+```
+
+```r
+is(p, "ggplot")
+```
+
+```
+## [1] TRUE
+```
+
+Since only one dimension is specified, we can add any 1d geom layer
+
+```r
 p1 <- p + geom_histogram() 
 p1
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-1.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-1.png) 
+
+As shown, data is facetted by samples name automatically (i.e `facet_wrap(~name)`).
+
+We can overwrite the default faceting by any variables that are defined in `pData`
 
 ```r
-# overwriting the default faceeting
+pData(fs)
+```
+
+```
+##       Patient Visit Days Grade  name
+## s5a05       5     5   19     3 s5a05
+## s5a06       5     6   26     3 s5a06
+## s6a05       6     5   19     3 s6a05
+## s6a06       6     6   27     3 s6a06
+## s7a05       7     5   21     3 s7a05
+## s7a06       7     6   28     3 s7a06
+```
+
+```r
 p1 + facet_grid(Patient~Visit)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-2.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-1.png) 
+
+To display 1d density
 
 ```r
-# display density
 p + geom_density()
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-3.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-6-1.png) 
+
+Fill the same color
 
 ```r
 p + geom_density(fill = "black")
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-4.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-7-1.png) 
+
+Fill different colors
 
 ```r
-# fill with different colors
 ggcyto(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-5.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-8-1.png) 
+
+Or plot in the same panel by using `ggplot` directly (thus removing the default facetting effect)
 
 ```r
-# or plot in the same panel by using `ggplot` directly (thus remove the default facetting effect)
 ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-3-6.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-9-1.png) 
 
-## 2d scatter/dot plot
+### 2d scatter/dot plot
 
 ```r
 # 2d hex
@@ -66,32 +107,36 @@ p <- p + geom_hex(bins = 128)
 p
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-1.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-10-1.png) 
+
+A default `scale_fill_gradientn` is applied to 2d hexbin plot.
+
+To add limits
 
 ```r
-# add boundary limits
 p <- p + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 p
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-2.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-11-1.png) 
+
+To overwrite the default fill gradien
 
 ```r
-# browser()#it is so bizarre that without this knitr failed to proceed here
-
-# overwrite the default fill gradien
 p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-3.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-12-1.png) 
 
 ```r
 p + scale_fill_gradient(trans = "sqrt", low = "gray", high = "black")
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-4-4.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-12-2.png) 
 
-## add `geom_gate` and `geom_stats` layers
+### Add `geom_gate` and `geom_stats` layers
+
+Firstly we create the `polygonGate` with a data-driven method provided by `flowStats` package.
 
 ```r
 # estimate a lymphGate
@@ -101,66 +146,106 @@ norm.filter <- lg$n2gate
 fres <- filter(fs, norm.filter)
 #extract the polygonGate for each sample
 poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
+poly.gates
+```
 
-# add  gate layer
+```
+## $s5a05
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+## 
+## $s5a06
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+## 
+## $s6a05
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+## 
+## $s6a06
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+## 
+## $s7a05
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+## 
+## $s7a06
+## Polygonal gate 'defaultPolygonGate' with 50 vertices in dimensions FSC-H and SSC-H
+```
+
+Then pass the gates to the gate layer
+
+```r
 p + geom_gate(poly.gates)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-1.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-14-1.png) 
+
+We can also plot the `rectangleGate`, this time we simply replicate a static gate across samples:
 
 ```r
-# add rectangleGate layer (2d)
 rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
+```
+
+Similarly, supply the list of gates to the `geom_gate` layer
+
+```r
 p + geom_gate(rect.gates)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-2.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-16-1.png) 
+
+Stats layer can be added on top of gate
 
 ```r
-#add stats layer
 p + geom_gate(rect.gates) + geom_stats(size = 3)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-3.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-17-1.png) 
+
+The `percentage` of the gated population over its parent is displayed as `geom_label`. Alternatively cell `count` can be displayed by setting `type` argument in `geom_stats` function.
+
+Here is another example of displaying the 1d gate generated by the automated gating method `mindensity` from `openCyto` package.
 
 ```r
-# a list of 1d gate
 den.gates.x <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
 p + geom_gate(den.gates.x) + geom_stats()
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-4.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-18-1.png) 
+
+`geom_gate` layer supports the 1d gate on either dimension, which means it automatically determines between the vertical or horizontal lines based on the gate dimension and given `aes`.
 
 ```r
-# 1d gate on another dimesion
 den.gates.y <- fsApply(fs, openCyto::mindensity, channel = "SSC-H", gate_range = c(100, 500), adjust = 1, positive = FALSE)
 
-# pass the precalculated stats value
 p + geom_gate(den.gates.y) + geom_stats(value = lapply(rect.gates, function(g)0.1))
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-5.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-19-1.png) 
+
+Here we also demenstrated the option of passing the precalculated arbitary stats value to `geom_stats` lay instead of letting it compute on the fly, 
+
+We can also put the 1d gate on density plot
 
 ```r
-# 1d gate on density plot
 ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-6.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-20-1.png) 
+
+Without supplying `data` for `geom_stats`, we add stats layer for all the gate layers implicitly
 
 ```r
-# add stats layer for each gate layer implicitly
 p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(size = 3)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-7.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-21-1.png) 
+
+
+Or we can add stats layer specificly just for one of the gate layer
 
 ```r
-# add stats layer only for one gate explicitly
 p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates, size = 3)
 ```
 
-![](ggcyto.flowSet_files/figure-html/unnamed-chunk-5-8.png) 
+![](ggcyto.flowSet_files/figure-html/unnamed-chunk-22-1.png) 
 
 

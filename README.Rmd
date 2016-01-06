@@ -61,7 +61,7 @@ ggplot(fs, aes(x = `<B710-A>`, y = `<R780-A>`)) + facet_wrap(~name) + geom_hex(b
 
 More examples of using `ggplot` directly on `flowSet`:
 
-* [ggplot + flowSet1d](vignettes/ggplot.flowSet.1d.md)
-* [ggplot + flowSet2d](vignettes/ggplot.flowSet.2d.md)
-* [ggplot + flowSet + gate](vignettes/ggplot.flowSet.gate.md)
-* [ggplot + flowSet + overlay](vignettes/ggplot.flowSet.overlay.md)
+* [ggplot + flowSet1d](vignettes/advanced/ggplot.flowSet.1d.md)
+* [ggplot + flowSet2d](vignettes/advanced/ggplot.flowSet.2d.md)
+* [ggplot + flowSet + gate](vignettes/advanced/ggplot.flowSet.gate.md)
+* [ggplot + flowSet + overlay](vignettes/advanced/ggplot.flowSet.overlay.md)

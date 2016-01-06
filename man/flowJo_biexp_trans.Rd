@@ -7,7 +7,7 @@
 flowJo_biexp_trans(..., pretty = FALSE)
 }
 \arguments{
-\item{...}{parameters passed to flowWorkspace::flowJoTrans function}
+\item{...}{parameters passed to \code{\link[flowWorkspace]{flowJoTrans}}}
 
 \item{pretty}{if use log10-like breaks that is normally used in flowJo
 when FALSE, breaks are equally spaced instead.}

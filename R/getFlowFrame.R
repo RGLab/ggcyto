@@ -7,7 +7,7 @@
 #' is not read and an empty flowFrame is returned. 
 #' @export
 #' @examples 
-#' datra(GvHD)
+#' data(GvHD)
 #' fs <- GvHD[1:2]
 #' getFlowFrame(fs)# fs is a flowSet
 #' 
