@@ -15,6 +15,17 @@ flowJo_fasinh_breaks(n = 6, ...)
 a function generates fasinh or fsinh space
 }
 \description{
-flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
+Used to construct \code{\link{flowJo_fasinh_trans}} object
+}
+\examples{
+data <- 1:1e3
+brks.func <- flowJo_fasinh_breaks()
+brks <- brks.func(data)
+brks # fasinh space displayed at raw data scale
+
+#transform it to verify it is equal-spaced at transformed scale
+trans.func <- flowJo.fasinh()
+brks.trans <- trans.func(brks)
+brks.trans
 }
 

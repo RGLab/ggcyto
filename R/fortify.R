@@ -27,7 +27,7 @@
   thisFilter <- attr(x, "filter")
   if(!is.null(thisFilter)){
     if(is.function(thisFilter)){
-      thisFilter <- thisFilter(x, dims)
+      thisFilter <- thisFilter(x, dims[, name])
     }
     x <- Subset(x, thisFilter)
   }
@@ -224,7 +224,7 @@ fortify.polygonGate <- function(model, data
 #' eg <- ellipsoidGate(filterId= "myEllipsoidGate", .gate=cov, mean=mean)
 #' fortify(eg)
 fortify.ellipsoidGate <- function(model, data, ...){
-  poly.g <- flowViz:::ell2Polygon(model)  
+  poly.g <- as(model, "polygonGate")  
   fortify(poly.g, ...)
 }
 

@@ -1,35 +1,21 @@
-###############################
-#(we should eventually remove its copy from flowWorkspace)
-########################
-
-#'  hyperbolic sine/inverse hyperbolic sine (flowJo-version) transform function constructor
-#' 
-#' @rdname flowJo.fasinh
-#' @param m numeric the full width of the transformed display in asymptotic decades
-#' @param t numeric the maximum value of input data
-#' @param a numeric Additional negative range to be included in the display in asymptotic decades
-#' @param length numeric the maximum value of transformed data
-#' @return fasinh/fsinh transform function
-#' @export
-flowJo.fasinh <- function (m = 4.0, t = 12000, a =  0.7, length = 256) 
-{
-  function(x){
-    length * ((asinh(x * sinh(m * log(10)) / t) + a * log(10)) / ((m + a) * log(10)))
-  }
-}
-
-#' @rdname flowJo.fasinh
-#' @export
-flowJo.fsinh <- function(m = 4.0, t = 12000, a =  0.7, length = 256){
-  function(x){
-    sinh(((m + a) * log(10)) * x/length - a * log(10)) * t / sinh(m * log(10)) 
-  }
-}
-
 #' flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
+#' 
+#' Used to construct \code{\link{flowJo_fasinh_trans}} object
+#' 
 #' @param n desired number of breaks
 #' @param ... parameters passed to flowJo.fasinh
 #' @return a function generates fasinh or fsinh space
+#' @examples 
+#' 
+#' data <- 1:1e3
+#' brks.func <- flowJo_fasinh_breaks()
+#' brks <- brks.func(data)
+#' brks # fasinh space displayed at raw data scale
+#' 
+#' #transform it to verify it is equal-spaced at transformed scale
+#' trans.func <- flowJo.fasinh()
+#' brks.trans <- trans.func(brks)
+#' brks.trans 
 #' @export
 flowJo_fasinh_breaks <- function (n = 6, ...) 
 {
@@ -53,14 +39,18 @@ flowJo_fasinh_breaks <- function (n = 6, ...)
   
 #' flowJo inverse hyperbolic sine transformation.
 #' 
+#' Used for inverse hyperbolic sine scale layer \code{\link{scale_x_flowJo_fasinh}}
+#' 
 #' @inheritParams flowJo_fasinh_breaks
 #' @return fasinh transformation object
+#' @examples 
+#' flowJo_fasinh_trans()
 #' @export
 flowJo_fasinh_trans <- function(...){
   trans <- flowJo.fasinh(...)
   inv <- flowJo.fsinh(...)
   brk <- flowJo_fasinh_breaks(...)
-  #   debug(brk)
+  
   trans_new("flowJo_fasinh", transform = trans, inverse = inv, breaks = brk)
 
 }
@@ -69,6 +59,15 @@ flowJo_fasinh_trans <- function(...){
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param m,t see 'help(flowJo.fasinh')
+#' @return ScaleContinuous object
+#' @examples 
+#' data(GvHD)
+#' fr <- GvHD[[1]]
+#' p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#' #display at raw scale
+#' p 
+#' #display at transformed scale
+#' p + scale_x_flowJo_fasinh(t = 1e4)
 #' @export
 scale_x_flowJo_fasinh <- function(..., m = 4, t = 1200){
   myTrans <- flowJo_fasinh_trans(m = m, t = t)

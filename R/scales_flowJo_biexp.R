@@ -1,11 +1,24 @@
 #' flowJo biexponential breaks (integer breaks on biexp-transformed scales)
 #' 
+#' Used to construct \code{\link{flowJo_biexp_trans}} object
+#' 
 #' @export
 #' @param n desired number of breaks
 #' @param pretty if use log10-like breaks that is normally used in flowJo
 #'        when FALSE, breaks are equally spaced instead.
 #' @param ... parameters passed to \code{\link[flowWorkspace]{flowJoTrans}}
 #' @return a function generates biexponential space
+#' @examples 
+#' 
+#' data <- 1:1e3
+#' brks.func <- flowJo_biexp_breaks()
+#' brks <- brks.func(data)
+#' brks # biexp space displayed at raw data scale
+#' 
+#' #transform it to verify it is equal-spaced at transformed scale
+#' trans.func <- flowJoTrans()
+#' brks.trans <- trans.func(brks)
+#' brks.trans 
 flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...) 
 {
   
@@ -36,11 +49,13 @@ flowJo_biexp_breaks <- function (n = 6, pretty = FALSE, ...)
 
 #' flowJo biexponential transformation. 
 #' 
-#' 
+#' Used for biexponential scale layer \code{\link{scale_x_flowJo_biexp}}
 #' 
 #' @export
 #' @importFrom scales trans_new format_format
 #' @inheritParams flowJo_biexp_breaks
+#' @examples 
+#' flowJo_biexp_trans()
 #' @return biexponential transformation object
 flowJo_biexp_trans <- function(..., pretty = FALSE){
 
@@ -66,6 +81,15 @@ flowJo_biexp_trans <- function(..., pretty = FALSE){
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param maxValue,widthBasis,pos,neg see 'help(flowJoTrans')
 #' @param pretty whether to display the breaks in pretty format
+#' @return ScaleContinuous object
+#' @examples 
+#' data(GvHD)
+#' fr <- GvHD[[1]]
+#' p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#' #display at raw scale
+#' p 
+#' #display at transformed scale
+#' p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 #' @export
 scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, pretty = FALSE){
   myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, pretty = pretty)

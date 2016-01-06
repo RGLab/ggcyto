@@ -1,3 +1,4 @@
+#' @include labs.R
 #' @importFrom RColorBrewer brewer.pal
 .element_tree <- list(
                       limits = "data" #or "instrument"
@@ -75,8 +76,13 @@ validate_element <- function(el, elname) {
 #' Reports whether x is a ggcyto_par object
 #' @return TRUE or FALSE
 #' @param x An object to test
+#' @examples 
+#' myPar <- ggcyto_par_set(limits = "instrument")
+#' is.ggcyto_par(myPar)
 #' @export
-is.ggcyto_par <- function(x) inherits(x, "ggcyto_par")
+is.ggcyto_par <- function(x) {
+  inherits(x, "ggcyto_par")
+}
 
 add_par <- function(t1, t2, t2name) {
   if (!is.ggcyto_par(t2)) {

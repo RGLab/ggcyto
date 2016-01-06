@@ -13,6 +13,9 @@ flowJo_fasinh_trans(...)
 fasinh transformation object
 }
 \description{
-flowJo inverse hyperbolic sine transformation.
+Used for inverse hyperbolic sine scale layer \code{\link{scale_x_flowJo_fasinh}}
+}
+\examples{
+flowJo_fasinh_trans()
 }
 

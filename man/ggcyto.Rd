@@ -19,6 +19,9 @@ ggcyto(data = NULL, ...)
 
 \item{...}{other arguments passed to specific methods}
 }
+\value{
+ggcyto object
+}
 \description{
 \code{ggcyto()} initializes a ggcyto object that inherits ggplot class.
 Similarly the + operator can be used to add layers to the

@@ -2,7 +2,7 @@
 % Please edit documentation in R/scales_logicle.R
 \name{logicle_breaks}
 \alias{logicle_breaks}
-\title{flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)}
+\title{flowCore logicle breaks (integer breaks on logicle-transformed scales)}
 \usage{
 logicle_breaks(n = 6, ...)
 }
@@ -15,6 +15,18 @@ logicle_breaks(n = 6, ...)
 a function that generates logicle space
 }
 \description{
-flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
+Used to construct \code{\link{logicle_trans}} object
+}
+\examples{
+data <- 1:1e3
+brks.func <- logicle_breaks()
+brks <- brks.func(data)
+brks # logicle space displayed at raw data scale
+
+#logicle transform it to verify it is equal-spaced at transformed scale
+trans.obj <- logicleTransform()
+trans.func <- slot(trans.obj, ".Data")
+brks.trans <- trans.func(brks)
+brks.trans
 }
 

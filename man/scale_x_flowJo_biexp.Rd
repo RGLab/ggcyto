@@ -18,7 +18,19 @@ scale_y_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
 
 \item{pretty}{whether to display the breaks in pretty format}
 }
+\value{
+ScaleContinuous object
+}
 \description{
 flowJo biexponential scale
+}
+\examples{
+data(GvHD)
+fr <- GvHD[[1]]
+p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#display at raw scale
+p
+#display at transformed scale
+p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 }
 

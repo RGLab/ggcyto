@@ -15,4 +15,10 @@ TRUE/FALSE
 \description{
 Reports whether x is a ggcyto object
 }
+\examples{
+data(GvHD)
+fs <- GvHD[1:2]
+p <- ggcyto(fs, aes(x = `FSC-H`))
+is.ggcyto(p)
+}
 

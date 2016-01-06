@@ -1,7 +1,22 @@
-#' flowJo inverse hyperbolic sine breaks (integer breaks on fasinh-transformed scales)
+#' flowCore logicle breaks (integer breaks on logicle-transformed scales)
+#' 
+#' Used to construct \code{\link{logicle_trans}} object
+#' 
 #' @param n desired number of breaks
 #' @param ... parameters passed to flowJo.fasinh
 #' @return a function that generates logicle space
+#' @examples 
+#' 
+#' data <- 1:1e3
+#' brks.func <- logicle_breaks()
+#' brks <- brks.func(data)
+#' brks # logicle space displayed at raw data scale
+#' 
+#' #logicle transform it to verify it is equal-spaced at transformed scale
+#' trans.obj <- logicleTransform()
+#' trans.func <- slot(trans.obj, ".Data")
+#' brks.trans <- trans.func(brks)
+#' brks.trans 
 #' @export
 logicle_breaks <- function (n = 6, ...) 
 {
@@ -26,15 +41,18 @@ logicle_breaks <- function (n = 6, ...)
 
 #' logicle transformation.
 #' 
+#' Used for logicle scale layer \code{\link{scale_x_logicle}}
+#' 
 #' @param ... arguments passed to logicleTransform.
 #' @return a logicle transformation object
+#' @examples 
+#' logicle_trans()
 #' @export
 logicle_trans <- function(...){
   trans.obj <- logicleTransform(...)
   trans <- trans.obj@.Data
   inv <- inverseLogicleTransform(trans = trans.obj)@.Data
   brk <- logicle_breaks(...)
-  #   debug(brk)
   trans_new("logicle", transform = trans, inverse = inv, breaks = brk)
   
 }
@@ -43,6 +61,15 @@ logicle_trans <- function(...){
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param w,t,m,a see 'help(logicleTransform')
+#' @return ScaleContinuous object
+#' @examples 
+#' data(GvHD)
+#' fr <- GvHD[[1]]
+#' p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#' #display at raw scale
+#' p 
+#' #display at transformed scale
+#' p + scale_x_logicle(t = 1e4)
 #' @export
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)

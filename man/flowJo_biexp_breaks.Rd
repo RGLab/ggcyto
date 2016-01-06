@@ -18,6 +18,17 @@ when FALSE, breaks are equally spaced instead.}
 a function generates biexponential space
 }
 \description{
-flowJo biexponential breaks (integer breaks on biexp-transformed scales)
+Used to construct \code{\link{flowJo_biexp_trans}} object
+}
+\examples{
+data <- 1:1e3
+brks.func <- flowJo_biexp_breaks()
+brks <- brks.func(data)
+brks # biexp space displayed at raw data scale
+
+#transform it to verify it is equal-spaced at transformed scale
+trans.func <- flowJoTrans()
+brks.trans <- trans.func(brks)
+brks.trans
 }
 

@@ -13,6 +13,9 @@ logicle_trans(...)
 a logicle transformation object
 }
 \description{
-logicle transformation.
+Used for logicle scale layer \code{\link{scale_x_logicle}}
+}
+\examples{
+logicle_trans()
 }
 

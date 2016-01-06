@@ -7,9 +7,47 @@ Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
 Description: Visualize Cytometry data with ggplot
 VignetteBuilder: knitr
-Depends: methods, grid, ggplot2(>= 2.0.0), flowCore, ncdfFlow(>= 2.17.1), flowWorkspace(>= 3.15.6)
-Imports: BiocGenerics, plyr, scales, proto, data.table, RColorBrewer, gridExtra, flowViz
-Suggests: testthat, flowWorkspaceData, knitr, flowStats, openCyto
+Depends:
+    methods,
+    grid,
+    ggplot2(>= 2.0.0),
+    flowCore,
+    ncdfFlow(>= 2.17.1),
+    flowWorkspace(>= 3.17.17)
+Imports:
+    plyr,
+    scales,
+    data.table,
+    RColorBrewer,
+    gridExtra
+Suggests:
+    testthat,
+    flowWorkspaceData,
+    knitr,
+    flowStats,
+    openCyto
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues
 biocViews: FlowCytometry, CellBasedAssays, Infrastructure, Visualization
+Collate:
+    'AllClasses.R'
+    'autoplot.R'
+    'axis_inverse_trans.R'
+    'compute_stats.R'
+    'fortify.R'
+    'fortify_fs.R'
+    'geom_gate.R'
+    'geom_hvline.R'
+    'geom_stats.R'
+    'getFlowFrame.R'
+    'ggcyto-GatingLayout.R'
+    'ggcyto-GatingSet.R'
+    'ggcyto-flowSet.R'
+    'ggcyto.R'
+    'labs.R'
+    'ggcyto_par.R'
+    'scales_flowJo_biexp.R'
+    'scales_flowJo_fasinh.R'
+    'scales_logicle.R'
+    'stat_position.R'
+    'utility.R'

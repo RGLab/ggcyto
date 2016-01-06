@@ -8,7 +8,8 @@
 #' \itemize{
 #'    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
 #'   }
-#'   
+#'
+#'  @return ggcyto object      
 #' @import methods ggplot2 flowCore ncdfFlow flowWorkspace
 #' @export
 #' @keywords internal
@@ -35,6 +36,11 @@ ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 #' Reports whether x is a ggcyto object
 #' @param x An object to test
 #' @return TRUE/FALSE
+#' @examples 
+#' data(GvHD)
+#' fs <- GvHD[1:2]
+#' p <- ggcyto(fs, aes(x = `FSC-H`))
+#' is.ggcyto(p)
 #' @export
 is.ggcyto <- function(x) inherits(x, "ggcyto")
 

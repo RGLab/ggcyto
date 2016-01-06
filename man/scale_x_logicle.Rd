@@ -14,7 +14,19 @@ scale_y_logicle(..., w = 0.5, t = 262144, m = 4.5, a = 0)
 
 \item{w,t,m,a}{see 'help(logicleTransform')}
 }
+\value{
+ScaleContinuous object
+}
 \description{
 flowJo inverse hyperbolic sine scale
+}
+\examples{
+data(GvHD)
+fr <- GvHD[[1]]
+p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#display at raw scale
+p
+#display at transformed scale
+p + scale_x_logicle(t = 1e4)
 }
 

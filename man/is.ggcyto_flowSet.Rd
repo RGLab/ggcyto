@@ -15,4 +15,10 @@ TRUE or FALSE
 \description{
 Reports whether x is a ggcyto_flowSet object
 }
+\examples{
+data(GvHD)
+fs <- GvHD[1:2]
+p <- ggcyto(fs, aes(x = `FSC-H`))
+is.ggcyto_flowSet(p)
+}
 

@@ -20,5 +20,30 @@ an expressionFilter
 }
 \description{
 It constructs an expression filter that removes the marginal events.
+It can be passed directly to ggcyto constructor. See the examples for details.
+}
+\examples{
+data(GvHD)
+fs <- GvHD[1]
+chnls <- c("FSC-H", "SSC-H")
+#before removign marginal events
+summary(fs[, chnls])
+
+# create merginal filter
+g <- marginalFilter(fs, chnls)
+g
+
+#after remove marginal events
+fs.clean <- Subset(fs, g)
+summary(fs.clean[, chnls])
+
+#pass the function directly to ggcyto
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+# with marginal events
+ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+
+# using marginalFilter to remove these events
+ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+", filter = marginalFilter) + geom_hex(bins = 64)
 }
 

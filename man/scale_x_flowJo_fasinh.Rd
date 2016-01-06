@@ -14,7 +14,19 @@ scale_y_flowJo_fasinh(..., m = 4, t = 1200)
 
 \item{m,t}{see 'help(flowJo.fasinh')}
 }
+\value{
+ScaleContinuous object
+}
 \description{
 flowJo inverse hyperbolic sine scale
+}
+\examples{
+data(GvHD)
+fr <- GvHD[[1]]
+p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
+#display at raw scale
+p
+#display at transformed scale
+p + scale_x_flowJo_fasinh(t = 1e4)
 }
 

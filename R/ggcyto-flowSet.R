@@ -73,9 +73,15 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
 #' Reports whether x is a ggcyto_flowSet object
 #' @param x An object to test
 #' @return TRUE or FALSE
+#' @examples 
+#' data(GvHD)
+#' fs <- GvHD[1:2]
+#' p <- ggcyto(fs, aes(x = `FSC-H`))
+#' is.ggcyto_flowSet(p)
 #' @export
-is.ggcyto_flowSet <- function(x) inherits(x, "ggcyto_flowSet")
-
+is.ggcyto_flowSet <- function(x){
+  inherits(x, "ggcyto_flowSet")
+}
 
 
 #' overloaded '+' method for ggcyto

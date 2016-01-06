@@ -16,6 +16,9 @@ when FALSE, breaks are equally spaced instead.}
 biexponential transformation object
 }
 \description{
-flowJo biexponential transformation.
+Used for biexponential scale layer \code{\link{scale_x_flowJo_biexp}}
+}
+\examples{
+flowJo_biexp_trans()
 }
 
