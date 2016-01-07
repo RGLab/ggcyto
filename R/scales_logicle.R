@@ -73,14 +73,13 @@ logicle_trans <- function(...){
 #' @export
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
-  #   scale_x_continuous(..., trans = myTrans)
-  continuous_scale(aesthetics = c("x"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
+  scale_x_continuous(..., trans = myTrans)
+  
 }
 
 #' @rdname scale_x_logicle
 #' @export
 scale_y_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
-  #   scale_x_continuous(..., trans = myTrans)
-  continuous_scale(aesthetics = c("y"), "position_c", identity,trans = myTrans, ..., expand = waiver(), guide = "none")
+  scale_y_continuous(..., trans = myTrans)
 }
