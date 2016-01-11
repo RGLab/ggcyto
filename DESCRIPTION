@@ -5,11 +5,11 @@ Version: 0.99.3
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
-Description: Visualize Cytometry data with ggplot
+Description: With the dedicated fority method implemented for flowSet, ncdfFlowSet and GatingSet classes, both raw and gated flow cytometry data can be plotted directly with ggplot.
+    ggcyto wrapper and some customed layers also make it easy to add gates and population statistics to the plot.
 VignetteBuilder: knitr
 Depends:
     methods,
-    grid,
     ggplot2(>= 2.0.0),
     flowCore,
     ncdfFlow(>= 2.17.1),
@@ -26,7 +26,8 @@ Suggests:
     knitr,
     rmarkdown,
     flowStats,
-    openCyto
+    openCyto,
+    flowViz
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues
 biocViews: FlowCytometry, CellBasedAssays, Infrastructure, Visualization
