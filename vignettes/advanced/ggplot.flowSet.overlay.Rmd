@@ -6,13 +6,12 @@ output:
   html_document:
     keep_md: yes
 vignette: >    
-  %\VignetteEngine{knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Add overlay plot with ggplot2}        
 ---
 
 ```{r, echo=FALSE}
-library(knitr)
-opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 `ggcyto` makes `ggplot2` to be able to work with `Cytometry` data, namely `flowSet/ncdfFlowSet` or `flowFrame` S4 objects.

@@ -6,13 +6,12 @@ output:
     fig_width: 5
     keep_md: yes
 vignette: >    
-  %\VignetteEngine{knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Quick plot for cytometry data}    
 ---
 
 ```{r, echo=FALSE}
-library(knitr)
-opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
 ```{r}
