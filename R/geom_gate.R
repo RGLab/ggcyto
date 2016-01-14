@@ -62,7 +62,7 @@ geom_gate.list <- function(data, ...){
 geom_gate.filterList <- function(data, ...){
   .geom_gate_filterList(data, ...)
 }
-.geom_gate_filterList <- function(data, pd, nPoints = 100, ...){  
+.geom_gate_filterList <- function(data, pd, nPoints = 400, ...){  
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate(data[[1]], nPoints = NULL, ...)#no need interpolate here
 
@@ -93,7 +93,7 @@ geom_gate.polygonGate <- function(data, ...){
 }
 
 
-.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
+.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 400, ...){
   
   #' To proper interpolate the polygon we need to pass nPoints
   #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
@@ -110,7 +110,7 @@ geom_gate.polygonGate <- function(data, ...){
 geom_gate.rectangleGate <- function(data, ...){
   .geom_gate_rectangleGate(data, ...)
 }
-.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
+.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 400, ...){
   
   param <- parameters(data)
   nDim <- length(param)
