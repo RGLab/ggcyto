@@ -51,7 +51,6 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     nDims <- length(dims)
     #attach dims to data for more efficient fortify
     attr(p$data, "dims") <- dims.tbl
-    attr(p$data, "measure_range") <- range(frm)[, dims.tbl[, name]] #for polygon interpolation
     attr(p$data, "filter") <- filter
     
   }else
@@ -134,40 +133,14 @@ add_ggcyto <- function(e1, e2, e2name){
     if(!is.null(layer_data))
       pd <- .pd2dt(pData(e1$data))
     if(is(layer_data, "filterList")){
-        if(!isTRUE(attr(layer_data, "pd")))
-          attr(layer_data, "pd") <- pd
-        
-        #collect range info from flow data
-        measure_range <- attr(e1$data, "measure_range")
-        #collect bins info from geom_hex
-        bins <- unlist(lapply(e1$layers, function(layer){
-          
-                        if(is(layer$geom, "GeomHex")){
-                          
-                          bins <- layer$stat_params[["bins"]]
-                          if(is.null(bins)){
-                            bins <- 30
-                          }
-                          bins
-                        }
-                      }))
-        
-        if(length(bins) > 1){
-        
-          stop("multiple geom_hex layers detected!")
+        if(!isTRUE(attr(layer_data, "annotated")))
+        {  # merge with pd
+         
+          layer_data <- merge(layer_data, pd, by = ".rownames")  
+          attr(layer_data, "annotated") <- TRUE 
+          e2$data <- layer_data
         }
         
-        #do the lazy-fortify here since we need the range info from main flow data
-        # and bin info from geom_hex layer
-        layer_data <- fortify(layer_data
-                              , measure_range = measure_range
-                              , bins = bins
-                              ) 
-        
-        attr(layer_data, "annotated") <- TRUE
-        e2$data <- layer_data
-      
-      
     }
     
   }else if(is(e2, "GeomStats")){

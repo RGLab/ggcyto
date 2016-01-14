@@ -62,9 +62,9 @@ geom_gate.list <- function(data, ...){
 geom_gate.filterList <- function(data, ...){
   .geom_gate_filterList(data, ...)
 }
-.geom_gate_filterList <- function(data, pd, ...){  
+.geom_gate_filterList <- function(data, pd, nPoints = 100, ...){  
   #construct gate-type specific layer
-  geom_gate_layer <- geom_gate(data[[1]], ...)
+  geom_gate_layer <- geom_gate(data[[1]], nPoints = NULL, ...)#no need interpolate here
 
   
   
@@ -76,7 +76,7 @@ geom_gate.filterList <- function(data, ...){
     
   
   #must explicitly fortify it since ggplot only does it during the layer$new method 
-  # data <- fortify(data) 
+  data <- fortify(data, nPoints = nPoints) 
 
   #tag this data.table so that ggcyo wrapper can recongnize it
   # class(data) <- c("geom_gate_filterList", class(data))
@@ -93,13 +93,13 @@ geom_gate.polygonGate <- function(data, ...){
 }
 
 
-.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
+.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
   
-  #' To proper interpolate the polygon we need to wailt until the xbin and measure_range are collected from the main ggcyto object
+  #' To proper interpolate the polygon we need to pass nPoints
   #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
   path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
   #now we can saftely assign the data
-  path_layer[["data"]] <- data
+  path_layer[["data"]] <- fortify(data, nPoints = nPoints)
   path_layer
   
 }
@@ -110,12 +110,12 @@ geom_gate.polygonGate <- function(data, ...){
 geom_gate.rectangleGate <- function(data, ...){
   .geom_gate_rectangleGate(data, ...)
 }
-.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", ...){
+.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
   
   param <- parameters(data)
   nDim <- length(param)
   if (nDim ==  2){
-    geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, ...)
+    geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, nPoints = nPoints, ...)
   }else if(nDim ==  1){
 
       geom_hvline(data = data, colour = colour, ...)
