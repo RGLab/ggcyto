@@ -68,6 +68,7 @@ as.GatingSet <- function(gh){
   add_ggcyto_gs(e1,e2)
 }
 add_ggcyto_gs <- function(e1, e2){
+  
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, as.character)
   gs <- e1$data
@@ -179,7 +180,8 @@ add_ggcyto_gs <- function(e1, e2){
 #     e2[["labels"]] <- res[["label"]]
   }
   
-  callNextMethod()
+  #otherwise dispatch to ggcyto_flowSet version of +
+  `+.ggcyto_flowSet`(e1,e2)
   
 }
 #' @export

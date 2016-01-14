@@ -6,6 +6,27 @@
 #' @return nothing
 #' @method print ggcyto_GatingLayout
 print.ggcyto_GatingLayout <- function(x, ...){
+  
+  #must do the conversion to ggplot here since + require ggcyto object
+  for(j in seq_along(x)){
+    # browser()
+    p <- x[[j]]
+    popName <- attr(p$data, "strip.text")
+    p <- as.ggplot(p)
+    
+    p$data[, name:= popName]
+    
+    for(i in seq_along(p$layers)){
+      if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
+        
+        p$layers[[i]][["data"]][, name:= popName]
+      }
+      
+    }
+    
+    x[[j]] <- p
+  }
+  
   arrange.main <- x@arrange.main
   plot(do.call(arrangeGrob, c(grobs = x, top = arrange.main)))  
 }
