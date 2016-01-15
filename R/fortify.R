@@ -104,7 +104,7 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' 
 #' @param model polygonGate
-#' @param data not used.
+#' @param data data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.
 #' @param nPoints total number of vertices of the polygon after interpolation. Default is NULL, which is no interpolation.
 #'                 The actual number may be more or less based on the lengths of edges due to the maximun and minimum limits on each edge.
 #'                   Interpolation is mainly for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
@@ -119,24 +119,28 @@ fortify.GatingSet <- function(model, ...){
 #' pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
 #' fortify(pg) #no interpolation
 #' fortify(pg, nPoints = 30) # with interpolation
-fortify.polygonGate <- function(model, data, nPoints = NULL, ...){
+fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
   
   vertices <- model@boundaries
   chnls <- colnames(vertices)
   
   
   
-  #reset the boundaries based on the current measure range
-  #to prevent it from interpolating on too large space (thus lose the point when display is still at the scale of measured range)
-  #it is mainly for the infinity vetices from rectangle or the extended vertices during the gate parsing 
-  ##EDIT:unfortunately this won't work , since the actual data range (meaningful data) could be beyond the measure_range
+  #reset the boundaries based on the current data range
+  #to prevent it from interpolating on too large space
+  #(thus lose the point when display is still at the scale of measured range)
+  #such situations are caused by  the infinity vetices from rectangle or the extended vertices during the gate parsing
+  #or the extreme coordinates stored in flowJo xml
+  #measurement range won't work , since the actual data range (meaningful data) could be beyond the measure_range
+  if(!is.null(data)){
+    for(chnl in chnls){
+      thisVal <- vertices[, chnl] 
+      thisRg <- data[, chnl]
+      vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
+      vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
+    }  
+  }
   
-#   for(chnl in chnls){
-#     thisVal <- vertices[, chnl] 
-#     thisRg <- measure_range[, chnl]
-#     vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
-#     vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
-#   }
   
   if(is.null(nPoints)){
     
@@ -219,7 +223,7 @@ fortify.polygonGate <- function(model, data, nPoints = NULL, ...){
 #' It interpolates the ellipsoidGate to polygongate before fortifying it.
 #' 
 #' @param model ellipsoidGate
-#' @param data not used.
+#' @param data data range used for polygon interpolation.
 #' @param ... not used.
 #' 
 #' @export
@@ -231,16 +235,17 @@ fortify.polygonGate <- function(model, data, nPoints = NULL, ...){
 #' mean <- c("FSC-H"=430, "SSC-H"=175)
 #' eg <- ellipsoidGate(filterId= "myEllipsoidGate", .gate=cov, mean=mean)
 #' fortify(eg)
-fortify.ellipsoidGate <- function(model, data, ...){
+fortify.ellipsoidGate <- function(model, data = NULL, ...){
   poly.g <- as(model, "polygonGate")  
-  fortify(poly.g, ...)
+  fortify(poly.g, data = data, ...)
 }
 
 #' Convert a filterList to a data.table useful for ggplot
 #' 
-#' 
+#' It tries to merge with pData that is associated with filterList as attribute 'pd'
+  
 #' @param model filterList
-#' @param data not used
+#' @param data data range used for polygon interpolation
 #' @param nPoints used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @param ... not used.
 #' 
@@ -253,13 +258,24 @@ fortify.ellipsoidGate <- function(model, data, ...){
 #' gates <- getGate(gs, "CD4")
 #' gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
 #' fortify(gates)
-fortify.filterList <- function(model, data, nPoints = NULL, ...){
-  
-  # convert each filter to df
-  df <- .ldply(model, fortify, nPoints = nPoints, .id = ".rownames")
+fortify.filterList <- function(model, data = NULL, nPoints = NULL, ...){
+      # convert each filter to df
+      df <- .ldply(model, fortify
+                      , data = data
+                      , nPoints = nPoints, .id = ".rownames")
     
-  
-  df
+      pd <- attr(model,"pd")
+      if(!is.null(pd)){
+          # merge with pd
+            
+        if(!is(pd, "data.table"))
+            pd <- .pd2dt(pd)
+        df <- merge(df, pd, by = ".rownames")  
+        attr(df, "annotated") <- TRUE
+      }
+      attr(df, "nPoints") <- nPoints
+      
+    df
 }
 
 #' Convert a rectangleGate to a data.table useful for ggplot
@@ -268,7 +284,7 @@ fortify.filterList <- function(model, data, nPoints = NULL, ...){
 #' for 1d, uses geom_vline/hline format.
 #' 
 #' @param model rectangleGate
-#' @param data not used.
+#' @param data data range used for polygon interpolation.
 #' @param ... not used.
 #' 
 #' @export
@@ -281,12 +297,12 @@ fortify.filterList <- function(model, data, nPoints = NULL, ...){
 #' fortify(rg)
 #' 
 #' @return data.table
-fortify.rectangleGate <- function(model, data, ...){
+fortify.rectangleGate <- function(model, data = NULL, ...){
   
   param <- parameters(model)
   nDim <- length(param)
   if (nDim ==  2){
-    fortify(as(model, "polygonGate"), ...)
+    fortify(as(model, "polygonGate"), data = data, ...)
   }else if(nDim ==  1){
     l.b <- model@min
     r.t <- model@max  

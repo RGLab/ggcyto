@@ -4,12 +4,12 @@
 \alias{fortify.polygonGate}
 \title{Convert a polygonGate to a data.table useful for ggplot}
 \usage{
-\method{fortify}{polygonGate}(model, data, nPoints = NULL, ...)
+\method{fortify}{polygonGate}(model, data = NULL, nPoints = NULL, ...)
 }
 \arguments{
 \item{model}{polygonGate}
 
-\item{data}{not used.}
+\item{data}{data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.}
 
 \item{nPoints}{total number of vertices of the polygon after interpolation. Default is NULL, which is no interpolation.
 The actual number may be more or less based on the lengths of edges due to the maximun and minimum limits on each edge.

@@ -4,12 +4,12 @@
 \alias{fortify.filterList}
 \title{Convert a filterList to a data.table useful for ggplot}
 \usage{
-\method{fortify}{filterList}(model, data, nPoints = NULL, ...)
+\method{fortify}{filterList}(model, data = NULL, nPoints = NULL, ...)
 }
 \arguments{
 \item{model}{filterList}
 
-\item{data}{not used}
+\item{data}{data range used for polygon interpolation}
 
 \item{nPoints}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
 
@@ -19,7 +19,7 @@
 data.table
 }
 \description{
-Convert a filterList to a data.table useful for ggplot
+It tries to merge with pData that is associated with filterList as attribute 'pd'
 }
 \examples{
 dataDir <- system.file("extdata",package="flowWorkspaceData")

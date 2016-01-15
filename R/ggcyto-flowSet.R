@@ -133,13 +133,24 @@ add_ggcyto <- function(e1, e2, e2name){
     if(!is.null(layer_data))
       pd <- .pd2dt(pData(e1$data))
     if(is(layer_data, "filterList")){
-        if(!isTRUE(attr(layer_data, "annotated")))
-        {  # merge with pd
-         
-          layer_data <- merge(layer_data, pd, by = ".rownames")  
-          attr(layer_data, "annotated") <- TRUE 
-          e2$data <- layer_data
-        }
+      
+        if(!isTRUE(attr(layer_data, "pd")))
+            attr(layer_data, "pd") <- pd
+                
+          #collect range info from flow data
+          data_range <- attr(e1$data, "data_range")
+
+          
+          #do the lazy-fortify here since we need the range info from main flow data
+
+          layer_data <- fortify(layer_data
+                                         , data = data_range
+                                         , nPoints = attr(layer_data, "nPoints")
+                                         ) 
+                          
+        attr(layer_data, "annotated") <- TRUE
+        e2$data <- layer_data
+                
         
     }
     

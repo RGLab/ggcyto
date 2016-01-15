@@ -4,12 +4,12 @@
 \alias{fortify.ellipsoidGate}
 \title{Convert a ellipsoidGate to a data.table useful for ggplot}
 \usage{
-\method{fortify}{ellipsoidGate}(model, data, ...)
+\method{fortify}{ellipsoidGate}(model, data = NULL, ...)
 }
 \arguments{
 \item{model}{ellipsoidGate}
 
-\item{data}{not used.}
+\item{data}{data range used for polygon interpolation.}
 
 \item{...}{not used.}
 }
