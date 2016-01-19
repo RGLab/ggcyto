@@ -1,0 +1,71 @@
+---
+title: "Quick plot for cytometry data"
+output:
+  html_document:
+    fig_height: 2
+    fig_width: 5
+    keep_md: yes
+vignette: >    
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Quick plot for cytometry data}    
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+```{r}
+library(ggcyto)
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+data(GvHD)
+fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
+```
+
+## `flowSet`
+`geom_density` layer is used for one-dimensional plot.
+```{r}
+autoplot(fs, x = 'FSC-H')
+```
+
+`geom_hex` layer is added for 2d plot.
+```{r}
+autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
+```
+
+## `GatingSet` 
+```{r, fig.width = 4, fig.height=3}
+autoplot(gs, "CD3+", bins = 64)
+```
+
+Here are some default settings applied:
+
+* The instrument range is applied by default (through `ggcyto_par_set(limits = "instrument")`).
+* "CD3" gate is plotted aganst its the parent population: "singlets"."
+* Axis labels are inverse transformed through `axis_x_inverse_trans/axis_x_inverse_trans`.
+
+
+Multiple gates that share the same parent can be plotted together.
+```{r, fig.width = 4, fig.height=3}
+autoplot(gs, c("CD4", "CD8"), bins = 64)
+```
+
+## `GatingHierarchy`
+Multiple cell populations with their asssociated gates can be plotted in different panels of the same plot.
+```{r, fig.height = 4}
+gh <- gs[[1]]
+nodes <- getNodes(gh, path = "auto")[c(3:9, 14)]
+nodes
+
+autoplot(gh, nodes, bins = 64)
+```
+
+Optionally we can disable default `grid.arrange` behavior and receive a list of ggplot objects instead and manually arrange these individual `ggplot` objects.
+```{r, fig.height = 4}
+objs <- autoplot(gh, nodes, bins = 64, arrange = FALSE)
+length(objs)
+class(objs[[1]])
+class(objs[[2]])
+
+```
+
