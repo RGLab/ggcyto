@@ -249,3 +249,48 @@ p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates
 ![](ggcyto.flowSet_files/figure-html/unnamed-chunk-22-1.png) 
 
 
+Although `ggcyto` object is fully ggplot-compatible in terms of adding layers and parameters, its data slot MAY NOT be fully fortified to data.frame before it is printed/plotted.
+
+```r
+class(p)
+```
+
+```
+## [1] "ggcyto_flowSet"
+## attr(,"package")
+## [1] "ggcyto"
+```
+
+```r
+class(p$data)
+```
+
+```
+## [1] "flowSet"
+## attr(,"package")
+## [1] "flowCore"
+```
+
+To convert it to a pure ggplot object, use `as.ggplot` function:
+
+```r
+p <- as.ggplot(p)
+
+class(p)
+```
+
+```
+## [1] "gg"     "ggplot"
+```
+
+```r
+class(p$data)
+```
+
+```
+## [1] "data.table" "data.frame"
+```
+
+
+
+

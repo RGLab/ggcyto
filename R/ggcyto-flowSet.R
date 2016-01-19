@@ -30,18 +30,21 @@
 #' p
 #'
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
+  
+  fs <- data
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
-  p <- ggplot2:::ggplot.data.frame(data, mapping, ...)
+  p <- ggplot2:::ggplot.data.frame(fs, mapping, ...)
+  
   
   if(!missing(mapping)){
     dims <- sapply(mapping,as.character)
     dims <- dims[grepl("[x|y]", names(dims))]
     
     #update x , y with actual channel name
-    frm <- getFlowFrame(data)
+    frm <- getFlowFrame(fs)
     dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
-    
+    chnl <- dims.tbl[, name]
     
     for(axis_name in names(dims))
       mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
@@ -49,9 +52,13 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     p$mapping <- mapping
     
     nDims <- length(dims)
+    
     #attach dims to data for more efficient fortify
-    attr(p$data, "dims") <- dims.tbl
-    attr(p$data, "filter") <- filter
+    attr(fs, "dims") <- dims.tbl
+    attr(fs, "filter") <- filter
+    p[["fs"]] <- fs  
+    p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
+    
     
   }else
     stop("mapping must be supplied to ggplot!")
@@ -122,29 +129,49 @@ setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
 add_ggcyto <- function(e1, e2, e2name){
 
-  dims <- attr(e1$data, "dims")
-  
-  
-  
+  dims <- attr(e1[["fs"]], "dims")
+  filter <- attr(e1[["fs"]], "filter")
+  chnl <- dims[, name]
+  flowData <- e1$data
+  gs <- e1[["gs"]]
+  fs <- e1[["fs"]]
+     
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
   if(is.ggproto(e2)){
     layer_data <- e2$data  
-    if(!is.null(layer_data))
-      pd <- .pd2dt(pData(e1$data))
+    if(!is.null(layer_data)){
+        pd <- .pd2dt(pData(fs))
+    }
+      
     if(is(layer_data, "filterList")){
       
         if(!isTRUE(attr(layer_data, "pd")))
             attr(layer_data, "pd") <- pd
                 
-          #collect range info from flow data
-          data_range <- attr(e1$data, "data_range")
-
+        #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range for the reasonable gate interpolation
+        #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
+        if(!is(flowData, "data.table")){ #check if already fortified
+          if(!is.null(gs)){#check if it is currently gs
+            fs <- fortify_fs(gs)  
+            attr(fs, "dims") <- dims
+            attr(fs, "filter") <- filter
+            e1[["fs"]] <- fs
+          }
+          dt <- fortify(fs)
+          data_range <- apply(dt[, chnl, with = FALSE], 2, range)
+          rownames(data_range) <- c("min", "max")  
+          e1[["data_range"]] <- data_range
+          e1$data <- dt
+        }
+          
+        
+        
           
           #do the lazy-fortify here since we need the range info from main flow data
 
           layer_data <- fortify(layer_data
-                                         , data = data_range
+                                         , data = e1[["data_range"]]
                                          , nPoints = attr(layer_data, "nPoints")
                                          ) 
                           
@@ -159,7 +186,8 @@ add_ggcyto <- function(e1, e2, e2name){
     #parse the gate from the each gate layer if it is not present in the current geom_stats layer
     if(is.null(gate))
     {
-      pd <- .pd2dt(pData(e1$data))
+      
+      pd <- .pd2dt(pData(fs))
       gates_parsed <- lapply(e1$layers, function(layer){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
@@ -183,7 +211,7 @@ add_ggcyto <- function(e1, e2, e2name){
     stat_type <- e2[["type"]]
     data_range <- e2[["data_range"]]
     adjust <- e2[["adjust"]]
-    fs <- e1$data
+    
     for(gate in gates_parsed){
       stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust)
       

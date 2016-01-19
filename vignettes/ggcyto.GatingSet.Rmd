@@ -107,21 +107,3 @@ p + axis_x_inverse_trans() + axis_y_inverse_trans()
 # ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
 ```
 
-`ggcyto` is the semi-ggplot object since the data slot is NOT fully fortified to data.frame until it is printed/plotted.
-```{r}
-class(p)
-class(p$data)
-```
-
-However it is still completely ggplot compatible in terms of adding layers and parameters.
-We can convert it to a pure ggplot object
-```{r}
-p <- as.ggplot(p)
-
-class(p)
-class(p$data)
-```
-
-
-
-

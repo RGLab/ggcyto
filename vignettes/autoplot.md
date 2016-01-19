@@ -87,7 +87,9 @@ class(objs[[1]])
 ```
 
 ```
-## [1] "gg"     "ggplot"
+## [1] "ggcyto_GatingSet"
+## attr(,"package")
+## [1] "ggcyto"
 ```
 
 ```r
@@ -95,6 +97,8 @@ class(objs[[2]])
 ```
 
 ```
-## [1] "gg"     "ggplot"
+## [1] "ggcyto_GatingSet"
+## attr(,"package")
+## [1] "ggcyto"
 ```
 

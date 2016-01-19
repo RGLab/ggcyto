@@ -115,7 +115,7 @@ p
 ```
 
 ```
-## Error in fortify_fs.GatingSet(x$data): 'subset' must be instantiated by the actual node name!
+## Error in fortify_fs.GatingSet(model, ...): 'subset' must be instantiated by the actual node name!
 ## Make sure either 'subset' is specified or the 'geom_gate' layer is added.
 ```
 
@@ -159,50 +159,4 @@ p + axis_x_inverse_trans() + axis_y_inverse_trans()
 #add filter (consistent with `margin` behavior in flowViz)
 # ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
 ```
-
-`ggcyto` is the semi-ggplot object since the data slot is NOT fully fortified to data.frame until it is printed/plotted.
-
-```r
-class(p)
-```
-
-```
-## [1] "ggcyto_GatingSet"
-## attr(,"package")
-## [1] "ggcyto"
-```
-
-```r
-class(p$data)
-```
-
-```
-## [1] "GatingSet"
-## attr(,"package")
-## [1] "flowWorkspace"
-```
-
-However it is still completely ggplot compatible in terms of adding layers and parameters.
-We can convert it to a pure ggplot object
-
-```r
-p <- as.ggplot(p)
-
-class(p)
-```
-
-```
-## [1] "gg"     "ggplot"
-```
-
-```r
-class(p$data)
-```
-
-```
-## [1] "data.table" "data.frame"
-```
-
-
-
 

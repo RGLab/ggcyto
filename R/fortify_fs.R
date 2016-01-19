@@ -46,12 +46,15 @@ fortify_fs.flowFrame <- function(model, data, ...){
 #' @export
 #' @rdname fortify_fs
 fortify_fs.GatingSet <- function(model, data, ...){
+  
   subset <- attr(model, "subset")
   if(is.null(subset))
     stop("subset must be supplied!")
   else if(subset == "_parent_")
     stop("'subset' must be instantiated by the actual node name!\nMake sure either 'subset' is specified or the 'geom_gate' layer is added. ")
-  fs <- getData(model, subset)
+  fs <- getData(model, subset)  
+  
+  
   #copy dims attribute to fs
   attr(fs, "dims") <- attr(model, "dims")
   attr(fs, "filter") <- attr(model, "filter")

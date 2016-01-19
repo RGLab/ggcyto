@@ -157,3 +157,20 @@ p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates
 ```
 
 
+Although `ggcyto` object is fully ggplot-compatible in terms of adding layers and parameters, its data slot MAY NOT be fully fortified to data.frame before it is printed/plotted.
+```{r}
+class(p)
+class(p$data)
+```
+
+To convert it to a pure ggplot object, use `as.ggplot` function:
+```{r}
+p <- as.ggplot(p)
+
+class(p)
+class(p$data)
+```
+
+
+
+

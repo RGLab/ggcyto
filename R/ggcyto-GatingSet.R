@@ -20,10 +20,11 @@
 #' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
 #'
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
-  
-  attr(data, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
+  gs <- data
+  attr(gs, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
 
-  p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
+  p <- ggcyto.flowSet(data = gs, mapping = mapping, ...)
+  p[["gs"]] <- gs
   p <- p + labs(title  = subset)
   
   # prepend the ggcyto class attribute
@@ -71,7 +72,7 @@ add_ggcyto_gs <- function(e1, e2){
   
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, as.character)
-  gs <- e1$data
+  gs <- e1[["gs"]]
   
     
   parent <- attr(gs, "subset")
@@ -89,7 +90,7 @@ add_ggcyto_gs <- function(e1, e2){
     #instantiate the subset/parent info
     if(parent == "_parent_"){
       parent <- getParent(gs[[1]], nodes[[1]])
-      attr(e1$data, "subset") <- parent
+      attr(e1[["gs"]], "subset") <- parent
     }
 
     if(e1$labels[["title"]] == "_parent_")
