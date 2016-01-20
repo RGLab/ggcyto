@@ -144,7 +144,7 @@ add_ggcyto <- function(e1, e2, e2name){
         pd <- .pd2dt(pData(fs))
     }
       
-    if(is(layer_data, "filterList")){
+    if(is(layer_data, "filterList")||is(layer_data, "filter")){
       
         if(!isTRUE(attr(layer_data, "pd")))
             attr(layer_data, "pd") <- pd
