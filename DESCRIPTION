@@ -2,7 +2,7 @@ Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
 Version: 0.99.3
-Date: 2015-11-02
+Date: 2015-11-03
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
 Description: With the dedicated fority method implemented for flowSet, ncdfFlowSet and
