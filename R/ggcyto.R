@@ -65,7 +65,7 @@ print.ggcyto <- function(x, ...) {
   
     
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
-    x <- as.ggplot(x) #fortify plot data here instead
+    x <- as.ggplot(x) 
     ggplot2:::print.ggplot(x)
 }
 
@@ -116,15 +116,23 @@ as.ggplot <- function(x){
   #####################
   #lazy-fortifying the plot data
   #####################
-  dims <- attr(x$data, "dims")
+  dims <- attr(x[["fs"]], "dims")
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
-  #fortify to fs first in order to get instrument range
-  x$data <- fortify_fs(x$data)
-  instrument_range <- range(x$data[[1, use.exprs= FALSE]])[, chnls, drop = FALSE]
-  x$data <- fortify(x$data)
+  instrument_range <- x[["instrument_range"]]
   
+  #data needs to be fortified here if geom_gate was not added
+  if(!is(x[["data"]], "data.table")){
+    x[["data"]] <- fortify(x[["data"]])
+    data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
+    rownames(data_range) <- c("min", "max")  
+  }else
+    data_range <- x[["data_range"]]
+  
+  #clear the raw data format
+  x[["fs"]] < NULL
+  x[["gs"]] < NULL
   #####################
   #update default scales
   #####################
@@ -150,7 +158,7 @@ as.ggplot <- function(x){
         if(par_limits == "instrument")
           this_limits <- instrument_range[, dim]
         else if(par_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
-          this_limits <- range(x$data[, dim, with = FALSE])
+          this_limits <- data_range[, dim]
         else
           this_limits <- NULL
       }

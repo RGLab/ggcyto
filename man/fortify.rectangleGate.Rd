@@ -4,12 +4,12 @@
 \alias{fortify.rectangleGate}
 \title{Convert a rectangleGate to a data.table useful for ggplot}
 \usage{
-\method{fortify}{rectangleGate}(model, data, ...)
+\method{fortify}{rectangleGate}(model, data = NULL, ...)
 }
 \arguments{
 \item{model}{rectangleGate}
 
-\item{data}{not used.}
+\item{data}{data range used for polygon interpolation.}
 
 \item{...}{not used.}
 }

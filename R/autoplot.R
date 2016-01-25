@@ -141,15 +141,14 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
     }else{
       p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
     }
-    
+
     p <- p + guides(fill=FALSE) + labs(title = NULL)
-    p <- as.ggplot(p)
     myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
                      , axis.text = element_text(color = gray(0.3), size = 6)
                      , strip.text = element_text(size = 10)
                      , plot.margin = unit(c(0,0,0,0), "cm")
                      , panel.margin = unit(0, "cm")
-                    )
+    )
     p <- p + myTheme
     
     #rename sample name with parent or current pop name in order to display it in strip
@@ -159,16 +158,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
     }else{
       popName <- paste(gate, collapse = "|")
     }
-    p$data[, name:= popName]
-    
-    for(i in seq_along(p$layers)){
-      if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
-        
-        p$layers[[i]][["data"]][, name:= popName]
-      }
-        
-    }
-      
+    attr(p$data, "strip.text") <- popName
     
     p
 

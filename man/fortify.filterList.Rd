@@ -4,15 +4,14 @@
 \alias{fortify.filterList}
 \title{Convert a filterList to a data.table useful for ggplot}
 \usage{
-\method{fortify}{filterList}(model, data, measure_range = NULL, bins = NULL,
-  ...)
+\method{fortify}{filterList}(model, data = NULL, nPoints = NULL, ...)
 }
 \arguments{
 \item{model}{filterList}
 
-\item{data}{not used}
+\item{data}{data range used for polygon interpolation}
 
-\item{measure_range,bins}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
+\item{nPoints}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
 
 \item{...}{not used.}
 }
