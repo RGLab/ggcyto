@@ -16,7 +16,7 @@ Depends:
     ggplot2(>= 2.0.0),
     flowCore,
     ncdfFlow(>= 2.17.1),
-    flowWorkspace(>= 3.17.17)
+    flowWorkspace(>= 3.17.24)
 Imports:
     plyr,
     scales,
