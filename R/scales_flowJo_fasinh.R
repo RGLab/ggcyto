@@ -3,7 +3,7 @@
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param m,t see 'help(flowJo.fasinh')
 #' @return ScaleContinuous object
-#' @importFrom flowWorkspace flowJo_fasinh_trans flowJo_fasinh_breaks
+#' @importFrom flowWorkspace flowJo_fasinh_trans
 #' @examples 
 #' data(GvHD)
 #' fr <- GvHD[[1]]

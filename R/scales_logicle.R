@@ -2,7 +2,7 @@
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param w,t,m,a see 'help(logicleTransform')
-#' @importFrom flowWorkspace logicle_trans logicle_breaks
+#' @importFrom flowWorkspace logicle_trans
 #' @return ScaleContinuous object
 #' @examples 
 #' data(GvHD)
