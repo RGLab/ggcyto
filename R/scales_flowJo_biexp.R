@@ -4,7 +4,7 @@
 #' @param maxValue,widthBasis,pos,neg see 'help(flowJoTrans')
 #' @param equal.space whether to display the breaks in equal.space format
 #' @return ScaleContinuous object
-#' @importFrom flowWorkspace flowJo_biexp_trans flowJo_biexp_breaks
+#' @importFrom flowWorkspace flowJo_biexp_trans
 #' @examples 
 #' data(GvHD)
 #' fr <- GvHD[[1]]
