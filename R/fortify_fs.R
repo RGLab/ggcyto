@@ -37,8 +37,11 @@ fortify_fs.default <- function(model, data, ...) {
 fortify_fs.flowFrame <- function(model, data, ...){
   sn <- identifier(model)
   fs <- as(model, "flowSet")
-  sampleNames(fs) <- sn
-  pData(fs)[["name"]] <- sn
+  if(nchar(sn) > 0){
+    sampleNames(fs) <- sn
+    pData(fs)[["name"]] <- sn
+  }
+    
   fs
 }
 
