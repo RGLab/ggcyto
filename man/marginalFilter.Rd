@@ -4,22 +4,20 @@
 \alias{marginalFilter}
 \title{Generate a marginal gate.}
 \usage{
-marginalFilter(fs, dims, tol = 1e-05, ...)
+marginalFilter(fs, dims, ...)
 }
 \arguments{
-\item{fs}{flowSet}
+\item{fs}{flowSet (not used.)}
 
 \item{dims}{the channels involved}
 
-\item{tol}{the tolerance}
-
-\item{...}{not used}
+\item{...}{arguments passed to \link[flowCore]{boundaryFilter}}
 }
 \value{
-an expressionFilter
+an boundaryFilter
 }
 \description{
-It constructs an expression filter that removes the marginal events.
+It simply constructs an boundaryFilter that removes the marginal events.
 It can be passed directly to ggcyto constructor. See the examples for details.
 }
 \examples{
