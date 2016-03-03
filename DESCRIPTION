@@ -56,3 +56,4 @@ Collate:
     'scales_logicle.R'
     'stat_position.R'
     'utility.R'
+RoxygenNote: 5.0.1
