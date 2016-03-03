@@ -67,7 +67,7 @@ autoplot.flowFrame <- function(object, ...){
 #' @param gate the gate to be plotted
 #' @export 
 #' @rdname autoplot
-autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", ...){
+autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, ...){
   if(missing(gate))
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
@@ -85,7 +85,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", ...){
   
   mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))
   
-  p <- ggcyto(object, mapping) + geom_hex(...) + geom_gate(gate) + geom_stats() 
+  p <- ggcyto(object, mapping, ...) + geom_hex(bins = bins) + geom_gate(gate) + geom_stats() 
   p <- p + ggcyto_par_set(limits = "instrument")
   p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
   p

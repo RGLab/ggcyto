@@ -24,7 +24,9 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   attr(gs, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
 
   p <- ggcyto.flowSet(data = gs, mapping = mapping, ...)
+  attr(gs, "filter") <- attr(p[["data"]], "filter")#copy the attr over
   p[["gs"]] <- gs
+  
   p <- p + labs(title  = subset)
   
   # prepend the ggcyto class attribute

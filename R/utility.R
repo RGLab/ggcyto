@@ -52,14 +52,13 @@
 
 #' Generate a marginal gate.
 #' 
-#' It constructs an expression filter that removes the marginal events.
+#' It simply constructs an boundaryFilter that removes the marginal events.
 #' It can be passed directly to ggcyto constructor. See the examples for details.
 #' 
-#' @param fs flowSet
+#' @param fs flowSet (not used.)
 #' @param dims the channels involved
-#' @param tol the tolerance 
-#' @param ... not used
-#' @return  an expressionFilter
+#' @param ... arguments passed to \link[flowCore]{boundaryFilter}
+#' @return  an boundaryFilter
 #' @examples 
 #' data(GvHD)
 #' fs <- GvHD[1]
@@ -85,22 +84,6 @@
 #' ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+", filter = marginalFilter) + geom_hex(bins = 64)
 #' 
 #' @export
-marginalFilter <- function(fs, dims, tol = 1e-5, ...){
-  r <- range(fs[[1, use.exprs = FALSE]], dims)
-  
-  exp <- NULL
-  for(dim in dims){
-    thisRange <- r[, dim]
-    eps <- diff(thisRange) * tol
-    thisExp <- substitute(dim > dim.min & dim < dim.max
-               , list(dim = as.symbol(dim)
-                      , dim.min = thisRange[1] + eps
-                      , dim.max = thisRange[2] - eps
-                      )
-                )
-    thisExp <- deparse(thisExp, width.cutoff = 500) # it will fail if width >500
-    exp <- paste(exp, thisExp, sep = ifelse(is.null(exp), "", "&"))
-  }
-  
-  char2ExpressionFilter(exp)
+marginalFilter <- function(fs, dims, ...){
+  boundaryFilter(x = dims, ...)
 }
