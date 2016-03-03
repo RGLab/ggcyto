@@ -57,6 +57,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     attr(fs, "dims") <- dims.tbl
     attr(fs, "filter") <- filter
     p[["fs"]] <- fs  
+    p[["data"]] <- fs #update data as well
     p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
     
     
