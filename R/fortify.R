@@ -20,11 +20,14 @@
 #' @return data.table
 #' @export
 .fs2dt <- function(x, ...){
+  
+  thisFilter <- attr(x, "filter")#must to get attr here before it is lost during subsetting
+  
   # subset by columns if applicable
   dims <- attr(x, "dims")
   if(!is.null(dims))
     x <- x[, dims[, name]]
-  thisFilter <- attr(x, "filter")
+  
   if(!is.null(thisFilter)){
     if(is.function(thisFilter)){
       thisFilter <- thisFilter(x, dims[, name])
