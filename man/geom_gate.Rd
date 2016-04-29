@@ -7,6 +7,8 @@
 \alias{geom_gate.ellipsoidGate}
 \alias{geom_gate.filterList}
 \alias{geom_gate.list}
+\alias{geom_gate.logical}
+\alias{geom_gate.logicalFilterResult}
 \alias{geom_gate.polygonGate}
 \alias{geom_gate.rectangleGate}
 \title{add a flowCore gate layer}
@@ -26,6 +28,10 @@ geom_gate(data, ...)
 \method{geom_gate}{ellipsoidGate}(data, ...)
 
 \method{geom_gate}{character}(data, ...)
+
+\method{geom_gate}{logicalFilterResult}(data, ...)
+
+\method{geom_gate}{logical}(data, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)

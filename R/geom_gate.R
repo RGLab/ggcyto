@@ -52,8 +52,15 @@ geom_gate.default <- function(data, ...){
 #' @rdname geom_gate
 #' @export
 geom_gate.list <- function(data, ...){
-  data <- filterList(data)
-  geom_gate(data, ...)  
+  element <- data[[1]]
+  if(is(element, "logical")||is(element, "logicalFilterResult")){
+    geom_gate.logical(data, ...)
+  }else if(is(element, "filter")){
+    data <- filterList(data)
+    geom_gate(data, ...)    
+  }else
+    stop("unsupported geom_gate type:", class(element))
+  
 }
 
 
@@ -145,3 +152,19 @@ geom_gate.character <- function(data, ...){
                 )
 }
 
+#' @rdname geom_gate
+#' @export
+geom_gate.logicalFilterResult <- function(data, ...){
+  geom_gate.logical(data, ...)
+}
+
+#' @rdname geom_gate
+#' @export
+geom_gate.logical <- function(data, ...){
+  structure(
+    list(indices = data
+         , gate_params = list(...)
+    )
+    , class = c("logicalGates", "ggcyto_virtual_layer")
+  )
+}
