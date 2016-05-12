@@ -274,6 +274,24 @@ add_ggcyto <- function(e1, e2, e2name){
     #cause the dispatch conflicts due to the special rule of groupGeneric
     e1$theme <- ggplot2:::update_theme(e1$theme, e2)
     return(e1)
+  }else if(is(e2, "logicalGates")){
+    
+    if(is(fs, "GatingSet")){
+      thisfs <- getData(gs)  
+      #make sure pass on subset attr here so that lazy-fortify will succeed in as.ggplot call. 
+      #'otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
+      attr(e1[["data"]], "subset") <- attr(gs, "subset")
+    }else{
+      thisfs <- fs
+    }
+    
+    subfs <- Subset(thisfs, e2[["indices"]])
+    # instantiate the new gate layer
+    thisCall <- quote(geom_point(data = subfs))
+    # copy all the other parameters
+    thisCall <-  as.call(c(as.list(thisCall), e2[["gate_params"]]))
+    e2 <- eval(thisCall)
+    
   }
   
   ggplot2:::`+.gg`(e1, e2)

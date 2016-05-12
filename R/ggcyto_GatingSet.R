@@ -101,6 +101,10 @@ add_ggcyto_gs <- function(e1, e2){
     for(node in nodes)
     {
       gate <- getGate(gs, node)
+      #must convert bool gate to indices since
+      #flowset doesn't know about booleanFilter
+      if(is(gate[[1]], "booleanFilter"))
+        gate <- lapply(gs, getIndices, y = node)
       
       thisCall <- quote(geom_gate(gate))
       thisCall <- as.call(c(as.list(thisCall), e2[["gate_params"]]))
