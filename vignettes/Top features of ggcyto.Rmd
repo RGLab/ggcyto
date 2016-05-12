@@ -7,6 +7,9 @@ output:
     keep_md: yes
     toc: yes
     toc_float: true
+vignette: >    
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Feature summary of ggcyto}
 ---
 
 ```{r, echo=FALSE}
@@ -180,10 +183,3 @@ nodes
 autoplot(gh, nodes, bins = 64)
 ```
 
-
-More examples:
-
-* [ggplot + flowSet1d](vignettes/advanced/ggplot.flowSet.1d.md)
-* [ggplot + flowSet2d](vignettes/advanced/ggplot.flowSet.2d.md)
-* [ggplot + flowSet + gate](vignettes/advanced/ggplot.flowSet.gate.md)
-* [ggplot + flowSet + overlay](vignettes/advanced/ggplot.flowSet.overlay.md)
