@@ -17,7 +17,7 @@ It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_l
 \arguments{
 \item{x}{ggcyto_gate_layout, which is essentially a list of ggplot objects}
 
-\item{...}{not used}
+\item{...}{other arguments passed to arrangeGrob}
 
 \item{object}{ggcyto_GatingLayout}
 }
