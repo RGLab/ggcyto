@@ -43,6 +43,7 @@ Collate:
     'fortify_fs.R'
     'geom_gate.R'
     'geom_hvline.R'
+    'geom_overlay.R'
     'geom_stats.R'
     'getFlowFrame.R'
     'ggcyto.R'

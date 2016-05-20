@@ -78,7 +78,16 @@ add_ggcyto_gs <- function(e1, e2){
   
     
   parent <- attr(gs, "subset")
-  if(is(e2, "gs.node")){
+  if(is(e2, "overlay.node")){
+    node <- e2[["node"]]  
+    fs.overlay <- getData(gs, node)
+    
+    thisCall <- quote(geom_overlay(fs.overlay))
+    thisCall <- as.call(c(as.list(thisCall), e2[["overlay_params"]]))
+    e2.new <- eval(thisCall)
+    e1 <- `+.ggcyto_flowSet`(e1, e2.new)
+    return (e1)
+  }else if(is(e2, "gs.node")){
     #instantiate e2 layer as a specific gate layer
 
     nodes <- e2[["node"]]  
