@@ -11,7 +11,7 @@ vignette: >
 ---
 
 ```{r, echo=FALSE}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, error = TRUE)
 ```
 
 
@@ -83,7 +83,13 @@ p
 
 unless it is instantiated by the gate layer, i.e. lookup the gating tree for the parent node based on the given gates in `geom_gate`
 ```{r}
-p + geom_gate(c("CD4", "CD8"))
+p <- p + geom_gate(c("CD4", "CD8"))
+p
+```
+
+With `geom_overlay`, you can easily overlay the additional cell populations (whose gates are not defined in the current projection) on top of the existing plot.
+```{r}
+p + geom_overlay("CD8/CCR7- 45RA+", col = "black", size = 0.1, alpha = 0.4)
 ```
 
 
@@ -104,6 +110,6 @@ Sometime it is helpful to display the axis label in raw scale by inverse transfo
 ```{r}
 p + axis_x_inverse_trans() + axis_y_inverse_trans()
 #add filter (consistent with `margin` behavior in flowViz)
-# ggcyto(gs, aes(x = CD4, y = CD8), subset = "3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
+# ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+", filter = marginalFilter)  + geom_hex(bins = 32, na.rm = T)
 ```
 
