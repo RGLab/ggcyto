@@ -58,6 +58,9 @@ geom_gate.list <- function(data, ...){
   }else if(is(element, "filter")){
     data <- filterList(data)
     geom_gate(data, ...)    
+  }else if(is(element, "filters")){
+    data <- filtersList(data)
+    geom_gate(data, ...)    
   }else
     stop("unsupported geom_gate type:", class(element))
   
@@ -150,6 +153,28 @@ geom_gate.character <- function(data, ...){
                   )
                 , class = c("gs.node", "ggcyto_virtual_layer")
                 )
+}
+
+#' @rdname geom_gate
+#' @export
+geom_gate.filters <- function(data, ...){
+  structure(
+    list(gate = data
+         , gate_params = list(...)
+    )
+    , class = c("geom.filters", "ggcyto_virtual_layer")
+  )
+}
+
+#' @rdname geom_gate
+#' @export
+geom_gate.filtersList <- function(data, ...){
+  structure(
+    list(gate = data
+         , gate_params = list(...)
+    )
+    , class = c("geom.filtersList", "ggcyto_virtual_layer")
+  )
 }
 
 #' @rdname geom_gate
