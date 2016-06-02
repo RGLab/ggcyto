@@ -92,6 +92,11 @@ fortify.flowSet <- function(model, data, ...){
 }
 
 #' @export
+#' @rdname fortify.flowSet
+fortify.ncdfFlowList <- function(model, ...){
+  getS3method("fortify", "flowSet")(model, ...)
+}
+#' @export
 #' @return data.table
 #' @rdname fortify.flowSet
 fortify.GatingSet <- function(model, ...){

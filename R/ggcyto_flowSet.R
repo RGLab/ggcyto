@@ -77,6 +77,11 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   
   p
 }
+
+ggcyto.ncdfFlowList <- function(data, ...){
+  ggcyto:::ggcyto.flowSet(data, ...)
+}
+
 #' Reports whether x is a ggcyto_flowSet object
 #' @param x An object to test
 #' @return TRUE or FALSE

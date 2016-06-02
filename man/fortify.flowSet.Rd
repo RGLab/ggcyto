@@ -5,11 +5,14 @@
 \alias{fortify.GatingSet}
 \alias{fortify.flowFrame}
 \alias{fortify.flowSet}
+\alias{fortify.ncdfFlowList}
 \title{Convert a flowFrame/flowSet/GatingSet to a ggplot-compatible data.table}
 \usage{
 \method{fortify}{flowFrame}(model, data, ...)
 
 \method{fortify}{flowSet}(model, data, ...)
+
+\method{fortify}{ncdfFlowList}(model, ...)
 
 \method{fortify}{GatingSet}(model, ...)
 }

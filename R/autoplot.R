@@ -59,6 +59,12 @@ autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
 
 #' @export
 #' @rdname autoplot
+autoplot.ncdfFlowList <- function(object, ...){
+  getS3method("autoplot", "flowSet")(object, ...)
+}
+
+#' @export
+#' @rdname autoplot
 autoplot.flowFrame <- function(object, ...){
   object <- fortify_fs(object)
   autoplot(object, ...)

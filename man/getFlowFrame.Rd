@@ -5,11 +5,14 @@
 \alias{getFlowFrame.GatingHierarchy}
 \alias{getFlowFrame.GatingSet}
 \alias{getFlowFrame.flowSet}
+\alias{getFlowFrame.ncdfFlowList}
 \title{extract flowFrame data structure from the given R object}
 \usage{
 getFlowFrame(x)
 
 \method{getFlowFrame}{flowSet}(x)
+
+\method{getFlowFrame}{ncdfFlowList}(x)
 
 \method{getFlowFrame}{GatingSet}(x)
 
