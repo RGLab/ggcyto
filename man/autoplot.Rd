@@ -5,9 +5,12 @@
 \alias{autoplot.GatingSet}
 \alias{autoplot.flowFrame}
 \alias{autoplot.flowSet}
+\alias{autoplot.ncdfFlowList}
 \title{Plot fluorescence intensity in one or two dimension.}
 \usage{
 \method{autoplot}{flowSet}(object, x, y = NULL, bins = 30, ...)
+
+\method{autoplot}{ncdfFlowList}(object, ...)
 
 \method{autoplot}{flowFrame}(object, ...)
 

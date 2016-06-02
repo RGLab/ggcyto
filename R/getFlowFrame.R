@@ -24,6 +24,12 @@ getFlowFrame.flowSet <- function(x){
 
 #' @rdname getFlowFrame
 #' @export
+getFlowFrame.ncdfFlowList <- function(x){
+  getS3method("getFlowFrame", "flowSet")(x)
+}
+
+#' @rdname getFlowFrame
+#' @export
 getFlowFrame.GatingSet <- function(x){
   getFlowFrame(getData(x))
 }
