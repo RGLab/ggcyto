@@ -6,6 +6,8 @@
 \alias{geom_gate.default}
 \alias{geom_gate.ellipsoidGate}
 \alias{geom_gate.filterList}
+\alias{geom_gate.filters}
+\alias{geom_gate.filtersList}
 \alias{geom_gate.list}
 \alias{geom_gate.logical}
 \alias{geom_gate.logicalFilterResult}
@@ -28,6 +30,10 @@ geom_gate(data, ...)
 \method{geom_gate}{ellipsoidGate}(data, ...)
 
 \method{geom_gate}{character}(data, ...)
+
+\method{geom_gate}{filters}(data, ...)
+
+\method{geom_gate}{filtersList}(data, ...)
 
 \method{geom_gate}{logicalFilterResult}(data, ...)
 

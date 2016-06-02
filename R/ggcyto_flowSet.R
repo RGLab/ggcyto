@@ -187,6 +187,35 @@ add_ggcyto <- function(e1, e2, e2name){
         
     }
     
+  }else if(is(e2, "geom.filters")){
+    gates <- e2[["gate"]]
+    for(gate in gates){
+      thisCall <- quote(geom_gate(data = gate))
+      # copy all the other parameters
+      thisCall <-  as.call(c(as.list(thisCall), e2[["gate_params"]]))
+      e2.new <- eval(thisCall)
+      e1 <- e1 + e2.new
+    }
+    return(e1)
+  }else if(is(e2, "geom.filtersList")){
+    gates <- e2[["gate"]]
+    #disassemble filtersList into filterLists
+    myFilterLists <- vector(mode = "list", length = length(gates[[1]]))
+    for(filts in gates){
+      for(i in seq_along(filts)){
+        myFilterLists[[i]] <- c(myFilterLists[[i]], filts[[i]])
+      }
+    }
+    for(myFilterList in myFilterLists){
+      names(myFilterList) <- names(gates)
+      myFilterList <- filterList(myFilterList)
+      thisCall <- quote(geom_gate(data = myFilterList))
+      # copy all the other parameters
+      thisCall <-  as.call(c(as.list(thisCall), e2[["gate_params"]]))
+      e2.new <- eval(thisCall)
+      e1 <- e1 + e2.new
+    }
+    return(e1)
   }else if(is(e2, "GeomStats")){
     gate <- e2[["gate"]]
     #parse the gate from the each gate layer if it is not present in the current geom_stats layer
