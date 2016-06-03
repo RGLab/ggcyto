@@ -70,6 +70,12 @@ autoplot.flowFrame <- function(object, ...){
   autoplot(object, ...)
 }
 
+#' @export
+#' @rdname autoplot
+autoplot.GatingSetList <- function(object, ...){
+  getS3method("autoplot", "GatingSet")(object, ...)
+}
+
 #' @param gate the gate to be plotted
 #' @export
 #' @rdname autoplot

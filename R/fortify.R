@@ -96,6 +96,13 @@ fortify.flowSet <- function(model, data, ...){
 fortify.ncdfFlowList <- function(model, ...){
   getS3method("fortify", "flowSet")(model, ...)
 }
+
+#' @export
+#' @rdname fortify.flowSet
+fortify.GatingSetList <- function(model, ...){
+  getS3method("fortify", "GatingSet")(model, ...)
+}
+
 #' @export
 #' @return data.table
 #' @rdname fortify.flowSet
@@ -143,6 +150,8 @@ fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
   if(!is.null(data)){
     for(chnl in chnls){
       thisVal <- vertices[, chnl] 
+      if(!chnl%in%colnames(data))
+        stop("gate dimension ", chnl, " not found in data!")
       thisRg <- data[, chnl]
       vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
       vertices[thisVal > thisRg[2], chnl] <- thisRg[2]

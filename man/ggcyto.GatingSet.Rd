@@ -3,9 +3,12 @@
 \name{ggcyto.GatingSet}
 \alias{ggcyto.GatingHierarchy}
 \alias{ggcyto.GatingSet}
+\alias{ggcyto.GatingSetList}
 \title{Create a new ggcyto plot from a GatingSet}
 \usage{
 \method{ggcyto}{GatingSet}(data, mapping, subset = "_parent_", ...)
+
+\method{ggcyto}{GatingSetList}(data, ...)
 
 \method{ggcyto}{GatingHierarchy}(data, ...)
 }

@@ -45,7 +45,11 @@ fortify_fs.flowFrame <- function(model, data, ...){
   fs
 }
 
-
+#' @export
+#' @rdname fortify_fs
+fortify_fs.GatingSetList <- function(model, data, ...){
+  getS3method("fortify_fs", "GatingSet")(model, data, ...)
+}
 #' @export
 #' @rdname fortify_fs
 fortify_fs.GatingSet <- function(model, data, ...){
