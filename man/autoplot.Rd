@@ -3,6 +3,7 @@
 \name{autoplot.flowSet}
 \alias{autoplot.GatingHierarchy}
 \alias{autoplot.GatingSet}
+\alias{autoplot.GatingSetList}
 \alias{autoplot.flowFrame}
 \alias{autoplot.flowSet}
 \alias{autoplot.ncdfFlowList}
@@ -13,6 +14,8 @@
 \method{autoplot}{ncdfFlowList}(object, ...)
 
 \method{autoplot}{flowFrame}(object, ...)
+
+\method{autoplot}{GatingSetList}(object, ...)
 
 \method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC-A",
   bins = 30, ...)

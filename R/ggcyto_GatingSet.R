@@ -37,6 +37,11 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p
 }
 
+#' @rdname ggcyto.GatingSet
+#' @export
+ggcyto.GatingSetList <- function(data, ...){
+  getS3method("ggcyto", "GatingSet")(data, ...)
+}
 
 #' @rdname ggcyto.GatingSet
 #' @export

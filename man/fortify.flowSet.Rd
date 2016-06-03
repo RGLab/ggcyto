@@ -3,6 +3,7 @@
 \name{fortify.flowFrame}
 \alias{fortify}
 \alias{fortify.GatingSet}
+\alias{fortify.GatingSetList}
 \alias{fortify.flowFrame}
 \alias{fortify.flowSet}
 \alias{fortify.ncdfFlowList}
@@ -13,6 +14,8 @@
 \method{fortify}{flowSet}(model, data, ...)
 
 \method{fortify}{ncdfFlowList}(model, ...)
+
+\method{fortify}{GatingSetList}(model, ...)
 
 \method{fortify}{GatingSet}(model, ...)
 }

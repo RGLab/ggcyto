@@ -79,7 +79,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
 }
 
 ggcyto.ncdfFlowList <- function(data, ...){
-  ggcyto:::ggcyto.flowSet(data, ...)
+  getS3method("ggcyto", "flowSet")(data, ...)
 }
 
 #' Reports whether x is a ggcyto_flowSet object

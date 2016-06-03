@@ -30,6 +30,12 @@ getFlowFrame.ncdfFlowList <- function(x){
 
 #' @rdname getFlowFrame
 #' @export
+getFlowFrame.GatingSetList <- function(x){
+  getS3method("getFlowFrame", "GatingSet")(x)
+}
+
+#' @rdname getFlowFrame
+#' @export
 getFlowFrame.GatingSet <- function(x){
   getFlowFrame(getData(x))
 }
