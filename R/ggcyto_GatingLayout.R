@@ -1,12 +1,37 @@
 #' print method for ggcyto_gate_layout class
-#' It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_layout object
-#' @param x ggcyto_gate_layout, which is essentially a list of ggplot objects
-#' @param ... other arguments passed to arrangeGrob
+#' @inheritParams ggcyto_arrange
 #' @export
 #' @return nothing
 #' @method print ggcyto_GatingLayout
 print.ggcyto_GatingLayout <- function(x, ...){
+  gt <- ggcyto_arrange(x, ...)
+  plot(gt)
+}
 
+
+#' Arrange a list of ggplot objects into gtable
+#' 
+#' It is usually implicitly invoked by print and show method and can be called by user when the further manipulation is needed, 
+#' 
+#' @param x ggcyto_gate_layout, which is essentially a list of ggplot objects that were previously stored as ggcyto_gate_layout object by autoplot function.
+#' @param ... other arguments passed to arrangeGrob
+#' @export
+#' @return gtable
+#' @examples 
+#' \dontrun{
+#' # get ggcyto_GatingLayout object from first sample
+#' res <- autoplot(gs[[1]], nodes, bins = 64)
+#' class(res)
+#' # arrange it as one-row gtable object 
+#' gt <- ggcyto_arrange(res, nrow = 1)
+#' gt
+#' # do the same to the second sample
+#' gt2 <- ggcyto_arrange(autoplot(gs[[2]], nodes, bins = 64), nrow = 1)
+#' # combine the two and print it on the sampe page
+#' gt3 <- gridExtra::rbind.gtable(gt, gt2)
+#' plot(gt3)
+#' }
+ggcyto_arrange <- function(x, ...){
   #must do the conversion to ggplot here since + require ggcyto object
   for(j in seq_along(x)){
     # browser()
@@ -28,7 +53,7 @@ print.ggcyto_GatingLayout <- function(x, ...){
   }
 
   arrange.main <- x@arrange.main
-  plot(do.call(arrangeGrob, c(grobs = x, top = arrange.main, ...)))
+  arrangeGrob(grobs = x, top = arrange.main, ...)
 }
 
 #' @param object ggcyto_GatingLayout
