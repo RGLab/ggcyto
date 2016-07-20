@@ -28,6 +28,10 @@
 #' 
 #' # add overlay layer by gate name
 #' p + geom_overlay(data = "DNT", size = 0.3, alpha = 0.7)
+#' 
+#' #add overlay for 1d densityplot
+#' p <- ggcyto(gs, aes(x = CD4), subset = "CD3+") + geom_density(aes(y = ..count..))
+#' p + geom_overlay("DNT", aes(y = ..count..), fill = "red")
 geom_overlay <- function(data, ...)UseMethod("geom_overlay")
 
 #' @export
@@ -53,7 +57,14 @@ geom_overlay.character <- function(data, ...){
 #' @rdname geom_overlay
 #' @export
 geom_overlay.flowSet <- function(data, ...){
-  geom_point(data = data, ...)
+  if(length(data) > 1)
+    stop("More than one flow data provided for geom_overlay. Please add one population per layer!")
+  structure(
+    list(fs = data
+         , overlay_params = list(...)
+    )
+    , class = c("overlay.fs", "ggcyto_virtual_layer")
+  )
   
 }
 

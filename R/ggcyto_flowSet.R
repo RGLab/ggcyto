@@ -216,6 +216,19 @@ add_ggcyto <- function(e1, e2, e2name){
       e1 <- e1 + e2.new
     }
     return(e1)
+  }else if(is(e2, "overlay.fs")){
+    fs.overlay <- e2[["fs"]]  
+    nDim <- nrow(dims)
+    if(nDim == 1){
+      thisCall <- quote(geom_density(data = fs.overlay))
+    }else{
+      thisCall <- quote(geom_point(data = fs.overlay))  
+    }
+
+    thisCall <- as.call(c(as.list(thisCall), e2[["overlay_params"]]))
+    e2.new <- eval(thisCall)
+    e1 <- `+.ggcyto_flowSet`(e1, e2.new)
+    return (e1)
   }else if(is(e2, "GeomStats")){
     gate <- e2[["gate"]]
     #parse the gate from the each gate layer if it is not present in the current geom_stats layer
