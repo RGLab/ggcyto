@@ -5,9 +5,11 @@ output:
     fig_height: 3
     fig_width: 4
     keep_md: yes
+    toc: yes
+    toc_float: true
 vignette: >    
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Visualize GatingSet with ggcyto}        
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, echo=FALSE}
@@ -29,6 +31,7 @@ p <- p + geom_hex(bins = 64)
 p
 ```
 
+## ggcyto_par_set
 We can use the instrument range to automatically filter out these outlier cell events
 ```{r}
 p + ggcyto_par_set(limits = "instrument")
@@ -45,7 +48,7 @@ To check what kind of visualization parameters can be changed through `ggcyto_pa
 ```{r}
 ggcyto_par_default()
 ```
-
+## geom_gate
 To plot a gate, simply pass the gate name to the `geom_gate` layer
 ```{r}
 p + geom_gate("CD4")
@@ -57,7 +60,7 @@ More than one gate can be added as long as they share the same parent and dimens
 p <- p + geom_gate(c("CD4","CD8")) # short for geom_gate("CD8") + geom_gate("CD4")
 p
 ```
-
+## geom_stats
 By default, stats for all gate layers are added through empty `geom_stats` layer. 
 ```{r}
 p + geom_stats() + labs_cyto("marker")
@@ -87,12 +90,21 @@ p <- p + geom_gate(c("CD4", "CD8"))
 p
 ```
 
+## geom_overlay
 With `geom_overlay`, you can easily overlay the additional cell populations (whose gates are not defined in the current projection) on top of the existing plot.
 ```{r}
 p + geom_overlay("CD8/CCR7- 45RA+", col = "black", size = 0.1, alpha = 0.4)
 ```
 
+`geom_overlay` automatically determines the overlay type (`goem_point` or `geom_density`) based on the number of dimensions specified in `ggcyto` constructor. 
+Note that we change the default `y` axis from `density` to `count` in order to make the scales comparable for the stacked density layers. They are wrapped with `..` because they belong to the `computed variables`.
+```{r}
+p <- ggcyto(gs, aes(x = CD4), subset = "CD3+") + geom_density(aes(y = ..count..))
+p + geom_overlay("CD8/CCR7- 45RA+", aes(y = ..count..), fill = "red")
+```
 
+
+## subset
 Alternatively, we can choose to plot all children of one specified parent and projections
 ```{r}
 p <- ggcyto(gs, aes(x = 38, y = DR), subset = "CD4") + geom_hex(bins = 64) + geom_gate() + geom_stats()
@@ -105,7 +117,7 @@ Or we can add gate layer to any arbitary node instead of its parent node
 ggcyto(gs, subset = "root", aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + geom_gate("CD4") + myPars
 ```
 
-
+## axis_x_inverse_trans
 Sometime it is helpful to display the axis label in raw scale by inverse transforming the axis without affecting the data
 ```{r}
 p + axis_x_inverse_trans() + axis_y_inverse_trans()

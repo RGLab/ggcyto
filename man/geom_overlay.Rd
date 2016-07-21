@@ -49,5 +49,9 @@ p + geom_overlay(data = fs, size = 0.3, alpha = 0.7)
 
 # add overlay layer by gate name
 p + geom_overlay(data = "DNT", size = 0.3, alpha = 0.7)
+
+#add overlay for 1d densityplot
+p <- ggcyto(gs, aes(x = CD4), subset = "CD3+") + geom_density(aes(y = ..count..))
+p + geom_overlay("DNT", aes(y = ..count..), fill = "red")
 }
 
