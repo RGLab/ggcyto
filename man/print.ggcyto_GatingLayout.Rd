@@ -5,8 +5,7 @@
 \alias{print.ggcyto_GatingLayout}
 \alias{show,ggcyto_GatingLayout-method}
 \alias{show.ggcyto_GatingLayout}
-\title{print method for ggcyto_gate_layout class
-It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_layout object}
+\title{print method for ggcyto_gate_layout class}
 \usage{
 \method{print}{ggcyto_GatingLayout}(x, ...)
 
@@ -15,7 +14,7 @@ It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_l
 \S4method{show}{ggcyto_GatingLayout}(object)
 }
 \arguments{
-\item{x}{ggcyto_gate_layout, which is essentially a list of ggplot objects}
+\item{x}{ggcyto_gate_layout, which is essentially a list of ggplot objects that were previously stored as ggcyto_gate_layout object by autoplot function.}
 
 \item{...}{other arguments passed to arrangeGrob}
 
@@ -26,6 +25,5 @@ nothing
 }
 \description{
 print method for ggcyto_gate_layout class
-It calls arrangeGrob to arrange a list of ggplot objects stored as ggcyto_gate_layout object
 }
 
