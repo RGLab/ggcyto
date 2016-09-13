@@ -130,9 +130,7 @@ as.ggplot <- function(x){
   }else
     data_range <- x[["data_range"]]
   
-  #clear the raw data format
-  x[["fs"]] < NULL
-  x[["gs"]] < NULL
+
   #####################
   #update default scales
   #####################
@@ -181,7 +179,9 @@ as.ggplot <- function(x){
     }
     
   }
-    
+  #clear the raw data format
+  x[["fs"]] <- NULL
+  x[["gs"]] <- NULL 
   #strip the ggcyto class attributes
   asS3(x)
 }
