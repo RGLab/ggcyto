@@ -57,8 +57,7 @@ geom_overlay.character <- function(data, ...){
 #' @rdname geom_overlay
 #' @export
 geom_overlay.flowSet <- function(data, ...){
-  if(length(data) > 1)
-    stop("More than one flow data provided for geom_overlay. Please add one population per layer!")
+  
   structure(
     list(fs = data
          , overlay_params = list(...)
