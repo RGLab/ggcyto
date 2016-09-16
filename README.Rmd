@@ -29,6 +29,8 @@ autoplot(fs, "CD4")
 autoplot(fs, "CD4", "CD8", bins = 64)
 
 autoplot(gs, c("CD4", "CD8"), bins = 64)
+#plot all channels
+autoplot(fs[[1]]) + labs_cyto("marker")
 ```
 
 ### More flexibility with **ggcyto** wrapper

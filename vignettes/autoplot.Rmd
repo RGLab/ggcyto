@@ -32,6 +32,11 @@ autoplot(fs, x = 'FSC-H')
 ```{r}
 autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)
 ```
+## `flowFrame`
+For the `flowFrame`, it can display one-dimensional plots for all channels by not supplying the `x` argument.
+```{r}
+autoplot(fs[[1]]) + labs_cyto("marker")
+```
 
 ## `GatingSet` 
 ```{r}

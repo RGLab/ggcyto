@@ -3,7 +3,7 @@
 #' @param data default flowSet for plot
 #' @param mapping default list of aesthetic mappings (these can be colour,
 #'   size, shape, line type -- see individual geom functions for more details)
-#'  @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
+#' @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
 #'                The gate is used to filter the flow data before it is plotted. 
 #' @param ... ignored
 #' @method ggcyto flowSet
@@ -326,7 +326,7 @@ add_ggcyto <- function(e1, e2, e2name){
     if(is(fs, "GatingSet")){
       thisfs <- getData(gs)  
       #make sure pass on subset attr here so that lazy-fortify will succeed in as.ggplot call. 
-      #'otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
+      #otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
       attr(e1[["data"]], "subset") <- attr(gs, "subset")
     }else{
       thisfs <- fs
