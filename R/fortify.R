@@ -6,7 +6,6 @@
 #' @return data.table
 #' @import data.table
 #' @export
-#' @
 .fr2dt <- function(x, ...){
   as.data.table(exprs(x))
 }

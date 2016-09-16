@@ -4,7 +4,8 @@
 #' It plots the cytometry data with geom_histogram, geom_density or geom_hex.
 #'
 #' @param object flowFrame, flowSet, GatingSet object
-#' @param x,y define the dimension of the plot
+#' @param x define the x dimension of the plot. When object is a flowFrame, it can be missing, which plots 1d density plot on all the channels. 
+#' @param y define the y dimension of the plot. Default is NULL, which means 1d densityplot.
 #' @param bins passed to geom_hex
 #' @param ... other arguments passed to ggplot
 #'
@@ -19,6 +20,9 @@
 #' #1d- density plot
 #' autoplot(fs, x = "SSC-H")
 #'
+#' #1d- density plot on all channels
+#' autoplot(fs[[1]])
+#' 
 #' #2d plot: default geom_hex plot
 #' autoplot(fs, x = 'FSC-H', y ='SSC-H')
 #'
@@ -65,9 +69,44 @@ autoplot.ncdfFlowList <- function(object, ...){
 
 #' @export
 #' @rdname autoplot
-autoplot.flowFrame <- function(object, ...){
-  object <- fortify_fs(object)
-  autoplot(object, ...)
+autoplot.flowFrame <- function(object, x, ...){
+  
+  if(missing(x)){
+    density_fr_all(object) 
+  }else{
+    object <- fortify_fs(object)
+    autoplot(object, x = x, ...)
+  }
+    
+}
+
+density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...){
+  
+  #plot each individual channel
+  Objs <- lapply(colnames(fr), function(chnl){
+      p <- autoplot(fr, chnl, ...)
+      p <- p + guides(fill=FALSE) + labs(title = NULL)
+      myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
+                       , axis.text = element_text(color = gray(0.3), size = 6)
+                       , axis.title.y = element_blank()
+                       , strip.text = element_blank()
+                       , plot.margin = unit(c(0,0,0,0), "cm")
+                       , panel.margin = unit(0, "cm")
+      )
+      p <- p + myTheme
+      attr(p$data, "strip.text") <- chnl
+      p
+    })
+  
+  
+  #convert it to a special class to dispatch the dedicated print method
+  Objs <- as(Objs, "ggcyto_GatingLayout")
+  Objs@arrange.main <- identifier(fr)
+
+
+  Objs
+  
+  
 }
 
 #' @export
