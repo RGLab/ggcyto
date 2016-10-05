@@ -83,7 +83,7 @@ autoplot.flowFrame <- function(object, x, ...){
 density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...){
   
   #plot each individual channel
-  Objs <- lapply(colnames(fr), function(chnl){
+  Objs <- sapply(colnames(fr), function(chnl){
       p <- autoplot(fr, chnl, ...)
       p <- p + guides(fill=FALSE) + labs(title = NULL)
       myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
@@ -96,7 +96,7 @@ density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...)
       p <- p + myTheme
       attr(p$data, "strip.text") <- chnl
       p
-    })
+    }, simplify = FALSE)
   
   
   #convert it to a special class to dispatch the dedicated print method
