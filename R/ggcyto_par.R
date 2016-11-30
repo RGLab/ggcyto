@@ -1,11 +1,15 @@
 #' @include labs.R
 #' @importFrom RColorBrewer brewer.pal
-.element_tree <- list(
+.element_tree <- function(){#don't want to make it a global variable 
+                            #since it will be evaluated and stored in package during the installation
+                            #and some stored ggplot2 layer objects may become obsolete overtime as ggplot2 upgrades
+                 list(
                       limits = "data" #or "instrument"
                       , facet = facet_wrap(~name, scales = "free") 
                       , hex_fill = scale_fill_gradientn(colours = rev(brewer.pal(11, "Spectral")), trans = "sqrt")  
                       , lab = labs_cyto("both") 
                       )
+}
 .lazy_element <- c("limits")
 #' Set some default parameters for ggcyto
 #'
@@ -60,11 +64,11 @@ ggcyto_par_set <- function(...) {
 #' @examples
 #' ggcyto_par_default()
 ggcyto_par_default <- function(){
-  do.call(ggcyto_par_set, .element_tree)
+  do.call(ggcyto_par_set, .element_tree())
 }
 
 validate_element <- function(el, elname) {
-  eldef <- .element_tree[[elname]]
+  eldef <- .element_tree()[[elname]]
   
   if (is.null(eldef)) {
     stop('"', elname, '" is not a valid ggcyo parameter element! Print the default parameters by "ggcyto_par_default()"')
