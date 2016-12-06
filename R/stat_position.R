@@ -50,7 +50,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
    .stat_position_filter(gate, ...)
  }
 
-.stat_position_filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL){
+.stat_position_filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL, ...){
   
   params <- parameters(gate)
   if(abs)#plot label whithin the boundary by default 

@@ -154,6 +154,8 @@ add_ggcyto_gs <- function(e1, e2){
        
         stat_type <- e2[["type"]]
         value <- e2[["value"]]
+        digits <- e2[["digits"]]
+        
         #grab the pre-calculated stats
         if(is.null(value)){
           if(stat_type == "count")
@@ -169,6 +171,7 @@ add_ggcyto_gs <- function(e1, e2){
                                     , type = stat_type
                                     , data_range = data_range
                                     , adjust = adjust
+                                    , digits = digits
                                     )
                              , e2[["geom_label_params"]]
                              )
