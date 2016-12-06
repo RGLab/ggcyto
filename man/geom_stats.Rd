@@ -6,7 +6,7 @@
 \usage{
 geom_stats(gate = NULL, ..., value = NULL, type = "percent",
   data_range = NULL, adjust = 0.5, label.padding = unit(0.05, "lines"),
-  label.size = 0)
+  label.size = 0, digits = 3)
 }
 \arguments{
 \item{gate}{a 'filterList` or character (represent as a population node in GatingSet)
@@ -23,6 +23,8 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 \item{adjust}{adjust the position of the centroid. from 0 to 1.}
 
 \item{label.padding, label.size}{arguments passed to geom_label layer}
+
+\item{digits}{control the stats format}
 }
 \value{
 a geom_popStats layer

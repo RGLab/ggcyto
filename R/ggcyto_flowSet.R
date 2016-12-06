@@ -259,9 +259,9 @@ add_ggcyto <- function(e1, e2, e2name){
     stat_type <- e2[["type"]]
     data_range <- e2[["data_range"]]
     adjust <- e2[["adjust"]]
-    
+    digits <- e2[["digits"]]
     for(gate in gates_parsed){
-      stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust)
+      stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, adjust = adjust, digits = digits)
       
       # instantiate the new stats layer
       thisCall <- quote(geom_label(data = stats))
