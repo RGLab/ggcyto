@@ -150,6 +150,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
 #' @param merge wehther to merge multiple gates into the same panel when they share the same parent and projections
 #' @param projections a list of customized projections
 #' @param strip.text either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE
+#' @param path the gating path format (passed to \link{getNodes})
 #' @importFrom gridExtra arrangeGrob
 #' @export
 #' @rdname autoplot
@@ -157,13 +158,14 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                          , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
                          , projections = list()
                          , strip.text = c("parent", "gate")
+                         , path = "auto"
                          , ...){
   strip.text <- match.arg(strip.text)
   if(missing(gate)){
-    gate <- getNodes(object, path = "auto")
+    gate <- getNodes(object, path = path)
     gate <- setdiff(gate,"root")
   }else if (is.numeric(gate)){
-    gate <- getNodes(object, path = "auto")[gate]
+    gate <- getNodes(object, path = path)[gate]
   }
 
   #match given axis to channel names
@@ -183,7 +185,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
 
     }else{
       gate <- plotObjs
-      parent <- getParent(object, gate, path = "auto")
+      parent <- getParent(object, gate, path = path)
       myPrj <- projections[[as.character(gate)]]
     }
 
