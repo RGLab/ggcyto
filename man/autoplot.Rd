@@ -22,7 +22,8 @@
 
 \method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A", bool = FALSE,
   arrange.main = sampleNames(object), arrange = TRUE, merge = TRUE,
-  projections = list(), strip.text = c("parent", "gate"), ...)
+  projections = list(), strip.text = c("parent", "gate"), path = "auto",
+  ...)
 }
 \arguments{
 \item{object}{flowFrame, flowSet, GatingSet object}
@@ -48,6 +49,8 @@
 \item{projections}{a list of customized projections}
 
 \item{strip.text}{either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE}
+
+\item{path}{the gating path format (passed to \link{getNodes})}
 }
 \value{
 a ggcyto object
