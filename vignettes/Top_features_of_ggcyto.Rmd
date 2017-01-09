@@ -100,10 +100,10 @@ It hides the complex details pf plotting different geometric shapes
 fr <- fs[[1]]
 p <- autoplot(fr,"CD4", "CD8") + ggcyto_par_set(limits = "instrument")
 #1d gate vertical
-gate_1d_v <- openCyto::mindensity(fr, "<B710-A>")
+gate_1d_v <- openCyto::gate_mindensity(fr, "<B710-A>")
 p + geom_gate(gate_1d_v)
 #1d gate horizontal
-gate_1d_h <- openCyto::mindensity(fr, "<R780-A>")
+gate_1d_h <- openCyto::gate_mindensity(fr, "<R780-A>")
 p + geom_gate(gate_1d_h)
 #2d rectangle gate
 gate_rect <- rectangleGate("<B710-A>" = c(gate_1d_v@min, 4e3), "<R780-A>" = c(gate_1d_h@min, 4e3))
