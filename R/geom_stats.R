@@ -20,6 +20,12 @@
 #' p
 #' # add gate and stats layer
 #' p + geom_gate("CD4") + geom_stats()
+#' 
+#' #sometime the stats are not shown (or positoned not properly) due to the inaccurate default instrument measurement range
+#' #stored in flow data. then it will be necessary to correct that by supplying the actual 'data_range'
+#' fr <- getData(gs)[[1]]
+#' rng <- range(fr, type = "data")
+#' p + geom_gate("CD4") + geom_stats(data_range = rng)
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", data_range = NULL, adjust = 0.5
                        , label.padding = unit(0.05, "lines"), label.size = 0, digits = 3){
   type <- match.arg(type, c("percent", "count"))
