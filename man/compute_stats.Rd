@@ -16,7 +16,8 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL,
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
-\item{data_range}{the data range for each channels}
+\item{data_range}{a data.frame that specifies the data range for each channels (see examples for its format.)
+Default is the instrument range extracted from fs object.}
 
 \item{...}{other arguments passed to stat_position function}
 }
@@ -37,5 +38,7 @@ fs <- GvHD[1:4]
 rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 compute_stats(fs, rect.gates)
+#overwrite the default data_range (that is instrument range by default, which could be inaccurate sometime)
+compute_stats(fs, rect.gates, data_range = range(fs[[1]], type = "data"))
 }
 

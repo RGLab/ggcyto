@@ -50,6 +50,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
    .stat_position_filter(gate, ...)
  }
 
+#' @param data_range a two-row data.frame. Each column is a a range for a specific channel. First row is min, Second row is max.
 .stat_position_filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL, ...){
   
   params <- parameters(gate)

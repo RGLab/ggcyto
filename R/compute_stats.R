@@ -9,7 +9,8 @@
 #' @param gates a list of filters
 #' @param type can be "percent", "count" or "MFI".
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
-#' @param data_range the data range for each channels
+#' @param data_range a data.frame that specifies the data range for each channels (see examples for its format.)
+#'                  Default is the instrument range extracted from fs object.
 #' @param ... other arguments passed to stat_position function
 #' @return
 #' a data.table that contains percent and centroid locations as well as pData
@@ -21,6 +22,8 @@
 #' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' compute_stats(fs, rect.gates)
+#' #overwrite the default data_range (that is instrument range by default, which could be inaccurate sometime)
+#' compute_stats(fs, rect.gates, data_range = range(fs[[1]], type = "data"))
 compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data_range = NULL, ...){
   
   if(is.null(fs)&&(is.null(value)||is.null(data_range)))
