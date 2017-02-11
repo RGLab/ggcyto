@@ -32,37 +32,40 @@
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   
   fs <- data
+  frm <- getFlowFrame(fs)
+  
+  if(missing(mapping)){
+    #fill the default mapping when it is not supplied
+    mapping <- aes_q(colnames(frm)[1], colnames(frm)[2])
+  }
+  
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
   p <- ggplot2:::ggplot.data.frame(fs, mapping, ...)
   
+  dims <- sapply(mapping,as.character)
+  dims <- dims[grepl("[x|y]", names(dims))]
+  nDims <- length(dims)
   
-  if(!missing(mapping)){
-    dims <- sapply(mapping,as.character)
-    dims <- dims[grepl("[x|y]", names(dims))]
-    
-    #update x , y with actual channel name
-    frm <- getFlowFrame(fs)
-    dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
-    chnl <- dims.tbl[, name]
-    
-    for(axis_name in names(dims))
-      mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
-    #update dims
-    p$mapping <- mapping
-    
-    nDims <- length(dims)
-    
-    #attach dims to data for more efficient fortify
-    attr(fs, "dims") <- dims.tbl
-    attr(fs, "filter") <- filter
-    p[["fs"]] <- fs  
-    p[["data"]] <- fs #update data as well
-    p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
-    
-    
-  }else
-    stop("mapping must be supplied to ggplot!")
+  #update x , y with actual channel name
+  dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
+  chnl <- dims.tbl[, name]
+  
+  
+  for(axis_name in names(dims))
+  mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])  
+  
+  #update dims
+  p$mapping <- mapping
+
+  
+  
+  #attach dims to data for more efficient fortify
+  attr(fs, "dims") <- dims.tbl
+  attr(fs, "filter") <- filter
+  p[["fs"]] <- fs  
+  p[["data"]] <- fs #update data as well
+  p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
   
     
   #init axis inversed labels and breaks

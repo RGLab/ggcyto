@@ -111,6 +111,7 @@ fortify.GatingSet <- function(model, ...){
   fortify(fs)
 }
 
+
 #' Convert a polygonGate to a data.table useful for ggplot
 #' 
 #' It converts the boundaries slot into a data.table

@@ -111,7 +111,12 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' class(p1) 
 #' p1$data # data is fortified
 #' @export
-as.ggplot <- function(x){
+#' @rdname as.ggplot
+as.ggplot <- function(x) UseMethod("as.ggplot")
+
+#' @export
+#' @rdname as.ggplot
+as.ggplot.ggcyto <- function(x){
 
   #####################
   #lazy-fortifying the plot data
@@ -185,3 +190,4 @@ as.ggplot <- function(x){
   #strip the ggcyto class attributes
   asS3(x)
 }
+

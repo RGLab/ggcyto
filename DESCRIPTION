@@ -45,6 +45,7 @@ Collate:
     'geom_hvline.R'
     'geom_overlay.R'
     'geom_stats.R'
+    'geom_tsne.R'
     'getFlowFrame.R'
     'ggcyto.R'
     'ggcyto_GatingLayout.R'
@@ -56,5 +57,7 @@ Collate:
     'scales_flowJo_fasinh.R'
     'scales_logicle.R'
     'stat_position.R'
+    'stat_tsne.R'
+    'tsne.R'
     'utility.R'
 RoxygenNote: 5.0.1

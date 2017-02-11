@@ -83,7 +83,30 @@ add_ggcyto_gs <- function(e1, e2){
   
     
   parent <- attr(gs, "subset")
-  if(is(e2, "overlay.node")){
+  if(is(e2, "stat.tsne")){
+    #this layer simply transforms the original ggcyto object into a special ggcyto_tsne without actual computing anything
+    parentNode <- e2[["parent"]]  
+    nodes <- e2[["nodes"]]  
+    #instantiate the parent by the first node if it is not yet been done
+    if(isTRUE(parent == "_parent_")&&isTRUE(parentNode == "_parent_"))
+      stop("parent needs to be specified through either 'subset' in ggcyto object or 'data' in stat_tsne layer!")
+    else if(!isTRUE(parent == "_parent_")&&!isTRUE(parentNode == "_parent_")&&parent!=parentNode)
+      stop("parents specified through 'subset' in ggcyto object and 'data' in stat_tsne layer are not consistent!")
+    
+    if(parent == "_parent")
+      parent <- parentNode
+    
+    
+    e2[["parent"]] <- parent
+    #coerce ggcyto_GatingSet to ggcyto_tsne object
+    e1 <- as(e1, "ggcyto_tsne")  
+    e1[["data"]] <- as(gs, "GatingSet_tsne")
+    class(e2) <- "list"
+    e1[["data"]]@tsne_params <- e2#store the params from stat_tsne layer
+    
+    return (e1)
+        
+  }else if(is(e2, "overlay.node")){
     node <- e2[["node"]]  
     fs.overlay <- getData(gs, node)
     

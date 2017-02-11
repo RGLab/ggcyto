@@ -8,6 +8,7 @@
 \alias{ggcyto_GatingLayout-class}
 \alias{ggcyto_GatingSet-class}
 \alias{ggcyto_flowSet-class}
+\alias{ggcyto_tsne-class}
 \title{Create a new ggcyto plot}
 \usage{
 ggcyto(data = NULL, ...)
