@@ -37,11 +37,12 @@ dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 p <- ggcyto(gs, subset = "CD8")
 p <- p + stat_tsne(nodes = c("CD8/38+ DR-", "CD8/CCR7- 45RA+"), marginal = FALSE, nEvents = 1e3) 
-myscale <- scale_color_gradientn(colours = rev(RColorBrewer::brewer.pal(11, "Spectral")))
-p + geom_point(aes(color = poly)) # subsequent plotting does not need to recompute tsne
-p <- p + myscale
-p + geom_point(aes(color = degree)) #plotting first time could be slow due to the inital computing of tsne
-p + geom_point(aes(color = `CD38 APC`), size = 1.5, alpha = 0.5)  
+#plotting first time could be slow due to the inital computing of tsne
+p + geom_tsne_poly(degree = 2, count = 40)
+
+# subsequent plotting does not need to recompute tsne
+p + geom_tsne_degree() #or directly use geom_point(aes(color = degree)) 
+p + geom_tsne_marker("CD38") # or use geom_point(aes(color = `CD38 APC`), size = 1.5, alpha = 0.5)  
 }
 }
 

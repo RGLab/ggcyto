@@ -53,6 +53,7 @@ Collate:
     'ggcyto_flowSet.R'
     'labs.R'
     'ggcyto_par.R'
+    'ggcyto_tsne.R'
     'scales_flowJo_biexp.R'
     'scales_flowJo_fasinh.R'
     'scales_logicle.R'
