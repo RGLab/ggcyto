@@ -78,6 +78,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   p
 }
 
+#' @rdname ggcyto.flowSet
+#' @export
 ggcyto.ncdfFlowList <- function(data, ...){
   getS3method("ggcyto", "flowSet")(data, ...)
 }
