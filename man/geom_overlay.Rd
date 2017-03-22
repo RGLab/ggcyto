@@ -6,6 +6,7 @@
 \alias{geom_overlay.default}
 \alias{geom_overlay.flowFrame}
 \alias{geom_overlay.flowSet}
+\alias{geom_overlay.ncdfFlowList}
 \title{Overlay other populations on existing plots.}
 \usage{
 geom_overlay(data, ...)
@@ -13,6 +14,8 @@ geom_overlay(data, ...)
 \method{geom_overlay}{default}(data, ...)
 
 \method{geom_overlay}{character}(data, ...)
+
+\method{geom_overlay}{ncdfFlowList}(data, ...)
 
 \method{geom_overlay}{flowSet}(data, ...)
 
