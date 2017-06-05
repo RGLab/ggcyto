@@ -2,8 +2,8 @@
 % Please edit documentation in R/stat_tsne.R
 \name{stat_tsne}
 \alias{stat_tsne}
-\alias{stat_tsne.character}
 \alias{stat_tsne.default}
+\alias{stat_tsne.character}
 \title{tsne layer.}
 \usage{
 stat_tsne(data, ...)
@@ -45,4 +45,3 @@ p + geom_tsne_degree() #or directly use geom_point(aes(color = degree))
 p + geom_tsne_marker("CD38") # or use geom_point(aes(color = `CD38 APC`), size = 1.5, alpha = 0.5)  
 }
 }
-

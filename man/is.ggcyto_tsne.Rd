@@ -15,4 +15,3 @@ TRUE or FALSE
 \description{
 Reports whether x is a ggcyto_tsne object
 }
-

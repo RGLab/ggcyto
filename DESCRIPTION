@@ -23,6 +23,7 @@ Imports:
     data.table,
     RColorBrewer,
     gridExtra
+Remotes: RGLab/cytoUtils
 Suggests:
     testthat,
     flowWorkspaceData,
@@ -62,4 +63,4 @@ Collate:
     'stat_tsne.R'
     'tsne.R'
     'utility.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

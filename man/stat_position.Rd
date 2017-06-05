@@ -40,4 +40,3 @@ rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 stat_position(rect.gates)
 }
-

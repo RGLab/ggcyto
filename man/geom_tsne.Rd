@@ -29,4 +29,3 @@ with some customized settings to visualize the "Degree of Functionality", "polyf
 \details{
 See examples in \link{stat_tsne}.
 }
-

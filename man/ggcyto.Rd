@@ -2,13 +2,13 @@
 % Please edit documentation in R/AllClasses.R, R/ggcyto.R
 \docType{class}
 \name{ggcyto-class}
-\alias{ggcyto}
 \alias{ggcyto-class}
-\alias{ggcyto.default}
-\alias{ggcyto_GatingLayout-class}
-\alias{ggcyto_GatingSet-class}
 \alias{ggcyto_flowSet-class}
+\alias{ggcyto_GatingSet-class}
+\alias{ggcyto_GatingLayout-class}
 \alias{ggcyto_tsne-class}
+\alias{ggcyto}
+\alias{ggcyto.default}
 \title{Create a new ggcyto plot}
 \usage{
 ggcyto(data = NULL, ...)
@@ -50,4 +50,3 @@ p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 p + geom_hex(bins = 128)
 }
 \keyword{internal}
-

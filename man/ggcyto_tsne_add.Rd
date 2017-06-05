@@ -2,8 +2,8 @@
 % Please edit documentation in R/ggcyto_tsne.R
 \docType{methods}
 \name{+.ggcyto_tsne}
-\alias{+,ggcyto_tsne,ANY-method}
 \alias{+.ggcyto_tsne}
+\alias{+,ggcyto_tsne,ANY-method}
 \title{overloaded '+' method for ggcyto_tsne}
 \usage{
 \method{+}{ggcyto_tsne}(e1, e2)
@@ -21,4 +21,3 @@ ggcyto_tsne object
 \description{
 It tries to parse geom_tsne_* layers added ggcyto_tsne object.
 }
-

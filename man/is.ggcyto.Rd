@@ -21,4 +21,3 @@ fs <- GvHD[1:2]
 p <- ggcyto(fs, aes(x = `FSC-H`))
 is.ggcyto(p)
 }
-

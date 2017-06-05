@@ -20,6 +20,7 @@
 #' @import data.table
 #' @import plyr
 #' @import Rtsne
+#' @importFrom cytoUtils updateIndices
 .subsamlple.parent <- function (gs, parent, groupBy, nEvents = NULL) {
   
  
@@ -46,7 +47,7 @@
     for (sn in name) {
       thisInd <- ind.vec[[sn]]
       gh <- gs[[sn]]
-      flowIncubator::updateIndices(gh, parent, thisInd)
+      updateIndices(gh, parent, thisInd)
     }
   }, by = groupBy] 
   message("subsampling complete ! recomputing... ")

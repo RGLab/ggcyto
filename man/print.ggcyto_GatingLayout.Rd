@@ -3,8 +3,8 @@
 \docType{methods}
 \name{print.ggcyto_GatingLayout}
 \alias{print.ggcyto_GatingLayout}
-\alias{show,ggcyto_GatingLayout-method}
 \alias{show.ggcyto_GatingLayout}
+\alias{show,ggcyto_GatingLayout-method}
 \title{print method for ggcyto_gate_layout class}
 \usage{
 \method{print}{ggcyto_GatingLayout}(x, ...)
@@ -26,4 +26,3 @@ nothing
 \description{
 print method for ggcyto_gate_layout class
 }
-

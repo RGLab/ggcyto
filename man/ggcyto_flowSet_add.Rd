@@ -2,8 +2,8 @@
 % Please edit documentation in R/ggcyto_flowSet.R
 \docType{methods}
 \name{+.ggcyto_flowSet}
-\alias{+,ggcyto_flowSet,ANY-method}
 \alias{+.ggcyto_flowSet}
+\alias{+,ggcyto_flowSet,ANY-method}
 \title{overloaded '+' method for ggcyto}
 \usage{
 \method{+}{ggcyto_flowSet}(e1, e2)
@@ -34,4 +34,3 @@ rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 p + geom_gate(rect.gates) + geom_stats()
 }
-

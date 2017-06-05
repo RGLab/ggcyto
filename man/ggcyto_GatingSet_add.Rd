@@ -2,8 +2,8 @@
 % Please edit documentation in R/ggcyto_GatingSet.R
 \docType{methods}
 \name{+.ggcyto_GatingSet}
-\alias{+,ggcyto_GatingSet,ANY-method}
 \alias{+.ggcyto_GatingSet}
+\alias{+,ggcyto_GatingSet,ANY-method}
 \title{overloaded '+' method for ggcyto.gs}
 \usage{
 \method{+}{ggcyto_GatingSet}(e1, e2)
@@ -31,4 +31,3 @@ It only supports some special axis transformations. (See examples below)
  p
  p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
 }
-

@@ -2,11 +2,11 @@
 % Please edit documentation in R/getFlowFrame.R
 \name{getFlowFrame}
 \alias{getFlowFrame}
-\alias{getFlowFrame.GatingHierarchy}
-\alias{getFlowFrame.GatingSet}
-\alias{getFlowFrame.GatingSetList}
 \alias{getFlowFrame.flowSet}
 \alias{getFlowFrame.ncdfFlowList}
+\alias{getFlowFrame.GatingSetList}
+\alias{getFlowFrame.GatingSet}
+\alias{getFlowFrame.GatingHierarchy}
 \title{extract flowFrame data structure from the given R object}
 \usage{
 getFlowFrame(x)
@@ -40,4 +40,3 @@ dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 getFlowFrame(gs)# gs is a GatingSet
 }
-

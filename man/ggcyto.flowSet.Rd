@@ -47,4 +47,3 @@ p <- p + geom_hex(bins = 128)
 p
 
 }
-

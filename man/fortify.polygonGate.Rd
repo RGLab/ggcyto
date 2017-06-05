@@ -32,4 +32,3 @@ pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
 fortify(pg) #no interpolation
 fortify(pg, nPoints = 30) # with interpolation
 }
-
