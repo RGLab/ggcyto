@@ -83,6 +83,13 @@ fortify.GatingSet_tsne <- function(model, ...){
 }
 
 #' @export
+#' @return data.table
+#' @rdname fortify.flowSet
+fortify.GatingSetList_tsne <- function(model, ...){
+  getS3method("fortify", "GatingSet_tsne")(model, ...)
+}
+
+#' @export
 #' @rdname as.ggplot
 as.ggplot.ggcyto_tsne <- function(x){
   #get any possible filters before overwrite data

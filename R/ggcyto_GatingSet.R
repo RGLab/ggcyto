@@ -100,7 +100,12 @@ add_ggcyto_gs <- function(e1, e2){
     e2[["parent"]] <- parent
     #coerce ggcyto_GatingSet to ggcyto_tsne object
     e1 <- as(e1, "ggcyto_tsne")  
-    e1[["data"]] <- as(gs, "GatingSet_tsne")
+    if(is(e1[["data"]], "GatingSet"))
+      e1[["data"]] <- as(gs, "GatingSet_tsne")
+    else if(is(e1[["data"]], "GatingSetList"))
+      e1[["data"]] <- as(gs, "GatingSetList_tsne")
+    else
+      stop("unsupported data type: ", class(e1[["data"]]))
     class(e2) <- "list"
     e1[["data"]]@tsne_params <- e2#store the params from stat_tsne layer
     

@@ -16,4 +16,4 @@ setClass("ggcyto_GatingLayout", contains = "list", slots = c(arrange.main = "cha
 setClass("ggcyto_tsne", contains = "ggcyto_GatingSet", slots = c(state = "environment"))
 
 setClass("GatingSet_tsne", contains = "GatingSet", slots = c(tsne_params = "list"))
-
+setClass("GatingSetList_tsne", contains = "GatingSetList", slots = c(tsne_params = "list"))

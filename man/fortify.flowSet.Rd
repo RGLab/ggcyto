@@ -8,6 +8,7 @@
 \alias{fortify.GatingSetList}
 \alias{fortify.GatingSet}
 \alias{fortify.GatingSet_tsne}
+\alias{fortify.GatingSetList_tsne}
 \title{Convert a flowFrame/flowSet/GatingSet to a ggplot-compatible data.table}
 \usage{
 \method{fortify}{flowFrame}(model, data, ...)
@@ -21,6 +22,8 @@
 \method{fortify}{GatingSet}(model, ...)
 
 \method{fortify}{GatingSet_tsne}(model, ...)
+
+\method{fortify}{GatingSetList_tsne}(model, ...)
 }
 \arguments{
 \item{model}{flowFrame, flowSet or GatingSet}
@@ -30,6 +33,8 @@
 \item{...}{not used.}
 }
 \value{
+data.table
+
 data.table
 
 data.table

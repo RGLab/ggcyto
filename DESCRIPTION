@@ -23,7 +23,7 @@ Imports:
     data.table,
     RColorBrewer,
     gridExtra
-Remotes: RGLab/cytoUtils
+Remotes: RGLab/cytoUtils (>=0.1.1)
 Suggests:
     testthat,
     flowWorkspaceData,
