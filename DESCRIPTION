@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.3.5
+Version: 1.5.1
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -54,6 +54,7 @@ Collate:
     'labs.R'
     'ggcyto_par.R'
     'ggcyto_tsne.R'
+    'scales_flowCore_fasinh.R'
     'scales_flowJo_biexp.R'
     'scales_flowJo_fasinh.R'
     'scales_logicle.R'

@@ -56,6 +56,13 @@ geom_overlay.character <- function(data, ...){
 
 #' @rdname geom_overlay
 #' @export
+geom_overlay.ncdfFlowList <- function(data, ...){
+  geom_overlay.flowSet(data, ...)
+  
+}
+
+#' @rdname geom_overlay
+#' @export
 geom_overlay.flowSet <- function(data, ...){
   
   structure(

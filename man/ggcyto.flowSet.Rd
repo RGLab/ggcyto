@@ -2,9 +2,12 @@
 % Please edit documentation in R/ggcyto_flowSet.R
 \name{ggcyto.flowSet}
 \alias{ggcyto.flowSet}
+\alias{ggcyto.ncdfFlowList}
 \title{Create a new ggcyto plot from a flowSet}
 \usage{
 \method{ggcyto}{flowSet}(data, mapping, filter = NULL, ...)
+
+\method{ggcyto}{ncdfFlowList}(data, ...)
 }
 \arguments{
 \item{data}{default flowSet for plot}
