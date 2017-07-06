@@ -154,8 +154,12 @@ add_ggcyto <- function(e1, e2, e2name){
     if(!is.null(layer_data)){
         pd <- .pd2dt(pData(fs))
     }
-      
-    if(is(layer_data, "filterList")||is(layer_data, "filter")){
+    
+    if(is(layer_data, "filter")){#coerce filter to filterList to ensure the consistent behavior later for other layers
+      e2$data <- filterList(sapply(sampleNames(fs), function(x)layer_data))
+      e1 <- `+.ggcyto_flowSet`(e1, e2)
+      return (e1)
+    }else if(is(layer_data, "filterList")){
       
         if(!isTRUE(attr(layer_data, "pd")))
             attr(layer_data, "pd") <- pd
