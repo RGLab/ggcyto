@@ -27,4 +27,3 @@ mean <- c("FSC-H"=430, "SSC-H"=175)
 eg <- ellipsoidGate(filterId= "myEllipsoidGate", .gate=cov, mean=mean)
 fortify(eg)
 }
-

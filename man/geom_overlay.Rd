@@ -2,11 +2,11 @@
 % Please edit documentation in R/geom_overlay.R
 \name{geom_overlay}
 \alias{geom_overlay}
-\alias{geom_overlay.character}
 \alias{geom_overlay.default}
-\alias{geom_overlay.flowFrame}
-\alias{geom_overlay.flowSet}
+\alias{geom_overlay.character}
 \alias{geom_overlay.ncdfFlowList}
+\alias{geom_overlay.flowSet}
+\alias{geom_overlay.flowFrame}
 \title{Overlay other populations on existing plots.}
 \usage{
 geom_overlay(data, ...)
@@ -57,4 +57,3 @@ p + geom_overlay(data = "DNT", size = 0.3, alpha = 0.7)
 p <- ggcyto(gs, aes(x = CD4), subset = "CD3+") + geom_density(aes(y = ..count..))
 p + geom_overlay("DNT", aes(y = ..count..), fill = "red")
 }
-

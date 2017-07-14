@@ -31,6 +31,7 @@ The individual elements are:
   
 }
 }
+
 \examples{
 library(ggcyto)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
@@ -48,4 +49,3 @@ p + ggcyto_par_set(limits = "instrument")
 myPars <- ggcyto_par_set(limits = list(x = c(0,3.2e3), y = c(-10, 3.5e3)))
  p  + myPars# or xlim(0,3.2e3) + ylim(-10, 3.5e3) 
 }
-

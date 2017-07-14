@@ -33,4 +33,3 @@ p
 #display at transformed scale
 p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
 }
-

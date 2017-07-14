@@ -15,4 +15,3 @@ Return The default ggcyto settings
 \examples{
 ggcyto_par_default()
 }
-

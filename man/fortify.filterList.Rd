@@ -28,4 +28,3 @@ gates <- getGate(gs, "CD4")
 gates <- as(gates, "filterList") #must convert list to filterList in order for the method to dispatch properly
 fortify(gates)
 }
-

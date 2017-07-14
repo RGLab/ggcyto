@@ -2,17 +2,17 @@
 % Please edit documentation in R/geom_gate.R
 \name{geom_gate}
 \alias{geom_gate}
-\alias{geom_gate.character}
 \alias{geom_gate.default}
-\alias{geom_gate.ellipsoidGate}
-\alias{geom_gate.filterList}
-\alias{geom_gate.filters}
-\alias{geom_gate.filtersList}
 \alias{geom_gate.list}
-\alias{geom_gate.logical}
-\alias{geom_gate.logicalFilterResult}
+\alias{geom_gate.filterList}
 \alias{geom_gate.polygonGate}
 \alias{geom_gate.rectangleGate}
+\alias{geom_gate.ellipsoidGate}
+\alias{geom_gate.character}
+\alias{geom_gate.filters}
+\alias{geom_gate.filtersList}
+\alias{geom_gate.logicalFilterResult}
+\alias{geom_gate.logical}
 \title{add a flowCore gate layer}
 \usage{
 geom_gate(data, ...)
@@ -81,4 +81,3 @@ p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
 # add gate layer by gate name
 p + geom_gate("CD4")
 }
-

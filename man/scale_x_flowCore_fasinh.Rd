@@ -29,4 +29,3 @@ p
 #display at transformed scale
 p + scale_x_flowCore_fasinh(a = 2)
 }
-
