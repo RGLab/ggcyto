@@ -29,4 +29,3 @@ p
 #display at transformed scale
 p + scale_x_logicle(t = 1e4)
 }
-

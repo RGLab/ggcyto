@@ -27,4 +27,3 @@ by '+.ggcyto_GatingSet' with 'breaks` and 'lables' customized.
  p
  p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
 }
-

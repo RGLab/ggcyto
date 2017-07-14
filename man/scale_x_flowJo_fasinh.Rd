@@ -29,4 +29,3 @@ p
 #display at transformed scale
 p + scale_x_flowJo_fasinh(t = 1e4)
 }
-

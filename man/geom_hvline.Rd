@@ -38,6 +38,7 @@ this layer.
 
 \Sexpr[results=rd,stage=build]{ggplot2:::rd_aesthetics("geom", "vline")}
 }
+
 \examples{
 
 
@@ -47,4 +48,3 @@ p + geom_hvline(data = data.frame(wt= 3))
 # hline
 p + geom_hvline(data = data.frame(mpg= 20))
 }
-

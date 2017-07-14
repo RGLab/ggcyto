@@ -19,4 +19,3 @@ Reports whether x is a ggcyto_par object
 myPar <- ggcyto_par_set(limits = "instrument")
 is.ggcyto_par(myPar)
 }
-

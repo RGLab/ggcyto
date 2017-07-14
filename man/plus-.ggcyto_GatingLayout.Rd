@@ -2,8 +2,8 @@
 % Please edit documentation in R/ggcyto_GatingLayout.R
 \docType{methods}
 \name{+.ggcyto_GatingLayout}
-\alias{+,ggcyto_GatingLayout,ANY-method}
 \alias{+.ggcyto_GatingLayout}
+\alias{+,ggcyto_GatingLayout,ANY-method}
 \title{overloaded '+' method for ggcyto_gate_layout}
 \usage{
 \method{+}{ggcyto_GatingLayout}(e1, e2)
@@ -33,4 +33,3 @@ class(p)
 # customize the font size of strip text for each ggcyo plots contained in GatingLayout object
 p + theme(strip.text = element_text(size = 14))
 }
-

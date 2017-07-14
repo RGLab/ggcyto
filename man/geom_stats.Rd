@@ -50,4 +50,3 @@ fr <- getData(gs)[[1]]
 rng <- range(fr, type = "data")
 p + geom_gate("CD4") + geom_stats(data_range = rng)
 }
-

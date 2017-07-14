@@ -41,4 +41,3 @@ compute_stats(fs, rect.gates)
 #overwrite the default data_range (that is instrument range by default, which could be inaccurate sometime)
 compute_stats(fs, rect.gates, data_range = range(fs[[1]], type = "data"))
 }
-

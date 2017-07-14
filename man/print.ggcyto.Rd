@@ -2,11 +2,11 @@
 % Please edit documentation in R/ggcyto.R
 \docType{methods}
 \name{print.ggcyto}
+\alias{print.ggcyto}
 \alias{plot.ggcyto}
 \alias{print,ggcyto-method}
-\alias{print.ggcyto}
-\alias{show,ggcyto-method}
 \alias{show.ggcyto}
+\alias{show,ggcyto-method}
 \title{Draw ggcyto on current graphics device.}
 \usage{
 \method{print}{ggcyto}(x, ...)
@@ -33,4 +33,3 @@ nothing
 A wrapper for print.ggplot. It converts the ggcyto to conventional ggplot object before printing it.
 This is usually invoked automatically when a ggcyto object is returned to R console.
 }
-

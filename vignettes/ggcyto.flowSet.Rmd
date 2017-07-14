@@ -5,6 +5,8 @@ output:
     fig_height: 3
     fig_width: 5
     keep_md: yes
+    toc: yes
+    toc_float: true
 vignette: >    
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Visualize flowSet with ggcyto}
@@ -63,6 +65,17 @@ Or plot in the same panel by using `ggplot` directly (thus removing the default 
 ```{r}
 ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)
 ```
+
+### stacked density plot
+```{r}
+#you can use ggjoy package to display stacked density plot
+require(ggjoy)
+#stack by fcs file ('name')
+p + geom_joy(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
+#or to stack by Visit and facet by patient
+p + geom_joy(aes(y = Visit)) + facet_grid(~Patient)
+```
+
 
 ### 2d scatter/dot plot
 ```{r}

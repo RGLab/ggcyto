@@ -32,4 +32,3 @@ gt3 <- gridExtra::rbind.gtable(gt, gt2)
 plot(gt3)
 }
 }
-
