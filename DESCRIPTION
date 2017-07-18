@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.5.3
+Version: 1.5.4
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -35,7 +35,7 @@ Suggests:
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues
 biocViews: FlowCytometry, CellBasedAssays, Infrastructure, Visualization
-Collate:
+Collate: 
     'AllClasses.R'
     'autoplot.R'
     'axis_inverse_trans.R'
@@ -53,6 +53,7 @@ Collate:
     'ggcyto_flowSet.R'
     'labs.R'
     'ggcyto_par.R'
+    'merge.quad.gates.R'
     'scales_flowCore_fasinh.R'
     'scales_flowJo_biexp.R'
     'scales_flowJo_fasinh.R'
