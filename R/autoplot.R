@@ -91,7 +91,7 @@ density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...)
                        , axis.title.y = element_blank()
                        , strip.text = element_blank()
                        , plot.margin = unit(c(0,0,0,0), "cm")
-                       , panel.margin = unit(0, "cm")
+                       , panel.spacing = unit(0, "cm")
       )
       p <- p + myTheme
       attr(p$data, "strip.text") <- chnl
@@ -201,7 +201,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                      , axis.text = element_text(color = gray(0.3), size = 6)
                      , strip.text = element_text(size = 10)
                      , plot.margin = unit(c(0,0,0,0), "cm")
-                     , panel.margin = unit(0, "cm")
+                     , panel.spacing = unit(0, "cm")
     )
     p <- p + myTheme
 
