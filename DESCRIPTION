@@ -54,6 +54,7 @@ Collate:
     'labs.R'
     'ggcyto_par.R'
     'merge.quad.gates.R'
+    'replace_data.R'
     'scales_flowCore_fasinh.R'
     'scales_flowJo_biexp.R'
     'scales_flowJo_fasinh.R'
