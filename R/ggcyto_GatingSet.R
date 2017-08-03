@@ -24,6 +24,8 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   attr(gs, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
 
   p <- ggcyto.flowSet(data = gs, mapping = mapping, ...)
+  # p[["layer.history"]][["type"]] = "gs"
+  p[["layer.history"]][["subset"]] = subset
   attr(gs, "filter") <- attr(p[["data"]], "filter")#copy the attr over
   p[["gs"]] <- gs
   
@@ -81,6 +83,12 @@ add_ggcyto_gs <- function(e1, e2){
   prj <- sapply(plot_mapping, as.character)
   gs <- e1[["gs"]]
   
+  is.recorded <- attr(e2, "is.recorded")
+  if(is.null(is.recorded))
+    is.recorded <- FALSE
+  if(!is.recorded)
+    e1[["layer.history"]][[length(e1[["layer.history"]]) + 1]] <- e2
+  
     
   parent <- attr(gs, "subset")
   if(is(e2, "overlay.node")){
@@ -90,6 +98,7 @@ add_ggcyto_gs <- function(e1, e2){
     thisCall <- quote(geom_overlay(fs.overlay))
     thisCall <- as.call(c(as.list(thisCall), e2[["overlay_params"]]))
     e2.new <- eval(thisCall)
+    attr(e2.new, "is.recorded") <- TRUE
     e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     return (e1)
   }else if(is(e2, "gs.node")){
@@ -123,6 +132,7 @@ add_ggcyto_gs <- function(e1, e2){
       thisCall <- quote(geom_gate(gate))
       thisCall <- as.call(c(as.list(thisCall), e2[["gate_params"]]))
       e2.new <- eval(thisCall)
+      attr(e2.new, "is.recorded") <- TRUE
       e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     }
     
@@ -177,7 +187,7 @@ add_ggcyto_gs <- function(e1, e2){
                              )
                            )
        e2.new <- eval(thisCall)
-        
+       attr(e2.new, "is.recorded") <- TRUE
        
        e1 <- `+.ggcyto_flowSet`(e1, e2.new) 
       }
@@ -203,7 +213,7 @@ add_ggcyto_gs <- function(e1, e2){
 #     e2[["breaks"]] <- res[["at"]]
 #     e2[["labels"]] <- res[["label"]]
   }
-  
+  attr(e2, "is.recorded") <- TRUE
   #otherwise dispatch to ggcyto_flowSet version of +
   `+.ggcyto_flowSet`(e1,e2)
   

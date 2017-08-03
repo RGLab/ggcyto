@@ -37,14 +37,19 @@
 #' p
 #'
 ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
+  #add empty layers recording
+  
   
   fs <- data
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
   p <- ggplot2:::ggplot.data.frame(fs, mapping, ...)
-  
+  p[["layer.history"]] <- list()
   
   if(!missing(mapping)){
+    p[["layer.history"]][["mapping"]] = mapping  
+    
+    
     dims <- sapply(mapping,as.character)
     dims <- dims[grepl("[x|y]", names(dims))]
     
@@ -150,7 +155,11 @@ add_ggcyto <- function(e1, e2, e2name){
   flowData <- e1$data
   gs <- e1[["gs"]]
   fs <- e1[["fs"]]
-     
+  is.recorded <- attr(e2, "is.recorded")
+  if(is.null(is.recorded))
+    is.recorded <- FALSE
+  if(!is.recorded)
+    e1[["layer.history"]][[length(e1[["layer.history"]]) + 1]] <- e2
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
   if(is.ggproto(e2)){
@@ -161,6 +170,7 @@ add_ggcyto <- function(e1, e2, e2name){
     
     if(is(layer_data, "filter")){#coerce filter to filterList to ensure the consistent behavior later for other layers
       e2$data <- filterList(sapply(sampleNames(fs), function(x)layer_data))
+      attr(e2, "is.recorded") <- TRUE
       e1 <- `+.ggcyto_flowSet`(e1, e2)
       return (e1)
     }else if(is(layer_data, "filterList")){
@@ -207,6 +217,7 @@ add_ggcyto <- function(e1, e2, e2name){
       # copy all the other parameters
       thisCall <-  as.call(c(as.list(thisCall), e2[["gate_params"]]))
       e2.new <- eval(thisCall)
+      attr(e2.new, "is.recorded") <- TRUE
       e1 <- e1 + e2.new
     }
     return(e1)
@@ -226,6 +237,7 @@ add_ggcyto <- function(e1, e2, e2name){
       # copy all the other parameters
       thisCall <-  as.call(c(as.list(thisCall), e2[["gate_params"]]))
       e2.new <- eval(thisCall)
+      attr(e2.new, "is.recorded") <- TRUE
       e1 <- e1 + e2.new
     }
     return(e1)
@@ -240,6 +252,7 @@ add_ggcyto <- function(e1, e2, e2name){
 
     thisCall <- as.call(c(as.list(thisCall), e2[["overlay_params"]]))
     e2.new <- eval(thisCall)
+    attr(e2.new, "is.recorded") <- TRUE
     e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     return (e1)
   }else if(is(e2, "GeomStats")){
@@ -280,8 +293,9 @@ add_ggcyto <- function(e1, e2, e2name){
       thisCall <- quote(geom_label(data = stats))
       # copy all the other parameters
       thisCall <-  as.call(c(as.list(thisCall), e2[["geom_label_params"]]))
-      e2.new <- eval(thisCall)
       
+      e2.new <- eval(thisCall)
+      attr(e2.new, "is.recorded") <- TRUE
       # update aes
       stats_mapping <- aes_string(label = stat_type)
       #add y aes for 1d density plot
@@ -306,7 +320,9 @@ add_ggcyto <- function(e1, e2, e2name){
       
       if(element == "hex_fill" && nrow(dims) == 1)
         next
-      e1 <- e1 + to_apply[[element]]
+      e2.new <- to_apply[[element]]
+      attr(e2.new, "is.recorded") <- TRUE
+      e1 <- e1 + e2.new
     }
       
     
