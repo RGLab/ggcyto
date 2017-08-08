@@ -30,6 +30,10 @@
 #' # 2d scatter plot
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 #' p + geom_hex(bins = 128)
+#' # do it programatically through aes_string and variables
+#' col1 <- "`FSC-H`" #note that the dimension names with special characters needs to be quoted by backticks
+#' col2 <- "`SSC-H`"
+#' ggcyto(fs, aes_string(col1,col2)) + geom_hex()
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 
