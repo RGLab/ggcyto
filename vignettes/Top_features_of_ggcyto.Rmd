@@ -200,7 +200,7 @@ p2 <- autoplot(getData(gh, "CD3+")[,5:8]) # some density plot
 p2@arrange.main <- ""#clear the default title
 gt2 <- ggcyto_arrange(p2, nrow = 1)
 
-gt3 <- gridExtra::rbind.gtable(gt, gt2)
+gt3 <- gridExtra::gtable_rbind(gt, gt2)
 plot(gt3)
 
 ```

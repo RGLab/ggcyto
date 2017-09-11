@@ -28,7 +28,7 @@ gt
 # do the same to the second sample
 gt2 <- ggcyto_arrange(autoplot(gs[[2]], nodes, bins = 64), nrow = 1)
 # combine the two and print it on the sampe page
-gt3 <- gridExtra::rbind.gtable(gt, gt2)
+gt3 <- gridExtra::gtable_rbind(gt, gt2)
 plot(gt3)
 }
 }
