@@ -4,10 +4,10 @@ output:
   html_document:
     fig_height: 2
     fig_width: 5
-    keep_md: yes
+    keep_md: true
 vignette: >    
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Quick plot for cytometry data}    
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, echo=FALSE}
@@ -77,7 +77,7 @@ gt
 # do the same to the second sample
 gt2 <- ggcyto_arrange(autoplot(gs[[2]], nodes, bins = 64), nrow = 1)
 # combine the two and print it on the sampe page
-gt3 <- gridExtra::rbind.gtable(gt, gt2)
+gt3 <- gridExtra::gtable_rbind(gt, gt2)
 plot(gt3)
 ```
 
