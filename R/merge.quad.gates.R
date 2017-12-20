@@ -20,9 +20,9 @@
 #' grps[[1]] # each group is annotaed with quadGate information
 #'
 #' ggcyto:::merge.quad.gates(gh, getChildren(gh, "CD3+")) # cd3 subsets are not coercible to quadgate thus return as they are
-merge.quad.gates <- function(gh, pops){
+merge.quad.gates <- function(gh, pops, bool = TRUE){
   #split pops into groups based on parent and projections
-  groups <- flowWorkspace:::.mergeGates(gh, pops, bool = FALSE, merge = TRUE)
+  groups <- flowWorkspace:::.mergeGates(gh, pops, bool = bool, merge = TRUE)
   #try to parse each group and attach quadgate info as needed
   lapply(groups, function(grp){
 
