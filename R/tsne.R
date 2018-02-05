@@ -20,7 +20,7 @@
 #' @import data.table
 #' @import plyr
 #' @import Rtsne
-#' @importFrom cytoUtils updateIndices
+#' @importFrom flowWorkspace updateIndices
 .subsamlple.parent <- function (gs, parent, groupBy, nEvents = NULL) {
   
  

@@ -16,14 +16,13 @@ Depends:
     ggplot2(>= 2.0.0),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
-    flowWorkspace(>= 3.17.24)
+    flowWorkspace(>= 3.27.14)
 Imports:
     plyr,
     scales,
     data.table,
     RColorBrewer,
     gridExtra
-Remotes: RGLab/cytoUtils (>=0.1.1)
 Suggests:
     testthat,
     flowWorkspaceData,
