@@ -191,7 +191,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
 
 
     if(is.null(myPrj)){
-      p <- autoplot.GatingSet(object, gate, ...)
+      p <- autoplot.GatingSet(object, gate, y = y, ...)
     }else{
       p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
     }
