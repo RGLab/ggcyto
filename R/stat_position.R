@@ -51,7 +51,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
  }
 
 #' @param data_range a two-row data.frame. Each column is a a range for a specific channel. First row is min, Second row is max.
-.stat_position_filter <- function(gate, adjust = 0.5, abs = FALSE, data_range = NULL, ...){
+.stat_position_filter <- function(gate, negated = FALSE, adjust = 0.5, abs = FALSE, data_range = NULL, ...){
   
   params <- parameters(gate)
   if(abs)#plot label whithin the boundary by default 
@@ -76,7 +76,16 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
           gr <- gate_range[,dim]
           #fix inf value
           gr <- .fixInf(gr)
-          gr <- .range_intersect(gr, dr)  
+          gr <- .range_intersect(gr, dr) 
+          if(negated)
+          {
+            margins <- abs(dr - gr)
+            if(which.max(margins) == 1)#use lower margin
+            {
+              gr <- c(dr[1], gr[1])
+            }else
+              gr <- c(gr[2], dr[2]) # use higher margin
+          }
         }
         gr
       })    

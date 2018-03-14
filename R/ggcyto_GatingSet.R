@@ -174,12 +174,14 @@ add_ggcyto_gs <- function(e1, e2){
             value <- lapply(gs, getProp, y = node)
         }
         
+       negated <- flowWorkspace:::isNegated(gs[[1]], node)
        thisCall <- quote(geom_stats(gates))
        
        thisCall <- as.call(c(as.list(thisCall)
                              , list(value = value
                                     , type = stat_type
                                     , data_range = data_range
+                                    , negated = negated
                                     , adjust = adjust
                                     , digits = digits
                                     )

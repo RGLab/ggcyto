@@ -49,11 +49,16 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' 
 #' @inheritParams compute_stats
 #' @param digits control the percent format
-.stat_percent <- function(fs, gates, digits = 3, value = NULL, ...){
+.stat_percent <- function(fs, gates, digits = 3, value = NULL, negated = FALSE, ...){
   if(is.null(value)){
     # compute the stats
     fres <- filter(fs, gates)
-    value <- sapply(fres, function(res)sum(res@subSet)/length(res@subSet), simplify = FALSE)
+    value <- sapply(fres, function(res){
+      p <- sum(res@subSet)/length(res@subSet)
+      if(negated)
+        p = 1 - p
+      p
+      }, simplify = FALSE)
   }
   sn <- names(value)
   value <- unlist(value)
@@ -67,10 +72,15 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' compute the event count of the cell population
 #' 
 #' @inheritParams compute_stats
-.stat_count <- function(fs, gates, value = NULL, ...){
+.stat_count <- function(fs, gates, value = NULL, negated = FALSE, ...){
   if(is.null(value)){
     fres <- filter(fs, gates)
-    value <- sapply(fres, function(res)sum(res@subSet), simplify = FALSE)
+    value <- sapply(fres, function(res){
+      ind <- res@subSet
+      if(negated)
+        ind <- !ind
+      sum(ind)
+      }, simplify = FALSE)
   }
   sn <- names(value)
   value <- unlist(value)
@@ -82,7 +92,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data
 #' compute the MFI of the cell population
 #' 
 #' @inheritParams compute_stats
-.stat_MFI <- function(fs, gates, digits = 3, ...){
+.stat_MFI <- function(fs, gates, digits = 3, negated = FALSE, ...){
   stop("MFI not supported yet!")
   fs_sub <- Subset(fs, gates)
      
