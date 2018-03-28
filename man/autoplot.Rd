@@ -18,7 +18,7 @@
 \method{autoplot}{GatingSetList}(object, ...)
 
 \method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC-A",
-  bins = 30, ...)
+  bins = 30, axis_inverse_trans = TRUE, ...)
 
 \method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A", bool = FALSE,
   arrange.main = sampleNames(object), arrange = TRUE, merge = TRUE,
@@ -37,6 +37,8 @@
 \item{...}{other arguments passed to ggplot}
 
 \item{gate}{the gate to be plotted}
+
+\item{axis_inverse_trans}{logical flag indicating whether to add \link{axis_x_inverse_trans} and axis_x_inverse_trans layers.}
 
 \item{bool}{whether to plot boolean gates}
 
@@ -77,6 +79,8 @@ autoplot(fs, x = 'FSC-H', y ='SSC-H')
 dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 autoplot(gs, "CD3+")
+#display axis values in transformed scale
+autoplot(gs, "CD3+", axis_inverse_trans = FALSE)
 
 #autplot for GatingHierarchy
 gh <- gs[[1]]
