@@ -4,7 +4,7 @@
 #' 
 #' @param gh a GatingHierarchy
 #' @param pops a vector of population names
-#'
+#' @param bool whether to deal with boolean gate
 #' @return a nested list of data structure that captures the information of parent, grouped populations (with the same projections)
 #' and the reconstructed quadGate object and the respective quadrant pattern
 #'

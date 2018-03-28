@@ -5,8 +5,8 @@
 \title{Popluation statistics layer}
 \usage{
 geom_stats(gate = NULL, ..., value = NULL, type = "percent",
-  data_range = NULL, adjust = 0.5, label.padding = unit(0.05, "lines"),
-  label.size = 0, digits = 3)
+  data_range = NULL, negated = FALSE, adjust = 0.5,
+  label.padding = unit(0.05, "lines"), label.size = 0, digits = 3)
 }
 \arguments{
 \item{gate}{a 'filterList` or character (represent as a population node in GatingSet)
@@ -20,6 +20,8 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 
 \item{data_range}{a data.frame that specifies the data range for each channels (see examples for its format.)
 Default is the instrument range extracted from fs object.}
+
+\item{negated}{whether the gate needs to be negated}
 
 \item{adjust}{adjust the position of the centroid. from 0 to 1.}
 

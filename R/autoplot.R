@@ -7,6 +7,7 @@
 #' @param x define the x dimension of the plot. When object is a flowFrame, it can be missing, which plots 1d density plot on all the channels. 
 #' @param y define the y dimension of the plot. Default is NULL, which means 1d densityplot.
 #' @param bins passed to geom_hex
+#' @param axis_inverse_trans logical flag indicating whether to add \link{axis_x_inverse_trans} and axis_x_inverse_trans layers.
 #' @param ... other arguments passed to ggplot
 #'
 #' @rdname autoplot
@@ -30,6 +31,8 @@
 #' dataDir <- system.file("extdata",package="flowWorkspaceData")
 #' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' autoplot(gs, "CD3+")
+#' #display axis values in transformed scale
+#' autoplot(gs, "CD3+", axis_inverse_trans = FALSE)
 #'
 #' #autplot for GatingHierarchy
 #' gh <- gs[[1]]
@@ -118,7 +121,7 @@ autoplot.GatingSetList <- function(object, ...){
 #' @param gate the gate to be plotted
 #' @export
 #' @rdname autoplot
-autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, ...){
+autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, axis_inverse_trans = TRUE, ...){
   if(missing(gate))
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
@@ -139,7 +142,8 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
 
   p <- ggcyto(object, mapping, ...) + geom_hex(bins = bins) + geom_gate(gate) + geom_stats()
   p <- p + ggcyto_par_set(limits = "instrument")
-  p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
+  if(axis_inverse_trans)
+    p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
   p
 
 }

@@ -4,12 +4,14 @@
 \alias{merge.quad.gates}
 \title{extend the original flowWorkspace:::.mergeGates function to restore quadGate when applicable}
 \usage{
-\method{merge}{quad.gates}(gh, pops)
+\method{merge}{quad.gates}(gh, pops, bool = TRUE)
 }
 \arguments{
 \item{gh}{a GatingHierarchy}
 
 \item{pops}{a vector of population names}
+
+\item{bool}{whether to deal with boolean gate}
 }
 \value{
 a nested list of data structure that captures the information of parent, grouped populations (with the same projections)
