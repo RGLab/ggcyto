@@ -1,95 +1,134 @@
-# ggcyto : Visualize `Cytometry` data with `ggplot`
+# ggcyto : Visualize `Cytometry` data with `ggplot`'
 
 
 
-### Overloaded `fortify` S3 method makes `Cytometry` data to be fully compatible with `ggplot`. 
+`ggcyto` is a cytometry data visualization tool built around ggplot and the grammar of graphics paradigm. The software extends the popular ggplot2 framework, already familiar to many data scientists, enabling it to recog-nize the core Bioconductor flow cytometry data structures for gated and annotated cytometry data. It simplifies visualization and plotting of flow data for publication quality graphics. 
 
 
-```r
-library(ggcyto)
-dataDir <- system.file("extdata",package="flowWorkspaceData")
-gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
-fs <- getData(gs, "CD3+")
-```
+There are three ways to construct the `ggcyto` plots. Each represents a different level of complexity and flexibility.  They meet the needs of various plot applications and thus are suitable for users at different levels of coding skills.
 
-### Quick plot with [autoplot](vignettes/autoplot.md) 
+# Quick plot
 
-```r
-#1d
-autoplot(fs, "CD4")
-```
+This inherits the spirit from ggplot's `Quick plot`, which simplies the plotting job by hiding more details from users and taking more assumptions for the plot.
 
-![](README_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+* see [autoplot](vignettes/autoplot.md)
 
-```r
-#2d
-autoplot(fs, "CD4", "CD8", bins = 64)
-```
+# More flexibility with **ggcyto** wrapper
 
-![](README_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
+`ggcyto` constructor along with overloaded `+` operator gives user more flexibility to fine-tune the plot yet still encapsulates lots of details that might be tedious and intimidating for many users.
 
-```r
-autoplot(gs, c("CD4", "CD8"), bins = 64)
-```
+See more examples of `ggcyto` constructor here:
 
-![](README_files/figure-html/unnamed-chunk-3-3.png)<!-- -->
+* [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
+* [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
 
-```r
-#plot all channels
-autoplot(fs[[1]]) + labs_cyto("marker")
-```
-
-![](README_files/figure-html/unnamed-chunk-3-4.png)<!-- -->
-
-### More flexibility with **ggcyto** wrapper
-
-#### [ggcyto + flowSet](vignettes/ggcyto.flowSet.md)
-
-```r
-# support fuzzy-matching of aes to the data
-# with flowJo-type of default color fills
-# facet on `name` by default
-ggcyto(fs,aes(x = CD4, y = CD8)) + geom_hex(bins = 64) + xlim(0, 3600)
-```
-
-![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
-
-#### [ggcyto + GatingSet](vignettes/ggcyto.GatingSet.md)
-
-```r
-ggcyto(gs,aes(x = CCR7, y = CD45RA), subset = "CD4") + geom_hex(bins = 64) + geom_gate("CD4/CCR7+ 45RA+") + geom_stats(fill = "yellow", size = 4)
-```
-
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
-
-### Use `ggplot` directly to have more controls. 
-
-```r
-# 1d
-p <- ggplot(fs, aes(x = `<B710-A>`)) + facet_wrap(~name) 
-#histogram plot
-p + geom_histogram(colour = "white")
-```
-
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
-
-```r
-#density plot
-p + geom_density(fill = "black")
-```
-
-![](README_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
-
-```r
-# 2d hexbin
-ggplot(fs, aes(x = `<B710-A>`, y = `<R780-A>`)) + facet_wrap(~name) + geom_hex(bins = 64)
-```
-
-![](README_files/figure-html/unnamed-chunk-6-3.png)<!-- -->
-
-More examples of using `ggplot` directly on `flowSet`:
+# Use `ggplot` directly to have more controls. 
+The package overloads ggplot's `fortify` S3 method so that `Cytometry` data structures (e.g. `flowSet/flowFrame`) are fully compatible with `ggplot`. More examples of using `ggplot` directly on `flowSet`:
 
 * [ggplot + flowSet1d](vignettes/advanced/ggplot.flowSet.1d.md)
 * [ggplot + flowSet2d](vignettes/advanced/ggplot.flowSet.2d.md)
 * [ggplot + flowSet + gate](vignettes/advanced/ggplot.flowSet.gate.md)
 * [ggplot + flowSet + overlay](vignettes/advanced/ggplot.flowSet.overlay.md)
+
+# quick demos of some most used features 
+
+
+```r
+library(ggcyto)
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+```
+
+
+
+
+```r
+#plot a gate by specifying the population node name (here it is 'CD3')
+autoplot(gs, "CD3")
+```
+
+![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
+```r
+#change the resolution
+p <- autoplot(gs, "CD3", bins = 64)
+p
+```
+
+![](README_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
+
+```r
+#display the transformed value at breaks label by turning off the inverse transform
+autoplot(gs, "CD3", axis_inverse_trans = FALSE)
+```
+
+![](README_files/figure-html/unnamed-chunk-4-3.png)<!-- -->
+
+```r
+#you can switch the limits from default `instrument` to the actual `data` range
+p + ggcyto_par_set(limits = "data")
+```
+
+![](README_files/figure-html/unnamed-chunk-4-4.png)<!-- -->
+
+```r
+# Choose between `marker` and `channel` names for axis label text
+p + labs_cyto("channel") #default is "both"
+```
+
+![](README_files/figure-html/unnamed-chunk-4-5.png)<!-- -->
+
+```r
+# overlay another population 'IgD-CD27-' as dots on top of the existing plot
+p + geom_overlay("IgD-CD27-", alpha = 0.5, size = 0.1, color = "purple")
+```
+
+![](README_files/figure-html/unnamed-chunk-4-6.png)<!-- -->
+
+```r
+# plot a population without gate
+fs <- getData(gs, "CD20") #extract the gated data as a flowSet
+autoplot(fs, "CD20", "CD19") #plot 2D
+```
+
+![](README_files/figure-html/unnamed-chunk-4-7.png)<!-- -->
+
+
+```r
+autoplot(fs, "CD20") #1d density
+```
+
+![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+```r
+#extract one sample as a flowFrame
+fr <- fs[[1]]
+#plot 1d density on all available channels
+autoplot(fr)
+```
+
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+ 
+
+```r
+gh <- gs[[1]] # extract a `GatingHierarchy` object for one sample
+# layout multiple cell populations with their asssociated gates in the same plot.
+nodes <- getNodes(gh)[c(3:9, 14)]
+p <- autoplot(gh, nodes, bins = 64)
+p
+```
+
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+
+
+```r
+#arrange it as one-row gtable object
+gt <- ggcyto_arrange(p, nrow = 1)
+plot(gt)
+```
+
+![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
+
+
