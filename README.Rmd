@@ -72,6 +72,27 @@ p + geom_overlay("IgD-CD27-", alpha = 0.5, size = 0.1, color = "purple")
 fs <- getData(gs, "CD20") #extract the gated data as a flowSet
 autoplot(fs, "CD20", "CD19") #plot 2D
 ```
+```{r}
+gs1 <- gs[1]
+gs2 <- gs[2]
+#construct the ggcyto object for gs1
+p <- ggcyto(gs1, aes(cd24, cd38)) + geom_hex(bins = 128)
+p <- p + geom_gate("Transitional") #add gate
+#customize the stats layer
+p <- p + geom_stats(type = "count", size = 6,  color = "red", fill = "green", adjust = 0.7)
+#customize the layer
+p <- p + labs_cyto("channel")
+#customize the axis limits
+p <- p + ggcyto_par_set(limits = "instrument")
+#add another population as the overlay dots
+p <- p + geom_overlay("IgD-CD27-", col = "black", size = 1.2, alpha = 0.4)
+#hide the legend
+p <- p + guides(fill=FALSE)
+p
+
+#replace the data with gs2 and see the same visual effect
+p %+% gs2
+```
 
 ```{r fig.height = 1}
 autoplot(fs, "CD20") #1d density
