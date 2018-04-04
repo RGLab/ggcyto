@@ -110,8 +110,11 @@ geom_gate.polygonGate <- function(data, ...){
   #' To proper interpolate the polygon we need to pass nPoints
   #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
   path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
+  #record nPoints for the interpolation later on triggered by fortify  
+  attr(data, "nPoints") <- nPoints
   #now we can saftely assign the data
-  path_layer[["data"]] <- data #fortify(data, nPoints = nPoints)
+  path_layer[["data"]] <- data 
+  
   path_layer
   
 }
