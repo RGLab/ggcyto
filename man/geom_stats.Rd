@@ -16,7 +16,7 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
-\item{type}{can be "percent", "count" or "MFI".}
+\item{type}{can be "percent", "count" or "MFI" (MFI is currently not supported yet).}
 
 \item{data_range}{a data.frame that specifies the data range for each channels (see examples for its format.)
 Default is the instrument range extracted from fs object.}

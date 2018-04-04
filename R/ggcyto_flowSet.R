@@ -170,6 +170,8 @@ add_ggcyto <- function(e1, e2, e2name){
     
     if(is(layer_data, "filter")){#coerce filter to filterList to ensure the consistent behavior later for other layers
       e2$data <- filterList(sapply(sampleNames(fs), function(x)layer_data))
+      #pass on nPoints for the interpolation later on triggered by fortify  
+      attr(e2$data, "nPoints") <- attr(layer_data, "nPoints")
       attr(e2, "is.recorded") <- TRUE
       e1 <- `+.ggcyto_flowSet`(e1, e2)
       return (e1)
