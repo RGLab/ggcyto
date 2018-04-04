@@ -1,0 +1,196 @@
+---
+title: "ggcyto: Next generation visualization software for flow cytometry. Supplementary Information."
+author: "Phu T. Van, Mike Jiang, Greg Finak & Raphael Gottardo"
+date: "March 28, 2018"
+output: 
+   BiocStyle::html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggcyto)
+library(flowWorkspaceData)
+library(flowWorkspace)
+library(xtable)
+library(cowplot)
+```
+
+# Overview
+
+This Supplementary Information document for the paper "ggcyto: Next generation visualization software for flow cytometry" shows how to use the BioConductor package `ggcyto` to visualize flow cytometry data and reproduces the plots from the original publication, together with code. 
+
+# ggcyto supported data structures
+
+`ggcyto` supports the core flow cytometry data structures in R/Bioconductor: `flowFrame` and `flowSet` (defined in the `flowCore` package) for ungated data, and `GatingSet` and `GatingHierarchy` (defined in the `flowWorkspace` package) for gated data. 
+
+This document use the "graft vs. host disease" (`GvHD`) data set from the `flowCore` package  [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowCore)), and part of the FlowCAP Lyoplate data that is in the `flowWorkspaceData` package, also [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowWorkspaceData)).
+
+
+# Reproducing figures from the original manuscript.
+
+The original manuscript shows three sets of plots created with `ggcyto`. We load the required data and use the code verbatim from the published figure to generate the associated plots.
+
+```{r load, warning=F, message=F}
+data(GvHD)
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+# Below we associate a transformation with the Lyoplate data GatingSet, which did not have one.
+gs@transformation <- transformerList(colnames(gs)[-(1:2)], flowJo_biexp_trans())
+
+# Choose a subset of samples.
+fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+ 
+# Give meaningful visit and subject identifiers to the samples.
+pd <- pData(fs)
+pd$Visit <- paste("visit",pd$Visit)
+pd$Patient <- paste("patient",pd$Patient)
+pData(fs) <- pd
+```
+
+## Figure 1 plots.
+
+### Autoplot API
+
+```{r figure1_1, warning=FALSE, message=FALSE, fig.width=4,fig.height=4}
+autoplot(gs[1], c("CD3","CD19"), bins = 64) +
+  geom_overlay("IgD+CD27+",size=0.25)
+```
+
+### ggcyto API.
+
+```{r figure1_2, warning=FALSE,message=FALSE,fig.width=7, fig.height=3.5}
+ggcyto(gs[1:2], aes(x="IgD",y="CD27"),subset= c("CD19andCD20")) + 
+  geom_hex(bins=128) + 
+  geom_gate(c("IgD+CD27+","IgD+CD27-","IgD-CD27+","IgD-CD27-")) + 
+  geom_stats(type = "count")
+```
+
+### transforming data.
+
+```{r figure1_3, fig.width=4, fig.height=4}
+#Use the first GvHD sample
+fr <- GvHD[[1]]
+p = autoplot(fr, "FL1-H") + theme_cowplot(font_size = 18)
+print(p)
+#flowCore logicle scale
+p + scale_x_logicle() 
+
+# flowJo fasinh
+p + scale_x_flowJo_fasinh() 
+```
+
+# Additional ggcyto features.
+
+The ggcyto package is built on `ggplot2` and uses the "grammar of graphics". Below we demonstrate how its new features can be used to easily generate high quality plots of cytometry data.
+
+## Context-aware plots.
+
+Following common `ggplot2` usage, `ggcyto` defines an `autoplot()` method. 
+Calling `autoplot()` on a supported data structure automatically results in a default
+plot that is sensible for the data being displayed. 
+
+For example, supplying a `flowSet` and a channel name result in a 1D density plot using `geom_density`. If more than one sample are passed in, a faceted plot of all samples is created. The `facet_grid` and `facet_wrap` geoms can be used on variables in the `pData` slot of the `flowFrame` or `flowSet` object.
+Below we generate a faceted 1D density grid of the forward scatter channel from the first four samples of the GvHD data.
+
+```{r, warning=F, message=F, fig.width=4, fig.height=4}
+autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit)
+```
+
+### Changing `geom`s.
+
+The plot can be easily modified to show a histogram by appending the appropriate `geom`.
+
+```{r, warning=F, message=F, fig.width=4, fig.height=4}
+autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit) + geom_histogram()
+```
+
+### Using gated data.
+
+Calling `autoplot` on a `GatingSet` or `GatingHierarchy` and supplying a **population name** results in a 1D or 2D density (depending on how the population is defined) using `geom_hex` or `geom_density`. Any gates in the GatingSet defined in those two dimensions are automatically overlaid on the plot:
+
+```{r, warning=F, message=F, fig.width=4, fig.height=4}
+autoplot(gs[[1]], c("CD3", "CD19"), bins = 64)
+```
+
+### Visualizing back-gating.
+
+Different populations can be overlaid on the same plot using `geom_overlay`, a ggcyto-specific `geom`. This is analogous to viewing back-gated cell populations. Below we highlight the IgD+CD127+ cells on the CD19 and CD3 projection of a sample from the Lyoplate B cell panel.
+
+```{r backgating, fig.width=4, fig.height=4}
+autoplot(gs[1], c("CD3","CD19"), bins = 64) +
+  geom_overlay("IgD+CD27+",size=0.5) 
+```
+
+### Changing the scales.
+
+The `x` and `y` axis scales are transformed above but show the raw data values. These can be changed to show the transformed data values on a linear scale using the `axis_inverse_trans` argument to `autoplot`.
+
+```{r linear_scales, warning=FALSE, message=FALSE, fig.width=4, fig.height=4}
+autoplot(gs[1], c("CD3","CD19"), bins = 64, axis_inverse_trans = FALSE) +
+  geom_overlay("IgD+CD27+",size=0.5) 
+```
+
+### Using the `ggcyto` interface. 
+
+The same plots created with `autoplot` can be generated using `ggcyto()`. Below, we show how to create theprevious plot using the `ggcyto` API.
+
+```{r ggcyto, warning=FALSE, message=FALSE,fig.width=4, fig.height=4} 
+ggcyto(gs[1], aes(x="CD3",y="CD19"),subset= "Live") + 
+  geom_hex(bins=64) +
+  geom_gate(c("CD19","CD3")) + 
+  geom_stats(type = "percent") + 
+  axis_x_inverse_trans() +
+  axis_y_inverse_trans()
+```
+
+## A use case with the Lyoplate data.
+
+We load the lyoplate data for the T cell panel. the data are available on [ImmuneSpace](http://www.immunespace.org).
+
+```{r load_lyoplates, warning=FALSE,message=FALSE}
+# load the Lyoplate gatingSet
+gs2 <- rbind2(load_gslist("/Volumes/gottardo//mike_working/lyoplate_out/gated_data/auto/gslist-tcell/"))
+
+gs2@transformation = transformerList(colnames(gs2)[-(1:2)], flowJo_biexp_trans())
+```
+
+The Lyoplate dataset for the T cell panel contains three biological samples. The samples were distributed across seven centers, an each center ran three technical replicates of each sample, as indicated in the metadata. 
+
+```{r lyoplate_meta, warning=F, message=F, echo=F}
+knitr::kable(pData(gs2), row.names=F)
+```
+
+The data was gated to identify CD4 and CD8 memory T cells:
+
+```{r lyoplate_hier, warning=F, message=F, echo=F}
+plot(gs2)
+```
+
+We can visualize variation across replicates and centers for sample #1349.
+The plot is built up using the `ggcyto()` API. Note we use `axis_x_inverse_trans` and `axis_y_inverse_trans` to transform the axes tick marks to a non-linear scale and display the raw data values. 
+
+The plot shows clearly that center-to-center variability is greater than variability across technical replicates.
+
+```{r lyoplate_facet, warning=F, message=F, fig.width=13}
+p = ggcyto(subset(gs2, Sample=="1349")
+        ,aes(x = CCR7,y=CD45RA)
+        ,subset="CD4") +
+        geom_hex(bins = 64) +
+        geom_gate("CD4/CCR7+CD45RA-") +
+        geom_stats() +
+        facet_grid(Replicate ~ Center) +
+        labs(title="sample 1349 CD4 central memory T cells, by center and replicate") +
+        ggcyto_par_set(limits = "instrument") + 
+        axis_x_inverse_trans() + 
+        axis_y_inverse_trans() 
+p
+```
+
+### Substituting data with the  `%+%` method.
+
+Here we use the `%+%` method to substitute the data in the plot. We'll plot only a subset of the centers.. specifically Baylor and CIMR.
+```{r lyoplate_facet_subs, warning=F, message=F, fig.width=8}
+p %+% subset(gs2,Center%in%c("Baylor","CIMR"))
+```
+
