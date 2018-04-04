@@ -7,7 +7,7 @@
 #' 
 #' @param fs flowSet. can be NULL when precaculated 'value' is provided
 #' @param gates a list of filters
-#' @param type can be "percent", "count" or "MFI".
+#' @param type can be "percent", "count" or "MFI" (MFI is currently not supported yet).
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
 #' @param data_range a data.frame that specifies the data range for each channels (see examples for its format.)
 #'                  Default is the instrument range extracted from fs object.

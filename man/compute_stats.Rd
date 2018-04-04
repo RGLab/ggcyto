@@ -12,7 +12,7 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL,
 
 \item{gates}{a list of filters}
 
-\item{type}{can be "percent", "count" or "MFI".}
+\item{type}{can be "percent", "count" or "MFI" (MFI is currently not supported yet).}
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
