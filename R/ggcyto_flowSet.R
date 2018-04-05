@@ -85,6 +85,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
   #add default the2me
   p[["ggcyto_pars"]] <- list()
   
+  p[["GeomStats"]] <- list()
+  
   p <- p + ggcyto_par_default()
   
   p
@@ -258,59 +260,7 @@ add_ggcyto <- function(e1, e2, e2name){
     e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     return (e1)
   }else if(is(e2, "GeomStats")){
-    gate <- e2[["gate"]]
-    #parse the gate from the each gate layer if it is not present in the current geom_stats layer
-    if(is.null(gate))
-    {
-      
-      pd <- .pd2dt(pData(fs))
-      gates_parsed <- lapply(e1$layers, function(layer){
-        
-        if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-          .filterList2dataframe(layer$data, colnames(pd))
-        else
-          NULL
-      })
-      #remove NULL elements
-      gates_parsed <- flowWorkspace:::compact(gates_parsed)
-    }else{
-      gates_parsed <- list(gate)
-    }             
-    
-    
-    if(length(gates_parsed) == 0)
-      stop("geom_gate layer must be added before geom_stats!")
-    
-    
-    # compute pop stats for each gate layer and 
-    value <- e2[["value"]]
-    stat_type <- e2[["type"]]
-    data_range <- e2[["data_range"]]
-    negated <- e2[["negated"]]
-    adjust <- e2[["adjust"]]
-    digits <- e2[["digits"]]
-    for(gate in gates_parsed){
-      stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, negated = negated, adjust = adjust, digits = digits)
-      
-      # instantiate the new stats layer
-      thisCall <- quote(geom_label(data = stats))
-      # copy all the other parameters
-      thisCall <-  as.call(c(as.list(thisCall), e2[["geom_label_params"]]))
-      
-      e2.new <- eval(thisCall)
-      attr(e2.new, "is.recorded") <- TRUE
-      # update aes
-      stats_mapping <- aes_string(label = stat_type)
-      #add y aes for 1d density plot
-      dims <- sapply(e1$mapping,as.character)
-      dims <- dims[grepl("[x|y]", names(dims))]
-      if(length(dims) == 1)
-        stats_mapping <- defaults(stats_mapping, aes(y = density))
-      e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
-      
-      e1 <- ggplot2:::`+.gg`(e1, e2.new)      
-    }
-    
+    e1[["GeomStats"]] <- c(e1[["GeomStats"]], list(e2)) #stats needs to be compputed after limits is set at as.ggplot function
     return(e1)
   }else if (is.ggcyto_par(e2)) {
     # store the ggcyto pars for the lazy-eval elements

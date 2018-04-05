@@ -141,13 +141,8 @@ add_ggcyto_gs <- function(e1, e2){
    return (e1) 
     
   }else if(is(e2, "GeomStats")){
-    data_range <- e2[["data_range"]]
     adjust <- e2[["adjust"]]
-    # cal range here
-    if(is.null(data_range)){
-      fs <- getData(gs, parent)
-      data_range <- range(fs[[1, use.exprs = FALSE]])  
-    }
+    
     #grab the nodes info from previous gate layers
     nodes.geom_gate <- e1[["nodes"]]
     if(is.null(nodes.geom_gate))
@@ -180,7 +175,6 @@ add_ggcyto_gs <- function(e1, e2){
        thisCall <- as.call(c(as.list(thisCall)
                              , list(value = value
                                     , type = stat_type
-                                    , data_range = data_range
                                     , negated = negated
                                     , adjust = adjust
                                     , digits = digits
