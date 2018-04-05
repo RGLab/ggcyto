@@ -9,8 +9,6 @@
 #' @param gates a list of filters
 #' @param type can be "percent", "count" or "MFI" (MFI is currently not supported yet).
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
-#' @param data_range a data.frame that specifies the data range for each channels (see examples for its format.)
-#'                  Default is the instrument range extracted from fs object.
 #' @param ... other arguments passed to stat_position function
 #' @return
 #' a data.table that contains percent and centroid locations as well as pData
@@ -22,24 +20,15 @@
 #' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' compute_stats(fs, rect.gates)
-#' #overwrite the default data_range (that is instrument range by default, which could be inaccurate sometime)
-#' compute_stats(fs, rect.gates, data_range = range(fs[[1]], type = "data"))
-compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, data_range = NULL, ...){
+compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...){
   
-  if(is.null(fs)&&(is.null(value)||is.null(data_range)))
-    stop("fs must be provided when 'value' or 'data_range' is not supplied!")
+  if(is.null(fs)&&(is.null(value)))
+    stop("fs must be provided when 'value' is not supplied!")
   
   stat_func <- eval(as.symbol(paste(".stat", type, sep = "_")))
   stats <- stat_func(fs, gates, value = value, ...)  
   
-  if(is.null(data_range))
-    data_range <- range(fs[[1, use.exprs = FALSE]])
-
-  #add default density range
-  #In order to ensure the stats visiblity
-  #try to put it closer to zero because we don't know the actual density range
-  data_range[["density"]] <- c(0,1e-4)
-  centroids <- stat_position(gates, data_range = data_range, ...)
+  centroids <- stat_position(gates, ...)
   
   stats <- merge(centroids, stats, by = ".rownames") # merge stats with centroid
   merge(stats, .pd2dt(pData(fs)), by = ".rownames") # merge with pdata

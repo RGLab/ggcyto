@@ -146,7 +146,9 @@ fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
   #such situations are caused by  the infinity vetices from rectangle or the extended vertices during the gate parsing
   #or the extreme coordinates stored in flowJo xml
   #measurement range won't work , since the actual data range (meaningful data) could be beyond the measure_range
-  if(!is.null(data)&&!is.null(nPoints)){
+  #update: now we want truncate gate at data range even when interpolation is no needed since stats location is
+  #based on the intersection of plot limits and gate boundary and we need to ensure it is within the gate boundary
+  if(!is.null(data)){
     for(chnl in chnls){
       thisVal <- vertices[, chnl] 
       if(!chnl%in%colnames(data))

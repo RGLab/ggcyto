@@ -139,7 +139,7 @@ as.ggplot <- function(x){
   #update default scales
   #####################
   breaks <- x[["axis_inverse_trans"]]
-  
+  stats_limits <- list()
   for(this_aes in aes_names)
   {
     dim <- dims[axis == this_aes, name]
@@ -175,6 +175,7 @@ as.ggplot <- function(x){
       }
         
     }
+    stats_limits[[dim]] <- x$scales$scales[[ind]][["limits"]]
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
     if(!is.null(thisBreaks)){
@@ -182,6 +183,71 @@ as.ggplot <- function(x){
       x$scales$scales[[ind]]$labels <- thisBreaks[["label"]]  
     }
     
+  }
+  stats_limits <- as.data.frame(stats_limits)
+  fs <- x[["fs"]]
+  #lazy parsing stats layer since the stats_limits is set at the end
+  for(e2 in x[["GeomStats"]])
+  {
+    gate <- e2[["gate"]]
+    #parse the gate from the each gate layer if it is not present in the current geom_stats layer
+    if(is.null(gate))
+    {
+      
+      pd <- .pd2dt(pData(fs))
+      gates_parsed <- lapply(x$layers, function(layer){
+        
+        if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
+          .filterList2dataframe(layer$data, colnames(pd))
+        else
+          NULL
+      })
+      #remove NULL elements
+      gates_parsed <- flowWorkspace:::compact(gates_parsed)
+    }else{
+      gates_parsed <- list(gate)
+    }             
+    
+    
+    if(length(gates_parsed) == 0)
+      stop("geom_gate layer must be added before geom_stats!")
+    
+    
+    # compute pop stats for each gate layer and 
+    value <- e2[["value"]]
+    stat_type <- e2[["type"]]
+    
+
+    #add default density range
+    #In order to ensure the stats visiblity
+    #try to put it closer to zero because we don't know the actual density range
+    data_range <- as.data.frame(data_range)
+    data_range[["density"]] <- c(0,1e-4)
+    
+    negated <- e2[["negated"]]
+    adjust <- e2[["adjust"]]
+    digits <- e2[["digits"]]
+    for(gate in gates_parsed){
+      stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, limits = stats_limits, negated = negated, adjust = adjust, digits = digits)
+      
+      # instantiate the new stats layer
+      thisCall <- quote(geom_label(data = stats))
+      # copy all the other parameters
+      thisCall <-  as.call(c(as.list(thisCall), e2[["geom_label_params"]]))
+      
+      e2.new <- eval(thisCall)
+      attr(e2.new, "is.recorded") <- TRUE
+      # update aes
+      stats_mapping <- aes_string(label = stat_type)
+      #add y aes for 1d density plot
+      dims <- sapply(x$mapping,as.character)
+      dims <- dims[grepl("[x|y]", names(dims))]
+      if(length(dims) == 1)
+        stats_mapping <- defaults(stats_mapping, aes(y = density))
+      e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
+      
+      x <- ggplot2:::`+.gg`(x, e2.new)      
+    }
   }
   #clear the raw data format
   x[["fs"]] <- NULL
