@@ -14,10 +14,6 @@
 #'              or character specifying a gated cell population in the GatingSet
 #'              
 #' @param ... other arguments
-#'        mapping, The mapping aesthetic mapping
-#'        data a polygonGate
-#'        fill polygonGate is not filled by default
-#'        colour default is red
 #'        pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
 #' @export
 #' @return a geom_gate layer
@@ -37,6 +33,8 @@
 #' # add gate layer by gate name
 #' p + geom_gate("CD4")
 geom_gate <- function(data, ...)UseMethod("geom_gate")
+
+geom_gate_impl <- function(data, ...)UseMethod("geom_gate_impl")
 
 #' @export
 #' @rdname geom_gate
@@ -74,7 +72,7 @@ geom_gate.filterList <- function(data, ...){
 }
 .geom_gate_filterList <- function(data, pd, nPoints = 100, ...){  
   #construct gate-type specific layer
-  geom_gate_layer <- geom_gate(data[[1]], nPoints = NULL, ...)#no need interpolate here
+  geom_gate_layer <- geom_gate_impl(data[[1]], nPoints = nPoints, ...)
 
   
   
@@ -97,35 +95,42 @@ geom_gate.filterList <- function(data, ...){
   geom_gate_layer
 }
 
-
+#' @param mapping, The mapping aesthetic mapping
+#' @param fill polygonGate is not filled by default
+#' @param  colour default is red
+#' @param nPoints used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @export
 #' @rdname geom_gate
-geom_gate.polygonGate <- function(data, ...){
-  .geom_gate_polygonGate(data, ...)  
+geom_gate.filter <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
+  structure(
+    list(filter = data
+         , gate_params = list(mapping = mapping
+                              , fill = fill
+                              , colour = colour
+                              , nPoints = nPoints
+                            ,...)
+    )
+    , class = c("filter.layer", "ggcyto_virtual_layer")
+  ) 
 }
 
 
-.geom_gate_polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
+geom_gate_impl.polygonGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
   
-  #' To proper interpolate the polygon we need to pass nPoints
-  #' so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
+  #To proper interpolate the polygon we need to pass nPoints
+  # so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
   path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
   #record nPoints for the interpolation later on triggered by fortify  
   attr(data, "nPoints") <- nPoints
   #now we can saftely assign the data
-  path_layer[["data"]] <- data 
+  path_layer[["data"]] <- data
   
   path_layer
   
 }
 
 
-#' @rdname geom_gate
-#' @export
-geom_gate.rectangleGate <- function(data, ...){
-  .geom_gate_rectangleGate(data, ...)
-}
-.geom_gate_rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
+geom_gate_impl.rectangleGate <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
   
   param <- parameters(data)
   nDim <- length(param)
@@ -133,18 +138,20 @@ geom_gate.rectangleGate <- function(data, ...){
     geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, nPoints = nPoints, ...)
   }else if(nDim ==  1){
 
-      geom_hvline(data = data, colour = colour, ...)
+     layer <- geom_hvline(data = data, colour = colour, ...)
+     
+     # layer[["is_1d_gate"]] <- TRUE
+     layer
          
   }else
     stop("rectangelGate with dimension ", nDim, "is not supported!")
   
 }
 
-#' @rdname geom_gate
-#' @export
-geom_gate.ellipsoidGate <- function(data, ...){
+
+geom_gate_impl.ellipsoidGate <- function(data, ...){
   
-  geom_gate.polygonGate(data, ...)
+  geom_gate_impl.polygonGate(data, ...)
 }
 
 #' @rdname geom_gate
