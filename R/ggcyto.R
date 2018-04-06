@@ -184,7 +184,7 @@ as.ggplot <- function(x){
     }
     
   }
-  stats_limits <- as.data.frame(stats_limits)
+  stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
   fs <- x[["fs"]]
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
