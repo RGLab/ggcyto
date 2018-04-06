@@ -5,9 +5,7 @@
 \alias{geom_gate.default}
 \alias{geom_gate.list}
 \alias{geom_gate.filterList}
-\alias{geom_gate.polygonGate}
-\alias{geom_gate.rectangleGate}
-\alias{geom_gate.ellipsoidGate}
+\alias{geom_gate.filter}
 \alias{geom_gate.character}
 \alias{geom_gate.filters}
 \alias{geom_gate.filtersList}
@@ -23,11 +21,8 @@ geom_gate(data, ...)
 
 \method{geom_gate}{filterList}(data, ...)
 
-\method{geom_gate}{polygonGate}(data, ...)
-
-\method{geom_gate}{rectangleGate}(data, ...)
-
-\method{geom_gate}{ellipsoidGate}(data, ...)
+\method{geom_gate}{filter}(data, mapping = NULL, fill = "transparent",
+  colour = "red", nPoints = 100, ...)
 
 \method{geom_gate}{character}(data, ...)
 
@@ -46,11 +41,15 @@ or filterList
 or character specifying a gated cell population in the GatingSet}
 
 \item{...}{other arguments
-mapping, The mapping aesthetic mapping
-data a polygonGate
-fill polygonGate is not filled by default
-colour default is red
 pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
+
+\item{mapping, }{The mapping aesthetic mapping}
+
+\item{fill}{polygonGate is not filled by default}
+
+\item{colour}{default is red}
+
+\item{nPoints}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
 }
 \value{
 a geom_gate layer

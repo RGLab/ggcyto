@@ -185,6 +185,7 @@ as.ggplot <- function(x){
     
   }
   stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
+  stats_limits[["density"]] <- c(0,1e-4)
   fs <- x[["fs"]]
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
@@ -199,6 +200,10 @@ as.ggplot <- function(x){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
           .filterList2dataframe(layer$data, colnames(pd))
+        # else if(isTRUE(layer[["is_1d_gate"]]))
+        # {
+        #   .gate2dataframe(layer$data)
+        # }
         else
           NULL
       })
@@ -222,7 +227,7 @@ as.ggplot <- function(x){
     #In order to ensure the stats visiblity
     #try to put it closer to zero because we don't know the actual density range
     data_range <- as.data.frame(data_range)
-    data_range[["density"]] <- c(0,1e-4)
+    
     
     negated <- e2[["negated"]]
     adjust <- e2[["adjust"]]
