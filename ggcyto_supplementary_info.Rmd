@@ -17,6 +17,10 @@ library(xtable)
 library(cowplot)
 ```
 
+# Background
+
+Open source software for computational cytometry has gained in popularity over the past few years. Efforts such as FlowCAP, the Lyoplate and Euroflow projects have highlighted the importance of efforts to standardize both experimental and computational aspects of cytometry data analysis. The R/BioConductor platform hosts the largest collection of open source cytometry software covering all aspects of data analysis. It provides complex data structures and uses state of the art technologies to store cytometry data with all the relevant experimental, gating, and cell population annotations. While the number of algorithms available in Bioconductor for cytometry data analysis has significantly increased over the past decade, the cytometry specific visualization frameworks available in Bioconductor for these types of data have lagged behind. 
+
 # Overview
 
 This Supplementary Information document for the paper "ggcyto: Next generation visualization software for flow cytometry" shows how to use the BioConductor package `ggcyto` to visualize flow cytometry data and reproduces the plots from the original publication, together with code. 
@@ -144,7 +148,7 @@ Below we generate a faceted 1D density grid of the forward scatter channel from 
 autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit)
 ```
 
-### Changing `geom`s.
+## Changing `geom`s.
 
 The plot can be easily modified to show a histogram by appending the appropriate `geom`.
 
@@ -152,7 +156,7 @@ The plot can be easily modified to show a histogram by appending the appropriate
 autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit) + geom_histogram()
 ```
 
-### Using gated data.
+## Using gated data.
 
 Calling `autoplot` on a `GatingSet` or `GatingHierarchy` and supplying a **population name** results in a 1D or 2D density (depending on how the population is defined) using `geom_hex` or `geom_density`. Any gates in the GatingSet defined in those two dimensions are automatically overlaid on the plot:
 
@@ -160,7 +164,7 @@ Calling `autoplot` on a `GatingSet` or `GatingHierarchy` and supplying a **popul
 autoplot(gs[[1]], c("CD3", "CD19"), bins = 64)
 ```
 
-### Visualizing back-gating.
+## Visualizing back-gating.
 
 Different populations can be overlaid on the same plot using `geom_overlay`, a ggcyto-specific `geom`. This is analogous to viewing back-gated cell populations. Below we highlight the IgD+CD127+ cells on the CD19 and CD3 projection of a sample from the Lyoplate B cell panel.
 
@@ -169,7 +173,7 @@ autoplot(gs[1], c("CD3","CD19"), bins = 64) +
   geom_overlay("IgD+CD27+",size=0.5) 
 ```
 
-### Transforming the axes.
+## Transforming the axes.
 
 The `x` and `y` axis scales are transformed above but show the raw data values. These can be changed to show the transformed data values on a linear scale using the `axis_inverse_trans` argument to `autoplot`.
 
@@ -178,7 +182,7 @@ autoplot(gs[1], c("CD3","CD19"), bins = 64, axis_inverse_trans = FALSE) +
   geom_overlay("IgD+CD27+",size=0.5) 
 ```
 
-### Using the `ggcyto` interface. 
+## Using the `ggcyto` interface. 
 
 The same plots created with `autoplot` can be generated using `ggcyto()`. Below, we show how to create theprevious plot using the `ggcyto` API.
 
@@ -234,7 +238,7 @@ p = ggcyto(subset(gs2, Sample=="1349")
 p
 ```
 
-### Substituting data with the  `%+%` method.
+## Substituting data with the  `%+%` method.
 
 Here we use the `%+%` method to substitute the data in the plot. We'll plot only a subset of the centers.. specifically Baylor and CIMR.
 ```{r lyoplate_facet_subs, warning=F, message=F, fig.width=8}
@@ -251,6 +255,6 @@ autoplot(fs[[1]])
 
 ## Future Work
 
-Since ggcyto utilizes ggplot’s `fortify()` method, users must take care in plotting large cell populations that result in manipulating large tables of data. This could be resolved by a C++ back-end for processing the data and by leveraging parallelization, such as that implemented in the [cytolib package](https://github.com/RGLab/cytolib).
+Since ggcyto utilizes ggplot’s `fortify()` method under the hood, users must take care in plotting large cell populations that result in manipulating large tables of data. This could be resolved by a C++ back-end for processing the data and by leveraging parallelization, such as that implemented in the [cytolib package](https://github.com/RGLab/cytolib).
 
 # References
