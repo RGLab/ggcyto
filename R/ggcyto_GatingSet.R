@@ -52,7 +52,17 @@ ggcyto.GatingHierarchy <- function(data, ...){
   ggcyto(data, ...)  
 }
 as.GatingSet <- function(gh){
-  as(gh, "GatingSet")[sampleNames(gh)]
+  sn <- sampleNames(gh)
+  gs <- as(gh, "GatingSet")
+  trans <- gs@transformation 
+  if(!is.null(trans)&&length(trans)>0)
+  {
+    trans <- list(trans)
+    names(trans) <- sn
+    gs@transformation <- trans
+  }
+    
+  gs[sn]
 }
 
 
