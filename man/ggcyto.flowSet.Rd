@@ -5,7 +5,8 @@
 \alias{ggcyto.ncdfFlowList}
 \title{Create a new ggcyto plot from a flowSet}
 \usage{
-\method{ggcyto}{flowSet}(data, mapping, filter = NULL, ...)
+\method{ggcyto}{flowSet}(data, mapping, filter = NULL,
+  max_nrow_to_plot = 50000, ...)
 
 \method{ggcyto}{ncdfFlowList}(data, ...)
 }
@@ -17,6 +18,8 @@ size, shape, line type -- see individual geom functions for more details)}
 
 \item{filter}{a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
 The gate is used to filter the flow data before it is plotted.}
+
+\item{max_nrow_to_plot}{the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 2e5.To turn off the subsampling, simply set it to a large enough number or Inf}
 
 \item{...}{ignored}
 }
