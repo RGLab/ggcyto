@@ -5,6 +5,7 @@
 #'   size, shape, line type -- see individual geom functions for more details)
 #' @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
 #'                The gate is used to filter the flow data before it is plotted. 
+#' @param max_nrow_to_plot the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 2e5.To turn off the subsampling, simply set it to a large enough number or Inf
 #' @param ... ignored
 #' @method ggcyto flowSet
 #' @return a ggcyto_GatingSet object which is a subclass of ggcyto class.
@@ -36,7 +37,7 @@
 #' p <- p + geom_hex(bins = 128)
 #' p
 #'
-ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
+ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
   #add empty layers recording
   
   
@@ -67,6 +68,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, ...){
     
     #attach dims to data for more efficient fortify
     attr(fs, "dims") <- dims.tbl
+    if(is.null(filter)&&is.finite(max_nrow_to_plot))
+      filter <- sampleFilter(size = max_nrow_to_plot)
     attr(fs, "filter") <- filter
     p[["fs"]] <- fs  
     p[["data"]] <- fs #update data as well
