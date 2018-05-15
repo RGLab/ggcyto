@@ -154,6 +154,37 @@ geom_gate_impl.ellipsoidGate <- function(data, ...){
   geom_gate_impl.polygonGate(data, ...)
 }
 
+setAs(from = "quadGate", to = "filters", function(from){
+  cutpoint <- from@boundary
+  dimnames <- names(cutpoint)
+  coord <- list(c(-Inf, cutpoint[[1]]) ,c(cutpoint[[2]], Inf))
+  names(coord) <- dimnames
+  ul <- rectangleGate(coord)
+  
+  coord <- list(c(cutpoint[[1]], Inf) ,c(cutpoint[[2]], Inf))
+  names(coord) <- dimnames
+  ur <- rectangleGate(coord)
+  
+  coord <- list(c(cutpoint[[1]], Inf) ,c(-Inf, cutpoint[[2]]))
+  names(coord) <- dimnames
+  br <- rectangleGate(coord)
+  
+  coord <- list(c(-Inf, cutpoint[[1]]) ,c(-Inf, cutpoint[[2]]))
+  names(coord) <- dimnames
+  bl <- rectangleGate(coord)
+  
+  filters(list(ul, ur, br, bl))
+})
+
+#' @rdname geom_gate
+#' @export
+geom_gate.quadGate <- function(data, ...){
+ 
+  
+  data <- as(data, "filters")
+  geom_gate(data, ...)
+}
+
 #' @rdname geom_gate
 #' @export
 geom_gate.character <- function(data, ...){
