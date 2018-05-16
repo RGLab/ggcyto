@@ -1,18 +1,73 @@
-
-setMethod("transform", signature = c("polygonGate"), function(`_data`, ...){
-  .transform.polygonGate(`_data`, ...)
+#' transform methods for gates
+#' @param _data the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
+#' @param ...
+#'      trans the transformation function or transformList object
+#'      param the parameter/dimension to be transformed. When trans is transformList object, param is not needed since it is derived from transformList.
+#' @return the transformed filter/filterList object
+#' @export
+#' @rdname transform-gate
+setMethod("transform", signature = c("filter"), function(`_data`, ...){
+  .transform.filter(`_data`, ...)
 })
-.transform.polygonGate <- function(gate, trans.fun, param){
-  gate@boundaries[, param] <- trans.fun(gate@boundaries[, param])
+
+#' @export
+#' @rdname transform-gate
+setMethod("transform", signature = c("filterList"), function(`_data`, ...){
+  res <- callNextMethod()
+  filterList(res)
+})
+
+#' @export
+#' @rdname transform-gate
+setMethod("transform", signature = c("list"), function(`_data`, ...){
+  res <- lapply(`_data`, function(g){
+    transform(g, ...)
+  })
+  res
+})
+
+.transform.filter <- function(`_data`, trans, ...){
+  if(is(trans, "transformList"))
+  {
+    dims <- parameters(`_data`)
+    for(p in names(trans@transforms))
+    {
+      if(p %in% dims)
+        `_data` <- transform_gate(`_data`, trans@transforms[[p]]@f, p)
+    }
+    `_data`
+  }else if(is(trans, "function"))
+    transform_gate(`_data`, trans, ...)
+  else
+    stop("unsupported `trans` type!")
+}
+
+#' transform methods for gates
+#' @param _data the gate object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
+#' @param ...
+#' @return the transformed gate object
+#' @export
+#' @rdname transform-gate
+transform_gate <- function(`_data`, ...)UseMethod("transform_gate")
+
+#' @param gate gate object
+#' @param trans the transformation function
+#' @param param the parameter/dimension to be transformed. 
+#' @export
+#' @rdname transform-gate
+transform_gate.polygonGate <- function(gate, trans, param){
+  gate@boundaries[, param] <- trans(gate@boundaries[, param])
   gate
 }
 
-setMethod("transform", signature = c("ellipsoidGate"), function(`_data`, ...){
-  # .transform.ellipsoidGate(`_data`, ...)
-  transform(as(`_data`, "polygonGate"), ...)
-})
+
+#' @export
+#' @rdname transform-gate
+transform_gate.ellipsoidGate <- function(gate, ...){
+  transform_gate(as(gate, "polygonGate"), ...)
+}
 # somehow ellips shape is not well perseved after transforming the two antipods and mean
-.transform.ellipsoidGate <- function(gate, trans.fun, param){
+transform_gate_old_ellipsoidGate <- function(gate, trans, param){
   #convert cov format to antipotal format since cov can not be transformed independently on each param
   #it is based on 5.3.1 of gatingML2 doc
   mu <- gate@mean
@@ -55,11 +110,11 @@ setMethod("transform", signature = c("ellipsoidGate"), function(`_data`, ...){
   names(antipod1) <- dims
   names(antipod2) <- dims
   #transform the respective dim of antipods
-  antipod1[param] <- trans.fun(antipod1[param])
-  antipod2[param] <- trans.fun(antipod2[param])
+  antipod1[param] <- trans(antipod1[param])
+  antipod2[param] <- trans(antipod2[param])
 
   # transform to get new mu
-  mu[param] <- trans.fun(mu[param])
+  mu[param] <- trans(mu[param])
   #shift to new center
   antipod1 <- antipod1 - mu
   antipod2 <- antipod2 - mu
@@ -83,30 +138,29 @@ setMethod("transform", signature = c("ellipsoidGate"), function(`_data`, ...){
 
 }
 
-setMethod("transform", signature = c("rectangleGate"), function(`_data`, ...){
-  .transform.rectangleGate(`_data`, ...)
-})
-.transform.rectangleGate <- function(gate, trans.fun, param){
+#' @export
+#' @rdname transform-gate
+transform_gate.rectangleGate <- function(gate, trans, param){
 
   min <- gate@min[[param]]
   if(!is.infinite(min))
-    gate@min[[param]] <- trans.fun(min)
+    gate@min[[param]] <- trans(min)
 
   max <- gate@max[[param]]
   if(!is.infinite(max))
-    gate@max[[param]] <- trans.fun(max)
+    gate@max[[param]] <- trans(max)
 
   gate
 
 }
-setMethod("transform", signature = c("quadGate"), function(`_data`, ...){
-  .transform.quadGate(`_data`, ...)
-})
-.transform.quadGate <- function(gate, trans.fun, param){
+
+#' @export
+#' @rdname transform-gate
+transform_gate.quadGate <- function(gate, trans, param){
 
   boundary <- gate@boundary[[param]]
   if(!is.infinite(boundary))
-    gate@boundary[[param]] <- trans.fun(boundary)
+    gate@boundary[[param]] <- trans(boundary)
 
   gate
 
