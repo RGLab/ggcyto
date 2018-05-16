@@ -140,6 +140,7 @@ as.ggplot <- function(x){
   #####################
   breaks <- x[["axis_inverse_trans"]]
   stats_limits <- list()
+  trans <- list()
   for(this_aes in aes_names)
   {
     dim <- dims[axis == this_aes, name]
@@ -170,7 +171,11 @@ as.ggplot <- function(x){
         #trans the given limits if trans is also present
         thisTrans <- x$scales$scales[[ind]][["trans"]]
         if(is(thisTrans, "trans"))
+        {
+          trans[[dim]] <- thisTrans
           this_limits <- thisTrans[["transform"]](this_limits)
+        }
+          
         x$scales$scales[[ind]][["limits"]] <- this_limits
       }
         
@@ -232,9 +237,33 @@ as.ggplot <- function(x){
     negated <- e2[["negated"]]
     adjust <- e2[["adjust"]]
     digits <- e2[["digits"]]
+    if(length(trans)>0)
+    {
+      translist <- lapply(trans, function(t)t[["transform"]])
+      translist <- transformList(names(translist), translist)
+      inverselist <- lapply(trans, function(t)t[["inverse"]])
+    }
+    if(length(trans)>0&&is.null(value))#means fs will be used to compute stats and thus needs to be scaled properly
+    {
+      fs <- transform(fs, translist)
+    }
     for(gate in gates_parsed){
+      if(length(trans)>0)
+        gate <- transform(gate, translist)
       stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, limits = stats_limits, negated = negated, adjust = adjust, digits = digits)
       
+      #restore the stats dimensions to raw scale
+      if(length(trans)>0)
+      {
+        for(param in names(inverselist))
+        {
+          thisTrans <- inverselist[[param]]
+          v <- thisTrans(stats[[param]])
+          stats[, (param) := v]
+        }  
+      }
+      
+        
       # instantiate the new stats layer
       thisCall <- quote(geom_label(data = stats))
       # copy all the other parameters

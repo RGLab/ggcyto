@@ -6,6 +6,7 @@
 \alias{geom_gate.list}
 \alias{geom_gate.filterList}
 \alias{geom_gate.filter}
+\alias{geom_gate.quadGate}
 \alias{geom_gate.character}
 \alias{geom_gate.filters}
 \alias{geom_gate.filtersList}
@@ -23,6 +24,8 @@ geom_gate(data, ...)
 
 \method{geom_gate}{filter}(data, mapping = NULL, fill = "transparent",
   colour = "red", nPoints = 100, ...)
+
+\method{geom_gate}{quadGate}(data, ...)
 
 \method{geom_gate}{character}(data, ...)
 
