@@ -155,14 +155,14 @@ add_ggcyto_gs <- function(e1, e2){
     
     #grab the nodes info from previous gate layers
     nodes.geom_gate <- e1[["nodes"]]
-    if(is.null(nodes.geom_gate))
-      stop("geom_gate must be added before adding geom_stats!")
+    # if(is.null(nodes.geom_gate))
+    #   stop("geom_gate must be added before adding geom_stats!")
     gates <- e2[["gate"]]      
     #when gate argument is absent from the stats layer, substitute it with nodes from gates layers
     if(is.null(gates))
       gates <- nodes.geom_gate
-    #if it is character then use it as node names
-    if(is.character(gates)){
+    
+    if(is.character(gates)){#if it is character then use it as node names
       #update the gate argument with the actual gates
       for(node in gates){
         gates <- getGate(gs, node)
@@ -197,8 +197,10 @@ add_ggcyto_gs <- function(e1, e2){
        
        e1 <- `+.ggcyto_flowSet`(e1, e2.new) 
       }
-      return(e1)
-    }
+    }else
+      e1 <- `+.ggcyto_flowSet`(e1, e2) #either no nodes and gate present, or gate is supplied at geom_stats, simply add stats layer as it is for lazy-eval later 
+    
+    return(e1)
     
   }
     
