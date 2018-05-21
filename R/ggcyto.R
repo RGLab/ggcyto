@@ -245,7 +245,7 @@ as.ggplot <- function(x){
     }
     if(length(trans)>0&&is.null(value))#means fs will be used to compute stats and thus needs to be scaled properly
     {
-      fs <- transform(fs, translist)
+      suppressMessages(fs <- transform(fs, translist))
     }
     for(gate in gates_parsed){
       if(length(trans)>0)
