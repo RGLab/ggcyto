@@ -1,19 +1,24 @@
 ---
 title: "Supplementary Information for 'ggcyto: Next generation visualization software for flow cytometry'"
 author: "Phu T. Van, Mike Jiang, Raphael Gottardo & Greg Finak"
-date: "March 28, 2018"
+date: "May 21, 2018"
 output: 
    BiocStyle::html_document:
     keep_md: yes
 bibliography: bibliography.bib
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=TRUE, results='hide',messages=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(ggcyto)
-library(flowWorkspaceData)
-library(flowWorkspace)
+#load the ggcyto package
+library(ggcyto) 
+#load flowWorkspaceData
+library(flowWorkspaceData) 
+#load flowWorkspace for importing FlowJo workspaces
+library(flowWorkspace) 
+#for tables
 library(xtable)
+#for combining plots
 library(cowplot)
 ```
 
@@ -43,42 +48,54 @@ Of the 47 cytometry tagged packages on BioConductor, two (including `ggcyto`), a
 ## Interaction with ggplot and the core BioConductor FCM data structures.
 
 To facilitate the use of core data structures with ggcyto, the package wraps the **ggplot** S3 class in an abstract S4 class that provides support for both ungated (`flowFrame` or `flowSet`) or gated (`GatingSet` or `GatingHierarchy`) data sources and overloads ggplot’s **fortify()** method to generate plots from these four core infrastructure objects.
-In ggcyto, the default “ggplot::+” operator is also overloaded by the ggcyto_GatingSet and ggcyto_flowSet classes. The cytometry data structures are processed by “+”, extracting and data and generating ggplot-compatible objects in the following sequence:
+In ggcyto, the default `“ggplot::+”` operator is also overloaded by the `ggcyto_GatingSet` and `ggcyto_flowSet` classes. The cytometry data structures are processed by the `“+”` operator, extracting and data and generating ggplot-compatible objects in the following sequence:
 
-     1. Create appropriate data structures from the arguments of the `geom_gate()` layer. 
-     2. Create ggplot “geom_density” or “geom_point” layers from `geom_overlay()` to display data. 
-     3. Compute cell population statistics and create labels from the `geom_stats()` layer. 
-     4. Show marker or channel names on axes and create the corresponding label layers.
+     1. Appropriate data structures are created from the arguments of the `geom_gate()` layer. 
+     2. The appropriate `geom_density` or `geom_point` layers are created from `geom_overlay()` to display the data. 
+     3. Cell population statistics are computed labels are created from the `geom_stats()` layer. 
+     4. Marker or channel names are displayed on the axes and the corresponding label layers are created.
 
 ## Principles of ggcyto.
 
-In **ggplot** users map plot aesthetics to variables and build a plot in layers. **ggcyto** follows those conventions, but the domain constrains requirements and many choices are set to sensible defaults. A user specifies a data source  (a flowSet or flowFrame of ungated data, or a GatingSet or GatingHierarchy of gated data), map plot axes to flow parameters (e.g. channels or markers), speci-fy which cell population to plot, specify an axis trans-formation, and optionally add a gate  to a plot. Many of these quantities are complex objects defined in the core cytometry data structures in BioConductor (Figure 1). 
-
+In **ggplot** users map plot aesthetics to variables and build a plot in layers. **ggCyto** follows those conventions, but the application domain constrains requirements so many options are set to sensible defaults. A user specifies a *data source*  (a flowSet or flowFrame of ungated data, or a GatingSet or GatingHierarchy of gated data), map plot axes to flow parameters (e.g. channels or markers), specify which cell population to plot, specify an axis transformation, and optionally add one or more gates to a plot. Many of these quantities are complex objects defined in the core cytometry data structures in BioConductor (Figure 1). 
 
 ## Lazy loading of data
 
-For large data sets ggcyto implements context-dependent lazy loading. When plotting with the **ggcyto** or **autplot** APIs, data loading is deferred to later stages of plotting.
+For large data sets ggcyto implements context-dependent lazy loading. When plotting with the **ggcyto** or **autplot** APIs, data loading is automatically deferred to later stages of plotting. 
+
+## Additional strategies for plotting large data
+
+The latest version of **ggcyto** (1.9.4) provides speeds up plotting of large data sets through a subsampling strategy. Additional arguments to `autoplot` and `ggcyto` named `sample.ratio` and `sample.threshold` specify what proportion of events to subsample (default 1%, 0.01) and at what total number of events should subsampling kick in (default: 100,000 events). This substantially speeds up plotting of large cell populations such as [lymphocytes](https://github.com/RGLab/ggcyto/issues/32). A caveat of this approach is that the reported counts currently reflect the subsampled counts, rather than the observed counts. This will be corrected in future releases. Cell population proportions should be relatively unaffected by subsampling.
+
 
 ## Data sets
 
-This document use the "graft vs. host disease" (`GvHD`) data set from the `flowCore` package  [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowCore)), and part of the FlowCAP Lyoplate data that is in the `flowWorkspaceData` package, also [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowWorkspaceData)).
+This document use the "graft vs. host disease" (`GvHD`) data set from the `flowCore` package  [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowCore)), and part of the FlowCAP Lyoplate data that is in the `flowWorkspaceData` package, also [on BioConductor](https://doi.org/doi:10.18129/B9.bioc.flowWorkspaceData)). Additional resources for cytometry data may be available via Bioconductor's **AnnotationHub** and **ExperimentHub** resources (@ExperimentHub, @AnnotationHub)
 
 
 # Reproducing figures from the original manuscript.
 
-The original manuscript shows three sets of plots created with `ggcyto`. We load the required data and use the code verbatim from the published figure to generate the associated plots.
+The original manuscript shows three sets of plots created with `ggcyto`. To reproduce these, we load the GvHD data and use the code presented in the published figure to generate the plots.
 
 ```{r load, warning=F, message=F}
-data(GvHD)
+#load the GvHD Data
+data(GvHD) 
+#Use system.file to point to the location of the GatingSet in flowWorkspaceData.
 dataDir <- system.file("extdata",package="flowWorkspaceData")
+#load_gs from the flowWorkspace package loads the gs_bcell_auto GatingSet.
+#list.files provides the full path to the GatingSet.
+#The data loaded is the B cell autogated lyoplate data.
 gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
-# Below we associate a transformation with the Lyoplate data GatingSet, which did not have one.
+
+# Below we associate a transformation (FlowJo biexponential) with the GatingSet since it did 
+# not have one. It is applied to all channels except FS and SSC (first two columns)
 gs@transformation <- transformerList(colnames(gs)[-(1:2)], flowJo_biexp_trans())
 
-# Choose a subset of samples.
+# For the GvHD data we select subjects 5 and 7, and Visit 5 and 6.
+# We extract those sample "name"s and use that to subset the GvHD flowSet.
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
  
-# Give meaningful visit and subject identifiers to the samples.
+# We attach meaningful visit and subject identifiers to the samples via the phenoData. 
 pd <- pData(fs)
 pd$Visit <- paste("visit",pd$Visit)
 pd$Patient <- paste("patient",pd$Patient)
@@ -89,27 +106,43 @@ pData(fs) <- pd
 
 ### The `autoplot` API
 
+Here `autoplot` is used to visualize the populations named "CD3" and "CD19" from the `GatingHierarchy`. Since cell populations are defined by gates, the vector of population names is passed to the `gate` argument of `autoplot` when the data are a `GatingSet` (first argument). The `bins` argument specifies the size of the hexagonal binning grid. 
+
+The `geom_overlay` layer allows us to highlight an additional cell population on top of an existing plot. In this case, we are highlighting the "IgD+CD27+" population. 
+
+All cell populations in the gating hierarchy can be printed via the `getNodes()` API from `flowWorkspace`.
+
 ```{r figure1_1, warning=FALSE, message=FALSE, fig.width=4,fig.height=4}
-autoplot(gs[1], c("CD3","CD19"), bins = 64) +
-  geom_overlay("IgD+CD27+",size=0.25)
+autoplot(gs[1], gate = c("CD3","CD19"), bins = 64) +
+  geom_overlay(data = "IgD+CD27+",size=0.25)
 ```
 
-When using the autoplot API, most plotting decisions are set to sensible defaults, depending on the context of the input (e.g. whether the data is a flowFrame or flowSet, or GatingSet or GatingHierarchy). For GatingSets and GatingHierarchies, the first input is a **cell population name** (or vector of several populations, provided they are defined in the same dimensions, see below), stored in the data source. This determines the selection of axes for plotting, the subset of the cells that are plotted (generally the cells in the parent of the selected population are plotted), the data transformation (by default the transformation stored in the data source is used and raw data values are plotted on tick marks with a non-linear spacing, analogous to a logarithmic plot). Any gates that define the chosen cell populations are drawn. When using autoplot, the additional parameter `axis_inverse_trans` switches between the transformed and untransformed data scale. Finally, the proportion of the gated populations (as a fraction of the parent) are displayed on the plot. 
+When using the autoplot API, most plotting decisions are set to sensible defaults, depending on the context of the input (e.g. whether the data is a flowFrame or flowSet, or GatingSet or GatingHierarchy). When the `autoplot` API takes a **flowFrame** or **flowSet**, the user specifies the **channels** or **markers** to plot on the axes, rather than a cell population, since these structures represent ungated data. 
 
-When the `autoplot` API takes a **flowFrame** or **flowSet**, the user speciries the **channels** or **markers** to plot on the axes, rather than a cell populatio, since these structures represent ungated data. 
+For GatingSets and GatingHierarchies, the first input is a **cell population name** (or vector of several populations, provided they are defined in the same dimensions, see below), stored in the data source. This determines the selection of axes for plotting, the subset of the cells that are plotted (generally the cells in the parent of the selected population are plotted), the data transformation (by default the transformation stored in the data source is used and raw data values are plotted on tick marks with a non-linear spacing, analogous to a logarithmic plot). Any gates that define the chosen cell populations are drawn. When using autoplot, the additional parameter `axis_inverse_trans` switches between the transformed and untransformed data scale. Finally, the proportion of the gated populations (as a fraction of the parent) are displayed on the plot. 
+
 
 The plots that are constructed are also "aware" of the dimensionality of a cell population. If a cell population is defined (e.g. gated) in only one dimension, **ggcyto** will produce a 1D density, whereas if it is defined in two dimensions, a 2D density estimate of the cells (using **geom_hex**) will be produced. Passing in a single flowFrame with no markers creates a set  of 1D densities for each marker in the data (see below).
 
 ### The `ggcyto` API.
 
+The ggcyto API allows for more control and flexibility in producing plots. 
+
 ```{r figure1_2, warning=FALSE,message=FALSE,fig.width=7, fig.height=3.5}
-ggcyto(gs[1:2], aes(x="IgD",y="CD27"),subset= c("CD19andCD20")) + 
+# The mapping of channels to axes is explicit via the mapping = aes(). argument.
+# The subset argument specifies the cell subset / subset of the data to plot.
+# A geom_hex layer with the bins argument specifies the type of plot.
+# A geom_gate layer specifies which gates / cell populations to add to plot. 
+#   the user must ensure they are defined in the same channels as the mapping.
+# The geom_stats layer specifies here that we want to show the counts. 
+#    The "percent" argument to "type" in "geom_stats" is also allowed.
+ggcyto(gs[1:2], mapping = aes(x="IgD",y="CD27"), subset = c("CD19andCD20")) + 
   geom_hex(bins=128) +
   geom_gate(c("IgD+CD27+","IgD+CD27-","IgD-CD27+","IgD-CD27-")) + 
   geom_stats(type = "count")
 ```
 
-Above, the **geom_gate** layer will add one or two-dimensional gates to a plot and accepts a **gate** object (eg. “rectangleGate”) or a *filterList* (collection of gate objects) defined in the **flowCore** package, or **named cell population** if using a gated data source.
+Above, the **geom_gate** layer will add one or two-dimensional gates to a plot and accepts a **gate** object (eg. “rectangleGate”) or a *filterList* (collection of gate objects) defined in the **flowCore** package, or **named cell population** if using a gated data source. The most recent version of ggcyto (1.9.4) also supports **quadGate**. 
 Cells from a different cell population can be highlighted and overlaid on an existing plot using the **geom_overlay** (see below) layer to produce an effect of backgating (i.e. visualizing a defined cell population on data projected onto a different set of parameters).
 Cell population summaries such as cell counts, percentages, or proportions can be added to figures of gated data using **geom_stats**, which takes the name of a gated population in a `GatingSet`, or a `filterList`. With no input, ggcyto tries to parse the gate information from the first **geom_gate** layer. 
 
@@ -119,21 +152,28 @@ Another useful feature is the overloaded ‘%+%’ method, which is used to repl
 
 ### Transforming the data.
 
+The `scale_x_...` and `scale_y_...` layers allow users to alter the transfomration used for data visualization on the fly. Supported transformations are `..._flowCore_fasinh`, `..._flowJo_biexp`,`..._flowJo_fasinh`*,`..._logicle`. 
+
 ```{r figure1_3, fig.width=4, fig.height=4}
 #Use the first GvHD sample
 fr <- GvHD[[1]]
-p = autoplot(fr, "FL1-H") + theme_cowplot(font_size = 18)
+
+# Autoplot is called on ungated data. 
+# In this case the x argument is a channel rather than "gate".  
+# The cowplot package is used to provide a theme.
+p = autoplot(fr, x = "FL1-H") + theme_cowplot(font_size = 18)
 print(p)
-#flowCore logicle scale
+
+#add an inline transformation: flowCore logicle scale
 p + scale_x_logicle() 
 
-# flowJo fasinh
+# add an inline transformation: flowJo fasinh
 p + scale_x_flowJo_fasinh() 
 ```
 
 # Additional ggcyto features.
 
-The ggcyto package is built on `ggplot2` and uses the "grammar of graphics". Below we demonstrate how its new features can be used to easily generate high quality plots of cytometry data.
+The ggcyto package is built on `ggplot2` and uses the "grammar of graphics". Below we demonstrate how its features can be used to easily generate high quality plots of cytometry data.
 
 ## Context-aware plots.
 
@@ -141,27 +181,41 @@ Following common `ggplot2` usage, `ggcyto` defines an `autoplot()` method.
 Calling `autoplot()` on a supported data structure automatically results in a default
 plot that is sensible for the data being displayed. 
 
-For example, supplying a `flowSet` and a channel name result in a 1D density plot using `geom_density`. If more than one sample are passed in, a faceted plot of all samples is created. The `facet_grid` and `facet_wrap` geoms can be used on variables in the `pData` slot of the `flowFrame` or `flowSet` object.
+For example, supplying a `flowSet` and a channel name result in a 1D density plot using `geom_density`. If more than one sample is passed in, a faceted plot of all samples is created. The `facet_grid` and `facet_wrap` geoms can be used on variables in the `pData` slot of the `flowFrame` or `flowSet` object.
 Below we generate a faceted 1D density grid of the forward scatter channel from the first four samples of the GvHD data.
 
 ```{r, warning=F, message=F, fig.width=4, fig.height=4}
-autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit)
+# we select the first four samples
+# We plot the forward scatter channel. 
+# facet_grid is specified to facet by Patient and Visit, which are defined in 
+# the pData() slot of the flowSet.
+autoplot(fs[1:4], x="FSC-H") + facet_grid(Patient~Visit)
 ```
 
 ## Changing `geom`s.
 
-The plot can be easily modified to show a histogram by appending the appropriate `geom`.
+An existing plot can be easily modified to use a different geometry by appending the appropriate `geom` to the plot construction call, as below.
 
 ```{r, warning=F, message=F, fig.width=4, fig.height=4}
-autoplot(fs[1:4], "FSC-H") + facet_grid(Patient~Visit) + geom_histogram()
+#geom_histogram replaces the default geom_density.
+#again we are faceting by Patient and Visit.
+autoplot(fs[1:4], x = "FSC-H") + facet_grid(Patient~Visit) + geom_histogram()
 ```
 
 ## Using gated data.
 
-Calling `autoplot` on a `GatingSet` or `GatingHierarchy` and supplying a **population name** results in a 1D or 2D density (depending on how the population is defined) using `geom_hex` or `geom_density`. Any gates in the GatingSet defined in those two dimensions are automatically overlaid on the plot:
+Calling `autoplot` on a `GatingSet` or `GatingHierarchy` and supplying a **population name** (also an alias for a **gate** since the former are defined by the latter) results in a 1D or 2D density (depending on how the gate is defined) using `geom_hex` or `geom_density`. Provided the specified gates are compatible (defined on the same channels, have the same dimensionality), they will be projected onto the plot:
 
 ```{r, warning=F, message=F, fig.width=4, fig.height=4}
-autoplot(gs[[1]], c("CD3", "CD19"), bins = 64)
+# CD9 and CD19 are gates / populations defined in the gating set. 
+autoplot(gs[[1]], gate = c("CD3", "CD19"), bins = 64)
+```
+
+We can visualize the tree of cell populations using the `plot` method defined in `flowWorkspace`. `bool=TRUE` ensures boolean gates are also plotted.
+
+```{r, warning=F, message=F, fig.width=4, fig.height=4}
+# the tree shows that CD3 and CD19 (used above) are cell populations. 
+plot(gs[[1]],bool=TRUE)
 ```
 
 ## Visualizing back-gating.
@@ -169,25 +223,37 @@ autoplot(gs[[1]], c("CD3", "CD19"), bins = 64)
 Different populations can be overlaid on the same plot using `geom_overlay`, a ggcyto-specific `geom`. This is analogous to viewing back-gated cell populations. Below we highlight the IgD+CD127+ cells on the CD19 and CD3 projection of a sample from the Lyoplate B cell panel.
 
 ```{r backgating, warning=FALSE,fig.width=4, fig.height=4}
-autoplot(gs[1], c("CD3","CD19"), bins = 64) +
+# we add an overlay of IgD+CD27+ cells on top of the display of CD3 and CD19 cells. 
+# We see they are CD19 positive
+autoplot(gs[1], gate = c("CD3","CD19"), bins = 64) +
   geom_overlay("IgD+CD27+",size=0.5) 
 ```
 
 ## Transforming the axes.
 
-The `x` and `y` axis scales are transformed above but show the raw data values. These can be changed to show the transformed data values on a linear scale using the `axis_inverse_trans` argument to `autoplot`.
+The `x` and `y` axis scales are transformed above but show the raw data values. These can be changed to show the transformed data values on a linear scale using the `axis_inverse_trans` argument to `autoplot`. Below, we see the data are in 4096 "channel" space, commonly used by FlowJo and other tools. 
 
 ```{r linear_scales, warning=FALSE, message=FALSE, fig.width=4, fig.height=4}
-autoplot(gs[1], c("CD3","CD19"), bins = 64, axis_inverse_trans = FALSE) +
+# The axis_inverse_trans argument allows us to display the x and y axes on the scale
+# which is used in the GatingSet. In this case, the data are in 4096 "channel" space. 
+# When used with tools like openCyto (which acts on the data in the GatingSet), this is useful for 
+# passing gate ranges and other parameters to gating algorithms.
+autoplot(gs[1], gate = c("CD3","CD19"), bins = 64, axis_inverse_trans = FALSE) +
   geom_overlay("IgD+CD27+",size=0.5) 
 ```
 
 ## Using the `ggcyto` interface. 
 
-The same plots created with `autoplot` can be generated using `ggcyto()`. Below, we show how to create theprevious plot using the `ggcyto` API.
+The same plots created with `autoplot` can be generated using `ggcyto()`. Below, we show how to create the previous plot using the `ggcyto` API. Note below, the gate names and channel names are the same, but this is not necessarily always the case. 
 
 ```{r ggcyto, warning=FALSE, message=FALSE,fig.width=4, fig.height=4} 
-ggcyto(gs[1], aes(x="CD3",y="CD19"),subset= "Live") + 
+# mapping specifies the channels to plot on the x and y axes.
+# geom_gate specifies the gate names / population name 
+# (note they just happen to be the same as the channel names but this is
+# not necessarily always the case). 
+# geom_stats specifies that we want to plot the "percent" for each cell population.
+# The x and y axis_inverse_trans reverse the axis transformation and plots the data in "channel" space (in this case). 
+ggcyto(gs[1], mapping = aes(x="CD3",y="CD19"),subset= "Live") + 
   geom_hex(bins=64) +
   geom_gate(c("CD19","CD3")) + 
   geom_stats(type = "percent") + 
@@ -203,6 +269,7 @@ We load the lyoplate data for the T cell panel. the data are available on [Immun
 # load the Lyoplate gatingSet. Here it's been downloaded and stored locally. The user reproducing this workflow should update their link.
 gs2 <- rbind2(load_gslist("~/Dropbox/GoTeam/Members/Phu/manuscripts/GGCyto/Paper version 1/gslist-tcell/"))
 
+# A transformation is added to the GatingSet so that the axis_inverse_trans and other arguments work as expected.
 gs2@transformation = transformerList(colnames(gs2)[-(1:2)], flowJo_biexp_trans())
 ```
 
@@ -215,6 +282,7 @@ knitr::kable(pData(gs2), row.names=F)
 The data was gated to identify CD4 and CD8 memory T cells:
 
 ```{r lyoplate_hier, warning=F, message=F, echo=F}
+# calling plot on a GatingSet shows us the gating tree structure.
 plot(gs2)
 ```
 
@@ -224,24 +292,37 @@ The plot is built up using the `ggcyto()` API. Note we use `axis_x_inverse_trans
 The plot shows clearly that center-to-center variability is greater than variability across technical replicates.
 
 ```{r lyoplate_facet, warning=F, message=F, fig.width=13}
+# subset the relevant sample
 p = ggcyto(subset(gs2, Sample=="1349")
+# map CCR7 to x and CD45RA to y
         ,aes(x = CCR7,y=CD45RA)
+# plot the CD4 subset of cells
         ,subset="CD4") +
+# display the data as a hexagonally binned density with 64 bins.
         geom_hex(bins = 64) +
+# plot the CCR7+/CD45RA- gate. Note we specify the parent as CD4+ since the gate also exists for CD8+
         geom_gate("CD4/CCR7+CD45RA-") +
+# We want to show population statistics.
         geom_stats() +
+# We facet by replicate and center.
         facet_grid(Replicate ~ Center) +
+# add a title
         labs(title="sample 1349 CD4 central memory T cells, by center and replicate") +
-        ggcyto_par_set(limits = "instrument") + 
-        axis_x_inverse_trans() + 
-        axis_y_inverse_trans() 
+# options to set the axis limits to the "instrument" range. Could also be "data".
+        ggcyto_par_set(limits = "instrument") +
+# invert the axis transformation to show raw data on x and y
+        axis_x_inverse_trans() +
+        axis_y_inverse_trans()
 p
 ```
 
 ## Substituting data with the  `%+%` method.
 
 Here we use the `%+%` method to substitute the data in the plot. We'll plot only a subset of the centers.. specifically Baylor and CIMR.
+
 ```{r lyoplate_facet_subs, warning=F, message=F, fig.width=8}
+# We use the %+% method to "substitute" a different set of data with the same plot parameters.
+# The right hand side of %+% takes a GatingSet object in this case, but could be a flowSet, flowFrame, or GatingHierarchy, depending on the nature of "p".
 p %+% subset(gs2,Center%in%c("Baylor","CIMR"))
 ```
 
@@ -255,6 +336,6 @@ autoplot(fs[[1]])
 
 ## Future Work
 
-Since ggcyto utilizes ggplot’s `fortify()` method under the hood, users must take care in plotting large cell populations that result in manipulating large tables of data. This could be resolved by a C++ back-end for processing the data and by leveraging parallelization, such as that implemented in the [cytolib package](https://github.com/RGLab/cytolib).
+Since ggcyto utilizes ggplot’s `fortify()` method under the hood, users must take care in plotting large cell populations that result in manipulating large tables of data. This could be resolved by a C++ back-end for processing the data and by leveraging parallelization, such as that implemented in the [cytolib package](https://github.com/RGLab/cytolib). For now, the latest version of ggcyto allows [subsampling](https://github.com/RGLab/ggcyto/issues/32) of the data as described earlier in this document. 
 
 # References
