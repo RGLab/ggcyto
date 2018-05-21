@@ -65,8 +65,7 @@ For large data sets ggcyto implements context-dependent lazy loading. When plott
 
 ## Additional strategies for plotting large data
 
-The latest version of **ggcyto** (1.9.4) provides speeds up plotting of large data sets through a subsampling strategy. Additional arguments to `autoplot` and `ggcyto` named `sample.ratio` and `sample.threshold` specify what proportion of events to subsample (default 1%, 0.01) and at what total number of events should subsampling kick in (default: 100,000 events). This substantially speeds up plotting of large cell populations such as [lymphocytes](https://github.com/RGLab/ggcyto/issues/32). A caveat of this approach is that the reported counts currently reflect the subsampled counts, rather than the observed counts. This will be corrected in future releases. Cell population proportions should be relatively unaffected by subsampling.
-
+The latest version of **ggcyto** (1.9.4) provides speeds up plotting of large data sets through a subsampling strategy. Additional arguments to `autoplot` and `ggcyto` named `sample.ratio` and `sample.threshold` specify what proportion of events to subsample (default 1%, 0.01) and at what total number of events should subsampling kick in (default: 100,000 events). This substantially speeds up plotting of large cell populations such as [lymphocytes](https://github.com/RGLab/ggcyto/issues/32). 
 
 ## Data sets
 
