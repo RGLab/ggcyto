@@ -1,4 +1,4 @@
-#' compute the positions of the population statistics based on the geometic gate centroid
+#' Compute the positions of the population statistics based on the geometic gate centroid for a ggcyto plot.
 #' 
 #' It is usually not called directly by user but mainly used by compute_stats function (which is called by ggcyto add method when geom_states layer is added).
 #' 

@@ -1,4 +1,4 @@
-#' Create a new ggcyto plot
+#' Plot cytometry data using the ggcyto API
 #'
 #' \code{ggcyto()} initializes a ggcyto object that inherits ggplot class.
 #' Similarly the + operator can be used to add layers to the
@@ -13,7 +13,7 @@
 #' @import methods ggplot2 flowCore ncdfFlow flowWorkspace
 #' @export
 #' @keywords internal
-#' @param data default cytometry data set.(flowSet,flowFrame)
+#' @param data The data source. A core cytometry data structure. (flowSet,flowFrame, GatingSet or GatingHierarchy)
 #' @param ... other arguments passed to specific methods
 #' @examples
 #' 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_stats.R
 \name{geom_stats}
 \alias{geom_stats}
-\title{Popluation statistics layer}
+\title{Add a popluation statistics layer to a ggcyto plot.}
 \usage{
 geom_stats(gate = NULL, ..., value = NULL, type = "percent",
   negated = FALSE, adjust = 0.5, label.padding = unit(0.05, "lines"),
@@ -30,10 +30,10 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 a geom_popStats layer
 }
 \description{
-It is a virtual layer and will be instanatiated as geom_label layer within ggycto.+ operator.
+This is a virtual layer and will be instanatiated as geom_label layer within ggycto.+ operator.
 }
 \details{
-So it is dedicated for ggcyto context and thus can't not be added to ggplot object directly.
+So it is dedicated for ggcyto context and thus cannot be added to ggplot object directly.
 }
 \examples{
 dataDir <- system.file("extdata",package="flowWorkspaceData")

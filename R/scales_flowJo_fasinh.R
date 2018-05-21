@@ -1,4 +1,4 @@
-#' flowJo inverse hyperbolic sine scale
+#' Add a flowJo inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param m,t see 'help(flowJo.fasinh')

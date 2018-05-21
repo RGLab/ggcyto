@@ -3,7 +3,7 @@
 \name{axis_x_inverse_trans}
 \alias{axis_x_inverse_trans}
 \alias{axis_y_inverse_trans}
-\title{Display axis labels in raw scales}
+\title{Display ggcyto axis labels using their raw values (as stored in the data structure)}
 \usage{
 axis_x_inverse_trans(...)
 

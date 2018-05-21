@@ -12,7 +12,7 @@
 \alias{geom_gate.filtersList}
 \alias{geom_gate.logicalFilterResult}
 \alias{geom_gate.logical}
-\title{add a flowCore gate layer}
+\title{Add a gate layer to a ggcyto plot.}
 \usage{
 geom_gate(data, ...)
 
