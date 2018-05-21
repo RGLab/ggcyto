@@ -90,7 +90,7 @@ as.GatingSet <- function(gh){
 add_ggcyto_gs <- function(e1, e2){
   
   plot_mapping <- e1$mapping
-  prj <- sapply(plot_mapping, as.character)
+  prj <- sapply(plot_mapping, quo_name)
   gs <- e1[["gs"]]
   
   is.recorded <- attr(e2, "is.recorded")

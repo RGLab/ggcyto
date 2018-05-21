@@ -22,7 +22,7 @@ transform_gate(`_data`, ...)
 
 \method{transform_gate}{polygonGate}(gate, trans, param)
 
-\method{transform_gate}{ellipsoidGate}(gate, trans, param)
+\method{transform_gate}{ellipsoidGate}(gate, ...)
 
 \method{transform_gate}{rectangleGate}(gate, trans, param)
 
