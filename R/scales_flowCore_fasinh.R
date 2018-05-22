@@ -1,4 +1,4 @@
-#' flowCore inverse hyperbolic sine scale
+#' Add a flowCore inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param a,b,c see 'help(arcsinhTransform')

@@ -1,4 +1,4 @@
-#' flowJo inverse hyperbolic sine scale
+#' Add a logicle scale to the x or y axes of a ggcyto plot.
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param w,t,m,a see 'help(logicleTransform')

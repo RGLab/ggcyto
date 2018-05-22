@@ -3,7 +3,7 @@
 \name{scale_x_flowCore_fasinh}
 \alias{scale_x_flowCore_fasinh}
 \alias{scale_y_flowCore_fasinh}
-\title{flowCore inverse hyperbolic sine scale}
+\title{Add a flowCore inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.}
 \usage{
 scale_x_flowCore_fasinh(..., a = 1, b = 1, c = 0)
 
@@ -18,7 +18,7 @@ scale_y_flowCore_fasinh(..., a = 1, b = 1, c = 0)
 ScaleContinuous object
 }
 \description{
-flowCore inverse hyperbolic sine scale
+Add a flowCore inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.
 }
 \examples{
 data(GvHD)

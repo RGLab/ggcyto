@@ -1,4 +1,4 @@
-#' Display axis labels in raw scales
+#' Display ggcyto axis labels using their raw values (as stored in the data structure)
 #' 
 #' It is essentially a dummy continous scale and will be instantiated 
 #' by '+.ggcyto_GatingSet' with 'breaks` and 'lables' customized.

@@ -8,14 +8,14 @@
 \alias{ggcyto_GatingLayout-class}
 \alias{ggcyto}
 \alias{ggcyto.default}
-\title{Create a new ggcyto plot}
+\title{Plot cytometry data using the ggcyto API}
 \usage{
 ggcyto(data = NULL, ...)
 
 \method{ggcyto}{default}(data = NULL, mapping = aes(), ...)
 }
 \arguments{
-\item{data}{default cytometry data set.(flowSet,flowFrame)}
+\item{data}{The data source. A core cytometry data structure. (flowSet,flowFrame, GatingSet or GatingHierarchy)}
 
 \item{...}{other arguments passed to specific methods}
 }
