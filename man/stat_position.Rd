@@ -5,7 +5,7 @@
 \alias{stat_position.filter}
 \alias{stat_position.filterList}
 \alias{stat_position.list}
-\title{compute the positions of the population statistics based on the geometic gate centroid}
+\title{Compute the positions of the population statistics based on the geometic gate centroid for a ggcyto plot.}
 \usage{
 stat_position(gate, ...)
 

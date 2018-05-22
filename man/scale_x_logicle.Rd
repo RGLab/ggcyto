@@ -3,7 +3,7 @@
 \name{scale_x_logicle}
 \alias{scale_x_logicle}
 \alias{scale_y_logicle}
-\title{flowJo inverse hyperbolic sine scale}
+\title{Add a logicle scale to the x or y axes of a ggcyto plot.}
 \usage{
 scale_x_logicle(..., w = 0.5, t = 262144, m = 4.5, a = 0)
 
@@ -18,7 +18,7 @@ scale_y_logicle(..., w = 0.5, t = 262144, m = 4.5, a = 0)
 ScaleContinuous object
 }
 \description{
-flowJo inverse hyperbolic sine scale
+Add a logicle scale to the x or y axes of a ggcyto plot.
 }
 \examples{
 data(GvHD)

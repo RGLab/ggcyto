@@ -3,7 +3,7 @@
 \name{scale_x_flowJo_fasinh}
 \alias{scale_x_flowJo_fasinh}
 \alias{scale_y_flowJo_fasinh}
-\title{flowJo inverse hyperbolic sine scale}
+\title{Add a flowJo inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.}
 \usage{
 scale_x_flowJo_fasinh(..., m = 4, t = 1200)
 
@@ -18,7 +18,7 @@ scale_y_flowJo_fasinh(..., m = 4, t = 1200)
 ScaleContinuous object
 }
 \description{
-flowJo inverse hyperbolic sine scale
+Add a flowJo inverse hyperbolic sine scale to the x or y axes of a ggcyto plot.
 }
 \examples{
 data(GvHD)

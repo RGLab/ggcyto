@@ -1,0 +1,47 @@
+context("autoplot")
+
+fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
+set.seed(1)#due to subsampling
+test_that("autoplot -- flowset", {
+  expect_doppelganger("autoplot-fs-1d", autoplot(fs, x = 'FSC-H'))
+  expect_doppelganger("autoplot-fs-2d", autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64))
+  
+})
+
+
+test_that("autoplot -- gatingset", {
+  
+  expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3"))
+  expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19")))
+  
+  
+})
+
+#TODO:tackle error of 'svglite only supports one page'
+# test_that("autoplot -- flowFrame", {
+#   expect_doppelganger("autoplot-fr", autoplot(fs[[1]]) + labs_cyto("marker"))
+#   
+# })
+
+# test_that("autoplot -- gatinghierarchy", {
+#   gh <- gs[[1]]
+#   nodes <- getNodes(gh, path = "auto")[c(3:6)]
+#   
+#   expect_doppelganger("autoplot-gs-1-gate", autoplot(gh, nodes))
+# })
+# 
+# test_that("autoplot -- ggcyto_arrange", {
+#   nodes <- getNodes(gs[[1]], path = "auto")[c(3:6)]
+#   res <- autoplot(gs[[1]], nodes)
+#   expect_is(res, "ggcyto_GatingLayout")
+#   # arrange it as one-row gtable object 
+#   gt <- ggcyto_arrange(res, nrow = 1)
+#   expect_is(gt, "gtable")
+#   # do the same to the second sample
+#   gt2 <- ggcyto_arrange(autoplot(gs[[2]], nodes), nrow = 1)
+#   # combine the two and print it on the sampe page
+#   gt3 <- gridExtra::gtable_rbind(gt, gt2)
+#   # plot(gt3)
+#   expect_doppelganger("autoplot-ggcyto_arrange", gt3)
+#   
+# })

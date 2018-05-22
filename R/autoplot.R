@@ -1,10 +1,10 @@
-#' Plot fluorescence intensity in one or two dimension.
+#' Plot cytometry data in one or two dimension with the ggcyto package.
 #'
-#' Overloaded autoplot for the cytomertry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
+#' Overloaded autoplot methods for the cytometry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
 #' It plots the cytometry data with geom_histogram, geom_density or geom_hex.
 #' When autoplot a GatingSet/Gatinghierarchy, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
 #'
-#' @param object flowFrame, flowSet, GatingSet object
+#' @param object The data source. A core cytometry data structure. A flowFrame, flowSet, GatingSet or GatingHierarchy object
 #' @param x define the x dimension of the plot (not used when object is a GatingSet). When object is a flowFrame, it can be missing, which plots 1d density plot on all the channels. 
 #' @param y define the y dimension of the plot. Default is NULL, which means 1d densityplot.
 #' @param bins passed to geom_hex
@@ -12,6 +12,7 @@
 #' @param ... other arguments passed to ggplot
 #'
 #' @rdname autoplot
+#' @aliases autoplot
 #' @return a ggcyto object
 #'
 #' @examples

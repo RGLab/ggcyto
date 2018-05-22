@@ -7,7 +7,7 @@
 \alias{geom_overlay.ncdfFlowList}
 \alias{geom_overlay.flowSet}
 \alias{geom_overlay.flowFrame}
-\title{Overlay other populations on existing plots.}
+\title{Overlay a population on an existing ggcyto plot analogous to backgating.}
 \usage{
 geom_overlay(data, ...)
 

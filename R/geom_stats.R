@@ -1,8 +1,8 @@
-#' Popluation statistics layer
+#' Add a popluation statistics layer to a ggcyto plot.
 #' 
-#' It is a virtual layer and will be instanatiated as geom_label layer within ggycto.+ operator.
+#' This is a virtual layer and will be instanatiated as geom_label layer within ggycto.+ operator.
 #' 
-#' So it is dedicated for ggcyto context and thus can't not be added to ggplot object directly. 
+#' So it is dedicated for ggcyto context and thus cannot be added to ggplot object directly. 
 #' 
 #' @param gate a 'filterList` or character (represent as a population node in GatingSet)
 #'             if not supplied, ggcyto then tries to parse the gate from the first geom_gate layer.

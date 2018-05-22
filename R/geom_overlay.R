@@ -1,4 +1,4 @@
-#' Overlay other populations on existing plots.
+#' Overlay a population on an existing ggcyto plot analogous to backgating.
 #' 
 #' It is useful for "backgating" plots.
 #' 

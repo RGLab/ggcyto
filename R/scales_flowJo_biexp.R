@@ -1,4 +1,4 @@
-#' flowJo biexponential scale
+#' Add a flowJo biexponential scale to the x or y axes of a ggcyto plot.
 #' 
 #' @param ... common continuous scale parameters passed to 'continuous_scale' (not used currently)
 #' @param maxValue,widthBasis,pos,neg see 'help(flowJoTrans')

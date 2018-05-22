@@ -3,7 +3,7 @@
 \name{scale_x_flowJo_biexp}
 \alias{scale_x_flowJo_biexp}
 \alias{scale_y_flowJo_biexp}
-\title{flowJo biexponential scale}
+\title{Add a flowJo biexponential scale to the x or y axes of a ggcyto plot.}
 \usage{
 scale_x_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
   neg = 0, equal.space = FALSE)
@@ -22,7 +22,7 @@ scale_y_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
 ScaleContinuous object
 }
 \description{
-flowJo biexponential scale
+Add a flowJo biexponential scale to the x or y axes of a ggcyto plot.
 }
 \examples{
 data(GvHD)

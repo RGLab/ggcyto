@@ -1,4 +1,4 @@
-#' add a flowCore gate layer
+#' Add a gate layer to a ggcyto plot.
 #' 
 #' When 'data' is a gate (or flowCore filter) or a list of gates or a filterList object. 
 #' When it is used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for 
