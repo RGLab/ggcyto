@@ -65,7 +65,7 @@ For large data sets ggcyto implements context-dependent lazy loading. When plott
 
 ## Additional strategies for plotting large data
 
-The latest version of **ggcyto** (1.9.4) provides speeds up plotting of large data sets through a subsampling strategy. Additional arguments to `autoplot` and `ggcyto` named `sample.ratio` and `sample.threshold` specify what proportion of events to subsample (default 1%, 0.01) and at what total number of events should subsampling kick in (default: 100,000 events). This substantially speeds up plotting of large cell populations such as [lymphocytes](https://github.com/RGLab/ggcyto/issues/32). 
+The latest version of **ggcyto** (1.9.5) provides speeds up plotting of large data sets through a subsampling strategy. ~~Additional arguments to `autoplot` and `ggcyto` named `sample.ratio` and `sample.threshold` specify what proportion of events to subsample (default 1%, 0.01) and at what total number of events should subsampling kick in (default: 100,000 events).~~ As of v1.9.5 the implementation uses `flowCore`'s `sampleFilter` to cap the number of events it displays. Currently this defaults to 50,000. This substantially speeds up plotting of large cell populations such as [lymphocytes](https://github.com/RGLab/ggcyto/issues/32). 
 
 ## Data sets
 
@@ -141,7 +141,7 @@ ggcyto(gs[1:2], mapping = aes(x="IgD",y="CD27"), subset = c("CD19andCD20")) +
   geom_stats(type = "count")
 ```
 
-Above, the **geom_gate** layer will add one or two-dimensional gates to a plot and accepts a **gate** object (eg. “rectangleGate”) or a *filterList* (collection of gate objects) defined in the **flowCore** package, or **named cell population** if using a gated data source. The most recent version of ggcyto (1.9.4) also supports **quadGate**. 
+Above, the **geom_gate** layer will add one or two-dimensional gates to a plot and accepts a **gate** object (eg. “rectangleGate”) or a *filterList* (collection of gate objects) defined in the **flowCore** package, or **named cell population** if using a gated data source. The most recent version of ggcyto (1.9.5) also supports **quadGate**. 
 Cells from a different cell population can be highlighted and overlaid on an existing plot using the **geom_overlay** (see below) layer to produce an effect of backgating (i.e. visualizing a defined cell population on data projected onto a different set of parameters).
 Cell population summaries such as cell counts, percentages, or proportions can be added to figures of gated data using **geom_stats**, which takes the name of a gated population in a `GatingSet`, or a `filterList`. With no input, ggcyto tries to parse the gate information from the first **geom_gate** layer. 
 
