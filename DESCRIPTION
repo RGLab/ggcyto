@@ -31,7 +31,8 @@ Suggests:
     flowStats,
     openCyto,
     flowViz,
-    ggjoy
+    ggjoy,
+    vdiffr
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues
 biocViews: FlowCytometry, CellBasedAssays, Infrastructure, Visualization
