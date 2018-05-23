@@ -13,18 +13,19 @@ setMethod("transform", signature = c("filter"), function(`_data`, ...){
 #' @export
 #' @rdname transform-gate
 setMethod("transform", signature = c("filterList"), function(`_data`, ...){
-  res <- callNextMethod()
+  res <- lapply(`_data`, function(g){transform(g, ...)})
   filterList(res)
 })
 
-#' @export
-#' @rdname transform-gate
-setMethod("transform", signature = c("list"), function(`_data`, ...){
-  res <- lapply(`_data`, function(g){
-    transform(g, ...)
-  })
-  res
-})
+# can't have this since it clobbers transform.data.frame S3 method
+# # @export
+# # @rdname transform-gate
+# setMethod("transform", signature = c("list"), function(`_data`, ...){
+#   res <- lapply(`_data`, function(g){
+#     transform(g, ...)
+#   })
+#   res
+# })
 
 .transform.filter <- function(`_data`, trans, ...){
   if(is(trans, "transformList"))
