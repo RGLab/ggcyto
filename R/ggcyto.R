@@ -249,7 +249,7 @@ as.ggplot <- function(x){
     }
     for(gate in gates_parsed){
       if(length(trans)>0)
-        gate <- transform(filterList(gate), translist)
+        gate <- transform(gate, translist)
       stats <- compute_stats(fs, gate, type = stat_type, value = value, data_range = data_range, limits = stats_limits, negated = negated, adjust = adjust, digits = digits)
       
       #restore the stats dimensions to raw scale
