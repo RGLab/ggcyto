@@ -1,4 +1,7 @@
 #' transform methods for gates
+#' 
+#' rescale the gate coordinates with the transformation provided
+#' 
 #' @param _data the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
 #' @param ...
 #'      trans the transformation function or transformList object
@@ -44,12 +47,9 @@ setMethod("transform", signature = c("filterList"), function(`_data`, ...){
 }
 
 #' transform methods for gates
-#' @param _data the gate object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
-#' @param ...
-#' @return the transformed gate object
 #' @export
 #' @rdname transform-gate
-transform_gate <- function(`_data`, ...)UseMethod("transform_gate")
+transform_gate <- function(gate, trans, param)UseMethod("transform_gate")
 
 #' @param gate gate object
 #' @param trans the transformation function

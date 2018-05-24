@@ -4,7 +4,6 @@
 \name{transform,filter-method}
 \alias{transform,filter-method}
 \alias{transform,filterList-method}
-\alias{transform,list-method}
 \alias{transform_gate}
 \alias{transform_gate.polygonGate}
 \alias{transform_gate.ellipsoidGate}
@@ -16,9 +15,7 @@
 
 \S4method{transform}{filterList}(`_data`, ...)
 
-\S4method{transform}{list}(`_data`, ...)
-
-transform_gate(`_data`, ...)
+transform_gate(gate, trans, param)
 
 \method{transform_gate}{polygonGate}(gate, trans, param)
 
@@ -39,16 +36,12 @@ param the parameter/dimension to be transformed. When trans is transformList obj
 \item{trans}{the transformation function}
 
 \item{param}{the parameter/dimension to be transformed.}
-
-\item{_data}{the gate object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.}
 }
 \value{
 the transformed filter/filterList object
-
-the transformed gate object
 }
 \description{
-transform methods for gates
+rescale the gate coordinates with the transformation provided
 
 transform methods for gates
 }
