@@ -1,18 +1,20 @@
 context("autoplot")
+#no effect since vdiffr capture and report the warnings anyway
+# options(warn = -1)#suppress removing rows warnings from ggplot
 
 fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
 set.seed(1)#due to subsampling
 test_that("autoplot -- flowset", {
-  expect_doppelganger("autoplot-fs-1d", autoplot(fs, x = 'FSC-H'))
-  expect_doppelganger("autoplot-fs-2d", autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64))
+  suppressWarnings(expect_doppelganger("autoplot-fs-1d", autoplot(fs, x = 'FSC-H')))
+  suppressWarnings(expect_doppelganger("autoplot-fs-2d", autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 64)))
   
 })
 
 
 test_that("autoplot -- gatingset", {
   
-  expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3"))
-  expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19")))
+  suppressWarnings(expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3")))
+  suppressWarnings(expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19"))))
   
   
 })
@@ -45,3 +47,5 @@ test_that("autoplot -- gatingset", {
 #   expect_doppelganger("autoplot-ggcyto_arrange", gt3)
 #   
 # })
+
+# options(warn = 0)#restore default

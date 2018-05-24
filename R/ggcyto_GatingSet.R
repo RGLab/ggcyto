@@ -133,7 +133,7 @@ add_ggcyto_gs <- function(e1, e2){
     
     for(node in nodes)
     {
-      gate <- getGate(gs, node)
+      gate <- filterList(getGate(gs, node))
       #must convert bool gate to indices since
       #flowset doesn't know about booleanFilter
       if(is(gate[[1]], "booleanFilter"))
@@ -165,7 +165,7 @@ add_ggcyto_gs <- function(e1, e2){
     if(is.character(gates)){#if it is character then use it as node names
       #update the gate argument with the actual gates
       for(node in gates){
-        gates <- getGate(gs, node)
+        gates <- filterList(getGate(gs, node))
        
         stat_type <- e2[["type"]]
         value <- e2[["value"]]
