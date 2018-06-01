@@ -1,0 +1,12 @@
+year = sub("-.*","",meta$Date)
+note = sprintf("R package version %s", meta$Version)
+bibentry(bibtype = "Article",
+title = "{ggcyto}: Next-generation open-source visualization software for cytometry",
+journal = "Bioinformatics",
+author = c(person("Phu", "Van"),
+person("Wenxin", "Jiang"),
+person("Raphael","Gottardo"),
+person("Greg","Finak")),
+year = 2018,
+url = "https://doi.org/10.1093/bioinformatics/bty441")
+
