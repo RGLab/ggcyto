@@ -44,12 +44,12 @@ p1 + facet_grid(Patient~Visit)
 #display density
 p + geom_density()
 
-#you can use ggjoy package to display stacked density plot
-require(ggjoy)
+#you can use ggridges package to display stacked density plot
+require(ggridges)
 #stack by fcs file ('name')
-p + geom_joy(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
+p + geom_density_ridges(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
 #or to stack by Visit and facet by patient
-p + geom_joy(aes(y = Visit)) + facet_grid(~Patient)
+p + geom_density_ridges(aes(y = Visit)) + facet_grid(~Patient)
 
 # 2d scatter/dot plot
 p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
