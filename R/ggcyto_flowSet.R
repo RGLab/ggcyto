@@ -189,8 +189,14 @@ add_ggcyto <- function(e1, e2, e2name){
             e1[["fs"]] <- fs
           }
           dt <- fortify(fs)
-          data_range <- apply(dt[, chnl, with = FALSE], 2, range)
-          rownames(data_range) <- c("min", "max")  
+          if(nrow(dt)>0)
+          {
+            data_range <- apply(dt[, chnl, with = FALSE], 2, range)
+            rownames(data_range) <- c("min", "max")  
+          }
+          else
+            data_range <- NULL
+          
           e1[["data_range"]] <- data_range
           e1$data <- dt
         }
