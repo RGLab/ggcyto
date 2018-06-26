@@ -7,7 +7,7 @@
 #' 
 #' @param fs flowSet. can be NULL when precaculated 'value' is provided
 #' @param gates a list of filters
-#' @param type can be "percent", "count" or "MFI" (MFI is currently not supported yet).
+#' @param type can be "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet). 
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
 #' @param ... other arguments passed to stat_position function
 #' @return
@@ -34,6 +34,10 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
   merge(stats, .pd2dt(pData(fs)), by = ".rownames") # merge with pdata
 }
 
+.stat_gate_name <- function(fs, gates, value = NULL, ...){
+  val <- sapply(gates, function(gate)gate@filterId)
+  data.table(gate_name = val, .rownames = names(val))
+}
 #' compute the proportion/percent of the cell population over the parent 
 #' 
 #' @inheritParams compute_stats

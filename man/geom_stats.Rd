@@ -16,7 +16,7 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
-\item{type}{can be "percent", "count" or "MFI" (MFI is currently not supported yet).}
+\item{type}{can be "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet).}
 
 \item{negated}{whether the gate needs to be negated}
 
@@ -43,4 +43,6 @@ p
 # add gate and stats layer
 p + geom_gate("CD4") + geom_stats()
 
+# display gate name
+p + geom_gate(c("CD4", "CD8")) + geom_stats(type = "gate_name")
 }
