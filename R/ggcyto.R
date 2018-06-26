@@ -278,7 +278,7 @@ as.ggplot <- function(x){
       e2.new <- eval(thisCall)
       attr(e2.new, "is.recorded") <- TRUE
       # update aes
-      stats_mapping <- aes_string(label = stat_type)
+      stats_mapping <- aes_string(label = "value")
       #add y aes for 1d density plot
       dims <- sapply(x$mapping,as.character)
       dims <- dims[grepl("[x|y]", names(dims))]

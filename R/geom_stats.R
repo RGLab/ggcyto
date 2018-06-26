@@ -24,9 +24,11 @@
 #' 
 #' # display gate name
 #' p + geom_gate(c("CD4", "CD8")) + geom_stats(type = "gate_name")
+#' # display gate name and percent
+#' p + geom_gate(c("CD4", "CD8")) + geom_stats(type = c("gate_name", "percent"))
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", negated = FALSE, adjust = 0.5
                        , label.padding = unit(0.05, "lines"), label.size = 0, digits = 3){
-  type <- match.arg(type, c("percent", "count", "gate_name"))
+  type <- unlist(lapply(type, function(stat_type)match.arg(stat_type, c("percent", "count", "gate_name"))))
   
   structure(
     list(gate = gate, value = value, type = type, negated = negated, adjust = adjust, digits = digits
