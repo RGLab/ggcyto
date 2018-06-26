@@ -173,10 +173,15 @@ add_ggcyto_gs <- function(e1, e2){
         
         #grab the pre-calculated stats
         if(is.null(value)){
-          if(stat_type == "count")
-            value <- lapply(gs, getTotal, y = node)
-          else if(stat_type == "percent")
-            value <- lapply(gs, getProp, y = node)
+          value <- lapply(stat_type, function(stype){
+            if(stype == "count")
+              lapply(gs, getTotal, y = node)
+            else if(stype == "percent")
+              lapply(gs, getProp, y = node)
+            else if(stype == "gate_name")
+              sapply(sampleNames(gs), function(sn)basename(node), simplify = FALSE)
+          })
+          
         }
         
        negated <- flowWorkspace:::isNegated(gs[[1]], node)

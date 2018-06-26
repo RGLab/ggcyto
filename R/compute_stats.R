@@ -7,7 +7,7 @@
 #' 
 #' @param fs flowSet. can be NULL when precaculated 'value' is provided
 #' @param gates a list of filters
-#' @param type can be "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet). 
+#' @param type a vector of strings to specify the stats types. can be any or multiple values of "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet). 
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
 #' @param ... other arguments passed to stat_position function
 #' @return
@@ -17,16 +17,36 @@
 #' @examples 
 #' data(GvHD)
 #' fs <- GvHD[1:4]
-#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+#' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)), filterId = "P1")
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' compute_stats(fs, rect.gates)
+#' compute_stats(fs, rect.gates, type = c("gate_name", "percent"))
 compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...){
   
   if(is.null(fs)&&(is.null(value)))
     stop("fs must be provided when 'value' is not supplied!")
-  
-  stat_func <- eval(as.symbol(paste(".stat", type, sep = "_")))
-  stats <- stat_func(fs, gates, value = value, ...)  
+  if(is.list(value))
+  {
+    if(length(value) != length(type))
+    {
+      if(length(type)==1)
+        value <- list(value)
+      else
+        stop("length of value is not consistent with the length of stats type vector!")
+    }
+  }
+  if(!is.list(value))
+    value <- list(value)
+  stats.list <- mapply(type, value, FUN = function(stat_type, val){
+    stat_func <- eval(as.symbol(paste(".stat", stat_type, sep = "_")))
+    stats <- stat_func(fs, gates, value = val, ...)  
+    stats
+  }, SIMPLIFY = FALSE)
+  #cat the multiple stats
+  stats <- Reduce(function(x,y){
+    val <- paste(x[, value], y[, value], sep = "\n")
+    x[, value := val]
+    }, x = stats.list)
   
   centroids <- stat_position(gates, ...)
   
@@ -35,8 +55,12 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
 }
 
 .stat_gate_name <- function(fs, gates, value = NULL, ...){
-  val <- sapply(gates, function(gate)gate@filterId)
-  data.table(gate_name = val, .rownames = names(val))
+  if(is.null(value))
+    value <- sapply(gates, function(gate)gate@filterId)
+  
+  value <- unlist(value)
+  
+  data.table(value = value, .rownames = names(value))
 }
 #' compute the proportion/percent of the cell population over the parent 
 #' 
@@ -57,7 +81,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
   value <- unlist(value)
   #format the calculated stats values
   value <- paste(format(value *100,digits=digits),"%",sep="")
-  stats <- data.table(percent = value, .rownames = sn) 
+  stats <- data.table(value = value, .rownames = sn) 
     
   stats
 }
@@ -77,7 +101,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
   }
   sn <- names(value)
   value <- unlist(value)
-  stats <- data.table(count = value, .rownames = sn) 
+  stats <- data.table(value = value, .rownames = sn) 
     
   stats
 }

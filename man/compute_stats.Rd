@@ -11,7 +11,7 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
 
 \item{gates}{a list of filters}
 
-\item{type}{can be "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet).}
+\item{type}{a vector of strings to specify the stats types. can be any or multiple values of "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet).}
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
 
@@ -31,7 +31,8 @@ This function is usually not called directly by user but used by ggcyto when geo
 \examples{
 data(GvHD)
 fs <- GvHD[1:4]
-rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
+rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)), filterId = "P1")
 rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 compute_stats(fs, rect.gates)
+compute_stats(fs, rect.gates, type = c("gate_name", "percent"))
 }
