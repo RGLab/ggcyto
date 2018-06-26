@@ -22,9 +22,11 @@
 #' # add gate and stats layer
 #' p + geom_gate("CD4") + geom_stats()
 #' 
+#' # display gate name
+#' p + geom_gate(c("CD4", "CD8")) + geom_stats(type = "gate_name")
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", negated = FALSE, adjust = 0.5
                        , label.padding = unit(0.05, "lines"), label.size = 0, digits = 3){
-  type <- match.arg(type, c("percent", "count"))
+  type <- match.arg(type, c("percent", "count", "gate_name"))
   
   structure(
     list(gate = gate, value = value, type = type, negated = negated, adjust = adjust, digits = digits

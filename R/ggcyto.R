@@ -189,8 +189,13 @@ as.ggplot <- function(x){
     }
     
   }
-  stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
-  stats_limits[["density"]] <- c(0,1e-4)
+  if(!is.null(data_range))
+  {
+    stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
+    stats_limits[["density"]] <- c(0,1e-4)
+    
+  }else
+    stats_limits <- NULL
   fs <- x[["fs"]]
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
@@ -231,7 +236,8 @@ as.ggplot <- function(x){
     #add default density range
     #In order to ensure the stats visiblity
     #try to put it closer to zero because we don't know the actual density range
-    data_range <- as.data.frame(data_range)
+    if(!is.null(data_range))
+      data_range <- as.data.frame(data_range)
     
     
     negated <- e2[["negated"]]
