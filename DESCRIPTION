@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.9.10
+Version: 1.9.11
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -13,7 +13,7 @@ Description: With the dedicated fortify method implemented for flowSet,
 VignetteBuilder: knitr
 Depends:
     methods,
-    ggplot2(>= 2.0.0),
+    ggplot2(>= 2.2.1.9000),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
     flowWorkspace(>= 3.17.24)
@@ -22,7 +22,8 @@ Imports:
     scales,
     data.table,
     RColorBrewer,
-    gridExtra
+    gridExtra,
+    rlang
 Suggests:
     testthat,
     flowWorkspaceData,
@@ -54,6 +55,7 @@ Collate:
     'ggcyto_flowSet.R'
     'labs.R'
     'ggcyto_par.R'
+    'ggplot_data_frame.R'
     'merge.quad.gates.R'
     'replace_data.R'
     'scales_flowCore_fasinh.R'
