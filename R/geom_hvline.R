@@ -44,6 +44,7 @@ GeomHVline <- ggproto("hvline", Geom,
                     draw_panel = function(data, panel_scales, coord) {
                       ranges <- coord$range(panel_scales)
                       
+                      
                       # determien whether x or y 
                       if("x"%in% colnames(data)){
                         axis.used <- "x"
@@ -52,7 +53,6 @@ GeomHVline <- ggproto("hvline", Geom,
                         axis.used <- "y"
                         axis.missing <- "x"
                       }
-                      
                       #fill values for the missing axis
                       thisRange <- ranges[[axis.missing]]  
                       data[[axis.missing]]    <- thisRange[1]
@@ -87,7 +87,7 @@ GeomHVline <- ggproto("hvline", Geom,
 #' is already facetted before this step and there is no way to access the facetted plot$data in order to
 #' reassign the 'panel' info for layer data.
 #' @importFrom plyr eval.quoted compact empty
-.my_compute_aesthetics <- function(self, data, plot) {
+.my_compute_aesthetics = function(self, data, plot) {
   # For annotation geoms, it is useful to be able to ignore the default aes
   if (self$inherit.aes) {
     aesthetics <- defaults(self$mapping, plot$mapping)
@@ -96,8 +96,7 @@ GeomHVline <- ggproto("hvline", Geom,
   }
   
   # Drop aesthetics that are set or calculated
-  set <- 
-    names(aesthetics) %in% names(self$aes_params)
+  set <- names(aesthetics) %in% names(self$aes_params)
   calculated <- ggplot2:::is_calculated_aes(aesthetics)
   aesthetics <- aesthetics[!set & !calculated]
   
@@ -106,28 +105,25 @@ GeomHVline <- ggproto("hvline", Geom,
     aesthetics[["group"]] <- self$aes_params$group
   }
   
-  # Old subsetting method
-  if (!is.null(self$subset)) {
-    include <- data.frame(plyr::eval.quoted(self$subset, data, plot$env))
-    data <- data[rowSums(include, na.rm = TRUE) == ncol(include), ]
-  }
-  
   ggplot2:::scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
-  
   #the two lines of hack for hvline:  
   # rm the missing axis from mapping aes so that 
   # it won't fail the following aesthetics evaluation 
-  aes_matched <-  sapply(aesthetics, as.character) %in% colnames(data)
+  aes_matched <-  sapply(aesthetics, quo_name) %in% colnames(data)
   aesthetics <- aesthetics[aes_matched]
   
   # Evaluate and check aesthetics
   aesthetics <- compact(aesthetics)
-  evaled <- lapply(aesthetics, eval, envir = data, enclos = plot$plot_env)
+  evaled <- lapply(aesthetics, rlang::eval_tidy, data = data)
   
   n <- nrow(data)
   if (n == 0) {
     # No data, so look at longest evaluated aesthetic
-    n <- max(vapply(evaled, length, integer(1)))
+    if (length(evaled) == 0) {
+      n <- 0
+    } else {
+      n <- max(vapply(evaled, length, integer(1)))
+    }
   }
   ggplot2:::check_aesthetics(evaled, n)
   
@@ -137,7 +133,8 @@ GeomHVline <- ggproto("hvline", Geom,
   } else {
     evaled$PANEL <- data$PANEL
   }
-  evaled <- data.frame(evaled, stringsAsFactors = FALSE)
+  evaled <- lapply(evaled, unname)
+  evaled <- ggplot2:::as_gg_data_frame(evaled)
   evaled <- ggplot2:::add_group(evaled)
   evaled
 }

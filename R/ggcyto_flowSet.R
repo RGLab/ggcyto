@@ -9,6 +9,7 @@
 #' @param ... ignored
 #' @method ggcyto flowSet
 #' @return a ggcyto_GatingSet object which is a subclass of ggcyto class.
+#' @importFrom rlang quo_name
 #' @export
 #' @examples
 #' 
@@ -44,15 +45,15 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
   fs <- data
   #instead of using ggplot.default method to contruct the ggplot object
   # we call the underlining s3 method directly to avoid foritying data at this stage
-  p <- ggplot2:::ggplot.data.frame(fs, mapping, ...)
+  p <- ggplot.data.frame(fs, mapping, ...)
   p[["layer.history"]] <- list()
   
   if(!missing(mapping)){
     p[["layer.history"]][["mapping"]] = mapping  
     
+    dims <- mapping[grepl("[x|y]", names(mapping))]
+    dims <- sapply(dims,quo_name)
     
-    dims <- sapply(mapping,as.character)
-    dims <- dims[grepl("[x|y]", names(dims))]
     
     #update x , y with actual channel name
     frm <- getFlowFrame(fs)
