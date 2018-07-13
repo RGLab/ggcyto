@@ -1,4 +1,4 @@
-#' copied from ggplot2 2.2.1 since it was removed from 2.3
+# copied from ggplot2 2.2.1 since it was removed from 2.3
 ggplot.data.frame <- function (data, mapping = aes(), ..., environment = parent.frame()) 
 {
   if (!missing(mapping) && !inherits(mapping, "uneval")) {
