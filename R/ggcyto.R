@@ -280,8 +280,8 @@ as.ggplot <- function(x){
       # update aes
       stats_mapping <- aes_string(label = "value")
       #add y aes for 1d density plot
-      dims <- sapply(x$mapping,as.character)
-      dims <- dims[grepl("[x|y]", names(dims))]
+      dims <- x$mapping[grepl("[x|y]", names(x$mapping))]
+      dims <- sapply(dims, quo_name)
       if(length(dims) == 1)
         stats_mapping <- defaults(stats_mapping, aes(y = density))
       e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
