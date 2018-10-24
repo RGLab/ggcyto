@@ -22,8 +22,8 @@ test_that("fs", {
   suppressWarnings(expect_doppelganger("ggcyto-fs-1d-density-black", p + geom_density(fill = "black")))  
   
   suppressWarnings(expect_doppelganger("ggcyto-fs-1d-density-alpha", ggcyto(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)))  
-  
-  suppressWarnings(expect_doppelganger("ggplot-fs-1d-density-black", ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)))  
+  #TODO:reproduce and fix this test case once cairo2.0 is installed on rhino
+  # suppressWarnings(expect_doppelganger("ggplot-fs-1d-density-black", ggplot(fs, aes(x = `FSC-H`, fill = name)) + geom_density(alpha = 0.2)))  
   
   p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
   p <- p + geom_hex(bins = 128)
