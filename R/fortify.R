@@ -114,15 +114,10 @@ fortify.GatingSet <- function(model, ...){
 #' Convert a polygonGate to a data.table useful for ggplot
 #' 
 #' It converts the boundaries slot into a data.table
-#' When 'nPoints' is supplied, the method tries to interpolate the polygon with more verticies.
 #' 
 #' 
 #' @param model polygonGate
 #' @param data data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.
-#' @param nPoints total number of vertices of the polygon after interpolation. Default is NULL, which is no interpolation.
-#'                 The actual number may be more or less based on the lengths of edges due to the maximun and minimum limits on each edge.
-#'                   Interpolation is mainly for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
-#'                    But it is not necessary for other purposes like centroid calculation.
 #' @param ... not used.
 #' 
 #' @export
@@ -131,106 +126,12 @@ fortify.GatingSet <- function(model, ...){
 #' sqrcut <- matrix(c(300,300,600,600,50,300,300,50),ncol=2,nrow=4)
 #' colnames(sqrcut) <- c("FSC-H","SSC-H")
 #' pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
-#' fortify(pg) #no interpolation
-#' fortify(pg, nPoints = 30) # with interpolation
+#' fortify(pg) 
 fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
   
   vertices <- model@boundaries
   chnls <- colnames(vertices)
-  
-  
-  
-  #reset the boundaries based on the current data range
-  #to prevent it from interpolating on too large space
-  #(thus lose the point when display is still at the scale of measured range)
-  #such situations are caused by  the infinity vetices from rectangle or the extended vertices during the gate parsing
-  #or the extreme coordinates stored in flowJo xml
-  #measurement range won't work , since the actual data range (meaningful data) could be beyond the measure_range
-  #update: now we want truncate gate at data range even when interpolation is no needed since stats location is
-  #based on the intersection of plot limits and gate boundary and we need to ensure it is within the gate boundary
-  if(!is.null(data)){
-    for(chnl in chnls){
-      thisVal <- vertices[, chnl] 
-      if(!chnl%in%colnames(data))
-        stop("gate dimension ", chnl, " not found in data!")
-      thisRg <- data[, chnl]
-      vertices[thisVal < thisRg[1], chnl] <- thisRg[1]
-      vertices[thisVal > thisRg[2], chnl] <- thisRg[2]
-    }  
-  }
-  
-  
-  if(is.null(nPoints)){
-    
-    new.vertices <- rbind(vertices, vertices[1,])#make sure geom_path will enclose the polygon by ending with the starting point
-  }else
-  {
-    
-
-    nVert <- nrow(vertices)
-    # compute distance between each pair of adjacent points
-    edges.lengths <- sapply(1:nVert, function(i){
-                     j <- ifelse(i < nVert, i + 1, 1)
-                     dist(vertices[c(i, j), ])[[1]]
-                  })
-    total.length <- sum(edges.lengths)
-    #determine the number of points to be interpolated for each edge
-    edges.lengths.norm <- edges.lengths/total.length
-    
-    if(nVert > 5){
-      #set cap for each edge to prevent the over-interpolation on the extended long edges
-      #The critieria to tell if it is extended gate is currently loose
-      #just by looking at the number of vertices, main idea is to exclude
-      #the rectangle gate
-      edges.lengths.norm <- sapply(edges.lengths.norm, function(i)min(i, 0.4))
-    }
-    
-    nEdge.points <- round(edges.lengths.norm * nPoints)
-    #set the lower limit to prevent under-interpolation on the short edges
-    nEdge.points <- sapply(nEdge.points, function(i)max(i,20))
-
-    #normalize data first
-#     vertices <- scale(vertices)
-#     sd <- attr(vertices, "scaled:scale")
-#     mu <- attr(vertices, "scaled:center")
-    
-    new.vertices <- .ldply(1:nVert, function(i){
-      j <- ifelse(i < nVert, i + 1, 1)
-      thisPair <- vertices[c(i, j),]
-      
-      xx <- thisPair[,1]
-      yy <- thisPair[,2]
-      
-      nOut <- max(2, nEdge.points[i]) # at least 2 to preserve orginal points
-      # interpolate more points to prevent it from losing its shape by xlim/ylim
-      if(xx[1] == xx[2]){
-        new.points <- list(x = rep(xx[1], nOut)
-                          , y = seq(yy[1], yy[2], (yy[2] - yy[1])/(nOut-1))
-                          )
-      }else{
-        
-        new.points <- approx(x = xx, y = yy, n = nOut) 
-        #approx tends to goes from left to right regardless of the order of original points
-        #we try to reverse it when needed
-        
-        if(xx[1] > xx[2]){
-          new.points[["x"]] <- rev(new.points[["x"]])
-          new.points[["y"]] <- rev(new.points[["y"]])
-        }  
-      }
-  #     plot(thisPair, xlim =range(vertices[,1]), ylim =range(vertices[,2]))
-  #     text(new.points,labels = 1:nOut,  col = "red")
-      as.data.table(new.points)
-    })
-    
-  
-#     new.vertices <- sweep(new.vertices , 2L,  sd, "*")
-#     new.vertices <- sweep(new.vertices , 2L,  mu, "+")
-  
-#     plot(vertices, type = "l")
-#     polygon(new.vertices, col = "red")
-  }
-  
+  new.vertices <- rbind(vertices, vertices[1,])#make sure geom_path will enclose the polygon by ending with the starting point
   dt <- as.data.table(new.vertices)
   setnames(dt, chnls)
   dt
@@ -263,8 +164,6 @@ fortify.ellipsoidGate <- function(model, data = NULL, ...){
 #' It tries to merge with pData that is associated with filterList as attribute 'pd'
   
 #' @param model filterList
-#' @param data data range used for polygon interpolation
-#' @param nPoints used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @param ... not used.
 #' 
 #' @importFrom plyr name_rows
@@ -279,8 +178,9 @@ fortify.ellipsoidGate <- function(model, data = NULL, ...){
 fortify.filterList <- function(model, data = NULL, nPoints = NULL, ...){
       # convert each filter to df
       df <- .ldply(model, fortify
-                      , data = data
-                      , nPoints = nPoints, .id = ".rownames")
+                      # , data = data
+                      # , nPoints = nPoints
+                   , .id = ".rownames")
     
       pd <- attr(model,"pd")
       if(!is.null(pd)){
@@ -291,7 +191,7 @@ fortify.filterList <- function(model, data = NULL, nPoints = NULL, ...){
         df <- merge(df, pd, by = ".rownames")  
         attr(df, "annotated") <- TRUE
       }
-      attr(df, "nPoints") <- nPoints
+      # attr(df, "nPoints") <- nPoints
       
     df
 }

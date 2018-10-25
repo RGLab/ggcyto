@@ -169,7 +169,13 @@ add_ggcyto <- function(e1, e2, e2name){
     e1[["layer.history"]][[length(e1[["layer.history"]]) + 1]] <- e2
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
-  if(is.ggproto(e2)){
+  if(is.Coord(e2))
+  {
+    #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
+    #so that it won't be applied later on
+    e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+  }else if(is.ggproto(e2)){
+    
     layer_data <- e2$data  
     if(!is.null(layer_data)){
         pd <- .pd2dt(pData(fs))
@@ -277,17 +283,40 @@ add_ggcyto <- function(e1, e2, e2name){
     e1[["GeomStats"]] <- c(e1[["GeomStats"]], list(e2)) #stats needs to be compputed after limits is set at as.ggplot function
     return(e1)
   }else if (is.ggcyto_par(e2)) {
-    # store the ggcyto pars for the lazy-eval elements
-    e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
-    # apply the non-lazy-eval elements right away
-    to_apply <- e2[!names(e2) %in% .lazy_element] 
-    
-    for(element in names(to_apply)){
+      
+    for(element in names(e2)){
       #skip hex_fill for 1d plot
       
       if(element == "hex_fill" && nrow(dims) == 1)
         next
-      e2.new <- to_apply[[element]]
+      e2.new <- e2[[element]]
+      #apply instrument range to limits
+      if(element == "limits" ){
+            instrument_range <- e1[["instrument_range"]]
+            if(is.list(e2.new))
+            {
+              this_limits <- e2.new
+            }else if(is.character(e2.new))
+            {
+              this_limits <- list()
+              if(e2.new == "instrument")
+              {
+                for(aes_name in dims[, axis])
+                  this_limits[[aes_name]] <- instrument_range[, dims[axis == aes_name, name]]    
+              }else if(e2.new == "data")
+              {
+                # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
+                e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
+                next
+              }else
+                stop("invalid 'limits' setting!")
+            
+            }
+            #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
+            #so that it won't be applied later on
+            e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+            e2.new <- coord_cartesian(xlim = this_limits[["x"]], ylim = this_limits[["y"]])
+      }
       attr(e2.new, "is.recorded") <- TRUE
       e1 <- e1 + e2.new
     }

@@ -152,35 +152,17 @@ as.ggplot <- function(x){
       x <- x + new.scale
     }
     ind <- which(x$scales$find(this_aes))
-    #set the default limits if it has not been set
-    if(is.null(x$scales$scales[[ind]][["limits"]])){
-      par_limits <- x$ggcyto_pars[["limits"]]
-      if(is.list(par_limits)){
-        this_limits <- par_limits[[this_aes]]
-      }else if(is.character(par_limits)){
-        if(par_limits == "instrument")
-          this_limits <- instrument_range[, dim]
-        else if(par_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
-          this_limits <- data_range[, dim]
-        else
-          this_limits <- NULL
-      }
+    #apply lazy limits setting
+    par_limits <- x$ggcyto_pars[["limits"]]
+    if(is.character(par_limits)&&par_limits == "data")
+    {
+      this_limits <- data_range[, dim]
+      x$coordinates[["limits"]][[this_aes]] <- this_limits
       
-      if(!is.null(par_limits)){
+    }else if(!is.null(par_limits))
+      stop("How did you end up here?")
         
-        #trans the given limits if trans is also present
-        thisTrans <- x$scales$scales[[ind]][["trans"]]
-        if(is(thisTrans, "trans"))
-        {
-          trans[[dim]] <- thisTrans
-          this_limits <- thisTrans[["transform"]](this_limits)
-        }
-          
-        x$scales$scales[[ind]][["limits"]] <- this_limits
-      }
-        
-    }
-    stats_limits[[dim]] <- x$scales$scales[[ind]][["limits"]]
+    stats_limits[[dim]] <- x$coordinates[["limits"]][[this_aes]]
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
     if(!is.null(thisBreaks)){
@@ -189,7 +171,7 @@ as.ggplot <- function(x){
     }
     
   }
-  if(!is.null(data_range))
+  if(!is.null(data_range)&&length(stats_limits)!=0)
   {
     stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
     stats_limits[["density"]] <- c(0,1e-4)
