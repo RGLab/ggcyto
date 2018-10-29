@@ -7,3 +7,7 @@ First submission
 ----------------------------------------------------------------
 
 add data replacement feature through %+% operator
+
+1.9.14
+----------------------------------------------------------------
+Regenerate figs using ggplot3.1.0&FreeType 2.8
