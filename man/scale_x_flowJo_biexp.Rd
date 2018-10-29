@@ -5,11 +5,11 @@
 \alias{scale_y_flowJo_biexp}
 \title{Add a flowJo biexponential scale to the x or y axes of a ggcyto plot.}
 \usage{
-scale_x_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
-  neg = 0, equal.space = FALSE)
+scale_x_flowJo_biexp(..., maxValue = 262144, widthBasis = -10,
+  pos = 4.5, neg = 0, equal.space = FALSE)
 
-scale_y_flowJo_biexp(..., maxValue = 262144, widthBasis = -10, pos = 4.5,
-  neg = 0, equal.space = FALSE)
+scale_y_flowJo_biexp(..., maxValue = 262144, widthBasis = -10,
+  pos = 4.5, neg = 0, equal.space = FALSE)
 }
 \arguments{
 \item{...}{common continuous scale parameters passed to 'continuous_scale' (not used currently)}

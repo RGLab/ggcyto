@@ -3,6 +3,7 @@
 #' data.table version of ldply
 #' @param .data a list
 #' @return a data.table
+#' @noRd 
 .ldply <- function (.data,  ..., .id = NA) 
 {
   index <- names(.data)
@@ -22,6 +23,7 @@
 #' @param  .fun the function to apply to each element of .data
 #' @param ... other arguments passed to .fun
 #' @param .id see help(ldply)
+#' @noRd 
 .do_loop <- function(index, .data, .fun = NULL, ..., .id = NA){
 
   lapply(index, function(i){
@@ -40,6 +42,7 @@
 }
 #' convert a flowSet to a data.table
 #' @param .data flowSet
+#' @noRd 
 .fsdply <- function (.data, ..., .id = NA) 
 {
 

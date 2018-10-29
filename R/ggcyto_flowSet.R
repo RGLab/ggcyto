@@ -153,7 +153,7 @@ is.ggcyto_flowSet <- function(x){
 #' @export
 setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
-
+#'@importFrom rlang !!!
 add_ggcyto <- function(e1, e2, e2name){
 
   dims <- attr(e1[["fs"]], "dims")
@@ -339,7 +339,7 @@ add_ggcyto <- function(e1, e2, e2name){
                                   )
                         
     }
-    e2 <- labs(lab_txt)
+    e2 <- labs(!!!lab_txt)
     
   }else if(is.theme(e2)){
     #have to take care of theme object since it inherits gg class and will
@@ -405,6 +405,7 @@ is.geom_gate_filterList <- function(layer){
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
+#' @noRd 
 .filterList2dataframe <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)

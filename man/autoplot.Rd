@@ -21,10 +21,10 @@
 \method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC-A",
   bins = 30, axis_inverse_trans = TRUE, ...)
 
-\method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A", bool = FALSE,
-  arrange.main = sampleNames(object), arrange = TRUE, merge = TRUE,
-  projections = list(), strip.text = c("parent", "gate"), path = "auto",
-  ...)
+\method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A",
+  bool = FALSE, arrange.main = sampleNames(object), arrange = TRUE,
+  merge = TRUE, projections = list(), strip.text = c("parent",
+  "gate"), path = "auto", ...)
 }
 \arguments{
 \item{object}{The data source. A core cytometry data structure. A flowFrame, flowSet, GatingSet or GatingHierarchy object}

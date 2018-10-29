@@ -87,6 +87,7 @@ GeomHVline <- ggproto("hvline", Geom,
 #' is already facetted before this step and there is no way to access the facetted plot$data in order to
 #' reassign the 'panel' info for layer data.
 #' @importFrom plyr eval.quoted compact empty
+#' @noRd 
 .my_compute_aesthetics = function(self, data, plot) {
   # For annotation geoms, it is useful to be able to ignore the default aes
   if (self$inherit.aes) {

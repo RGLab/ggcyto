@@ -6,6 +6,7 @@
 #' @return data.table
 #' @import data.table
 #' @export
+#' @noRd 
 .fr2dt <- function(x, ...){
   as.data.table(exprs(x))
 }
@@ -18,6 +19,7 @@
 #' @param x flowSet
 #' @return data.table
 #' @export
+#' @noRd 
 .fs2dt <- function(x, ...){
   
   thisFilter <- attr(x, "filter")#must to get attr here before it is lost during subsetting
@@ -51,6 +53,7 @@ fortify.flowFrame <- function(model, data, ...){
 }
 
 #' convert pData to data.table
+#' @noRd 
 .pd2dt <- function(pd){
   pd <- as.data.table(pd, keep.rownames = TRUE)
   setnames(pd, "rn", ".rownames")

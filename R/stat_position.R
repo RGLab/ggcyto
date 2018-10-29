@@ -22,6 +22,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
 }
 
 #' replace infinite values 
+#' @noRd 
 .fixInf <- function(x)
 {
 
@@ -51,6 +52,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
  }
 
 #' @param data_range a two-row data.frame. Each column is a a range for a specific channel. First row is min, Second row is max.
+#' @noRd 
 .stat_position_filter <- function(gate, negated = FALSE, adjust = 0.5, abs = FALSE, data_range = NULL, limits = NULL, ...){
   
   params <- parameters(gate)
