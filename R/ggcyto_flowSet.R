@@ -376,6 +376,7 @@ is.geom_gate_filterList <- function(layer){
 #' (no longer needed since the data is now not foritfied until print.ggcyo)
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
+#' @noRd 
 .filterList2dataframe <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
