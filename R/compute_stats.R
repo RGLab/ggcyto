@@ -66,6 +66,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
 #' 
 #' @inheritParams compute_stats
 #' @param digits control the percent format
+#' @noRd 
 .stat_percent <- function(fs, gates, digits = 3, value = NULL, negated = FALSE, ...){
   if(is.null(value)){
     # compute the stats
@@ -89,6 +90,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
 #' compute the event count of the cell population
 #' 
 #' @inheritParams compute_stats
+#' @noRd 
 .stat_count <- function(fs, gates, value = NULL, negated = FALSE, ...){
   if(is.null(value)){
     fres <- filter(fs, gates)
@@ -109,6 +111,7 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
 #' compute the MFI of the cell population
 #' 
 #' @inheritParams compute_stats
+#' @noRd 
 .stat_MFI <- function(fs, gates, digits = 3, negated = FALSE, ...){
   stop("MFI not supported yet!")
   fs_sub <- Subset(fs, gates)

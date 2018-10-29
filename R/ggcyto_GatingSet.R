@@ -235,6 +235,7 @@ add_ggcyto_gs <- function(e1, e2){
 #' @rdname ggcyto_GatingSet_add
 setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
 #' match the subpopulation based on the given projections and parentID
+#' @noRd 
 .getChildren_by_projection <- function(gs, parentID, x, y){
   cids <- getChildren(gs[[1]], parentID, showHidden = FALSE, path = "auto")
   if(length(cids)>0)
