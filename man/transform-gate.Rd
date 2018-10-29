@@ -42,6 +42,4 @@ the transformed filter/filterList object
 }
 \description{
 rescale the gate coordinates with the transformation provided
-
-transform methods for gates
 }
