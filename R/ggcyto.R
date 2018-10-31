@@ -149,14 +149,7 @@ as.ggplot <- function(x){
   for(this_aes in aes_names)
   {
     dim <- dims[axis == this_aes, name]
-    # set limits
-    if(!x$scales$has_scale(this_aes))
-    {
-      #add new one if not present 
-      new.scale <- ggplot2:::make_scale("continuous", this_aes)
-      x <- x + new.scale
-    }
-    ind <- which(x$scales$find(this_aes))
+   
     #apply lazy limits setting
     par_limits <- x$ggcyto_pars[["limits"]]
     if(is.character(par_limits)&&par_limits == "data")
@@ -171,6 +164,14 @@ as.ggplot <- function(x){
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
     if(!is.null(thisBreaks)){
+      # set limits
+      if(!x$scales$has_scale(this_aes))
+      {
+        #add new one if not present 
+        new.scale <- ggplot2:::make_scale("continuous", this_aes)
+        x <- x + new.scale
+      }
+      ind <- which(x$scales$find(this_aes))
       x$scales$scales[[ind]]$breaks <- thisBreaks[["at"]]
       x$scales$scales[[ind]]$labels <- thisBreaks[["label"]]  
     }
