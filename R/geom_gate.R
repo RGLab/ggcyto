@@ -83,10 +83,10 @@ geom_gate.filterList <- function(data, ...){
   }
   
   #record nPoints for the interpolation later on triggered by fortify  
-  attr(data, "nPoints") <- nPoints
+  # attr(data, "nPoints") <- nPoints
   
   #must explicitly fortify it since ggplot only does it during the layer$new method 
-  # data <- fortify(data, nPoints = nPoints) 
+  data <- fortify(data)
 
   #tag this data.table so that ggcyo wrapper can recongnize it
   # class(data) <- c("geom_gate_filterList", class(data))
@@ -119,12 +119,12 @@ geom_gate_impl.polygonGate <- function(data, mapping = NULL, fill = "transparent
   
   #To proper interpolate the polygon we need to pass nPoints
   # so we need to avoid the fority process triggered by geom_path$new here (by not passing the data)
-  path_layer <- geom_path(mapping = mapping, data = NULL , colour = colour, ...) 
+  path_layer <- geom_path(mapping = mapping, data = data , colour = colour, ...) 
   #record nPoints for the interpolation later on triggered by fortify  
-  attr(data, "nPoints") <- nPoints
-  #now we can saftely assign the data
-  path_layer[["data"]] <- data
-  
+  # attr(data, "nPoints") <- nPoints
+  # #now we can saftely assign the data
+  # path_layer[["data"]] <- data
+  # 
   path_layer
   
 }
