@@ -191,12 +191,24 @@ as.ggplot <- function(x){
     e2 <- x$layers[[i]]
     #override default bindwidth that is based on the entire scale limits
     #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
-    if(is(e2$geom, "GeomHex") && is.null(e2$stat_params[["binwidth"]]))
+    if(is(e2$geom, "GeomHex"))
     {
-      dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
-      e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+      bw <- e2$stat_params[["binwidth"]]
+      bins <- e2$stat_params[["bins"]]
+      if(is.null(bins)||length(bins)==0)
+      {
+        bins <- formals(stat_bin_hex)[["bins"]]
+      }
+      
+      if(is.null(bw)||length(bw)==0)
+      {
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
+        x$layers[[i]] <- e2  
+      }
+      
     }
-    x$layers[[i]] <- e2
+    
   }
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
