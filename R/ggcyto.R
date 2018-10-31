@@ -128,7 +128,12 @@ as.ggplot <- function(x){
   
   #data needs to be fortified here if geom_gate was not added
   if(!is(x[["data"]], "data.table")){
-    x[["data"]] <- fortify(x[["data"]])
+    if(is(x[["data"]], "GatingSet")){#check if it is currently gs
+      x[["data"]] <- fortify(x[["gs"]]) # only x[["gs"]] carries necessary attributes for fortify
+    }else if(is(x[["data"]], "flowSet"))
+      x[["data"]] <- fortify(x[["fs"]])
+    else
+      stop("unknow data type!")
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
   }else
@@ -179,6 +184,19 @@ as.ggplot <- function(x){
   }else
     stats_limits <- NULL
   fs <- x[["fs"]]
+  #retrospect geom_hex layer to fix binwidth
+  for(i in seq_along(x$layers))
+  {
+    e2 <- x$layers[[i]]
+    #override default bindwidth that is based on the entire scale limits
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex") && is.null(e2$stat_params[["binwidth"]]))
+    {
+      dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+      e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+    }
+    x$layers[[i]] <- e2
+  }
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
   {
@@ -191,11 +209,7 @@ as.ggplot <- function(x){
       gates_parsed <- lapply(x$layers, function(layer){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-          .filterList2dataframe(layer$data, colnames(pd))
-        # else if(isTRUE(layer[["is_1d_gate"]]))
-        # {
-        #   .gate2dataframe(layer$data)
-        # }
+          .dataframe2filterList(layer$data, colnames(pd))
         else
           NULL
       })

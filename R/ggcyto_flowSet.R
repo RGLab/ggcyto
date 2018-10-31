@@ -175,39 +175,23 @@ add_ggcyto <- function(e1, e2, e2name){
     #so that it won't be applied later on
     e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
   }else if(is.ggproto(e2)){
-    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
-    if(is(e2$geom, "GeomHex"))
-    {
-
-        #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range 
-        #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
-        if(!is(flowData, "data.table")){ #check if already fortified
-          if(!is.null(gs)){#check if it is currently gs
-            fs <- fortify_fs(gs)
-            attr(fs, "dims") <- dims
-            attr(fs, "filter") <- filter
-            e1[["fs"]] <- fs
-          }
-          dt <- fortify(fs)
-          if(nrow(dt)>0)
-          {
-            data_range <- apply(dt[, chnl, with = FALSE], 2, range)
-            rownames(data_range) <- c("min", "max")
-          }
-          else
-            data_range <- NULL
-
-          e1[["data_range"]] <- data_range
-          e1$data <- dt
-        }
-        
-        if(is.null(e2$stat_params[["binwidth"]]))
-        {
-          dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
-          e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
-        }
+    layer_data <- e2$data  
+    if(!is.null(layer_data)){
+      pd <- .pd2dt(pData(fs))
     }
-
+    
+    if(is(layer_data, "filterList")){
+      
+      if(!isTRUE(attr(layer_data, "pd")))
+        attr(layer_data, "pd") <- pd
+      #do the lazy-fortify here since we  may need the pd info from main flow data
+      
+      layer_data <- fortify(layer_data)
+      
+      attr(layer_data, "annotated") <- TRUE
+      e2$data <- layer_data
+      
+    }
   }else if(is(e2, "filter.layer")){#coerce filter to filterList to ensure the consistent behavior later for other layers
     e2$data <- filterList(sapply(sampleNames(fs), function(x)e2$filter))
     thisCall <- quote(geom_gate(data = e2$data))
@@ -390,7 +374,7 @@ is.geom_gate_filterList <- function(layer){
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
 #' @noRd 
-.filterList2dataframe <- function(df, pcols = ".rownames"){
+.dataframe2filterList <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
   df <- df[, c(markers, ".rownames"), with = FALSE]
@@ -400,14 +384,14 @@ is.geom_gate_filterList <- function(layer){
     
     sub_df[[".rownames"]] <- NULL
     
-    .gate2dataframe(sub_df)    
+    .dataframe2gate(sub_df)    
   })
   
   filterList(glist)
 }
 
 # Convert data.frame back to original gate format
-.gate2dataframe <- function(df){
+.dataframe2gate <- function(df){
   markers <- colnames(df)
   nDim <- length(markers)
   if(nDim == 2){
