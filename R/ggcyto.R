@@ -120,7 +120,8 @@ as.ggplot <- function(x){
   #####################
   #lazy-fortifying the plot data
   #####################
-  dims <- attr(x[["fs"]], "dims")
+  fs <- x[["fs"]]
+  dims <- attr(fs, "dims")
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
@@ -128,12 +129,13 @@ as.ggplot <- function(x){
   
   #data needs to be fortified here if geom_gate was not added
   if(!is(x[["data"]], "data.table")){
+    
     if(is(x[["data"]], "GatingSet")){#check if it is currently gs
-      x[["data"]] <- fortify(x[["gs"]]) # only x[["gs"]] carries necessary attributes for fortify
-    }else if(is(x[["data"]], "flowSet"))
-      x[["data"]] <- fortify(x[["fs"]])
-    else
-      stop("unknow data type!")
+      fs  <- fortify_fs(x[["gs"]]) # only x[["gs"]] carries necessary attributes for fortify
+      attr(fs ,"dims") <- dims # reattach dims
+    }
+    
+    x[["data"]] <- fortify(fs)
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
   }else
@@ -184,7 +186,7 @@ as.ggplot <- function(x){
     
   }else
     stats_limits <- NULL
-  fs <- x[["fs"]]
+  
   #retrospect geom_hex layer to fix binwidth
   for(i in seq_along(x$layers))
   {
