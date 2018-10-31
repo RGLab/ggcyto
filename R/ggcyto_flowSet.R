@@ -175,55 +175,39 @@ add_ggcyto <- function(e1, e2, e2name){
     #so that it won't be applied later on
     e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
   }else if(is.ggproto(e2)){
-    
-    # layer_data <- e2$data  
-    # if(!is.null(layer_data)){
-    #     pd <- .pd2dt(pData(fs))
-    # }
-    
-    # if(is(layer_data, "filterList")){
-    #   
-    #     if(!isTRUE(attr(layer_data, "pd")))
-    #         attr(layer_data, "pd") <- pd
-    #             
-    #     #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range for the reasonable gate interpolation
-    #     #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
-    #     if(!is(flowData, "data.table")){ #check if already fortified
-    #       if(!is.null(gs)){#check if it is currently gs
-    #         fs <- fortify_fs(gs)  
-    #         attr(fs, "dims") <- dims
-    #         attr(fs, "filter") <- filter
-    #         e1[["fs"]] <- fs
-    #       }
-    #       dt <- fortify(fs)
-    #       if(nrow(dt)>0)
-    #       {
-    #         data_range <- apply(dt[, chnl, with = FALSE], 2, range)
-    #         rownames(data_range) <- c("min", "max")  
-    #       }
-    #       else
-    #         data_range <- NULL
-    #       
-    #       e1[["data_range"]] <- data_range
-    #       e1$data <- dt
-    #     }
-    #       
-    #     
-        
-          
-          #do the lazy-fortify here since we need the range info from main flow data
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex"))
+    {
 
-          # layer_data <- fortify(layer_data
-                                         # , data = e1[["data_range"]]
-                                         # , nPoints = attr(layer_data, "nPoints")
-                                         # ) 
-                          
-        # attr(layer_data, "annotated") <- TRUE
-        # e2$data <- layer_data
-                
+        #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range 
+        #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
+        if(!is(flowData, "data.table")){ #check if already fortified
+          if(!is.null(gs)){#check if it is currently gs
+            fs <- fortify_fs(gs)
+            attr(fs, "dims") <- dims
+            attr(fs, "filter") <- filter
+            e1[["fs"]] <- fs
+          }
+          dt <- fortify(fs)
+          if(nrow(dt)>0)
+          {
+            data_range <- apply(dt[, chnl, with = FALSE], 2, range)
+            rownames(data_range) <- c("min", "max")
+          }
+          else
+            data_range <- NULL
+
+          e1[["data_range"]] <- data_range
+          e1$data <- dt
+        }
         
-    # }
-    
+        if(is.null(e2$stat_params[["binwidth"]]))
+        {
+          dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+          e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+        }
+    }
+
   }else if(is(e2, "filter.layer")){#coerce filter to filterList to ensure the consistent behavior later for other layers
     e2$data <- filterList(sapply(sampleNames(fs), function(x)e2$filter))
     thisCall <- quote(geom_gate(data = e2$data))
