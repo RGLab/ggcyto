@@ -135,7 +135,6 @@ as.ggplot <- function(x){
       
     }else
       fs <- x[["data"]]
-    
     x[["data"]] <- fortify(fs)
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
@@ -191,6 +190,14 @@ as.ggplot <- function(x){
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
     if(!is.null(thisBreaks)){
+      # set limits
+      if(!x$scales$has_scale(this_aes))
+      {
+        #add new one if not present 
+        new.scale <- ggplot2:::make_scale("continuous", this_aes)
+        x <- x + new.scale
+      }
+      ind <- which(x$scales$find(this_aes))
       x$scales$scales[[ind]]$breaks <- thisBreaks[["at"]]
       x$scales$scales[[ind]]$labels <- thisBreaks[["label"]]  
     }
@@ -203,6 +210,32 @@ as.ggplot <- function(x){
     
   }else
     stats_limits <- NULL
+  
+  #retrospect geom_hex layer to fix binwidth
+  for(i in seq_along(x$layers))
+  {
+    e2 <- x$layers[[i]]
+    #override default bindwidth that is based on the entire scale limits
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex"))
+    {
+      bw <- e2$stat_params[["binwidth"]]
+      bins <- e2$stat_params[["bins"]]
+      if(is.null(bins)||length(bins)==0)
+      {
+        bins <- formals(stat_bin_hex)[["bins"]]
+      }
+      
+      if(is.null(bw)||length(bw)==0)
+      {
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
+        x$layers[[i]] <- e2  
+      }
+      
+    }
+    
+  }
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
   {
@@ -215,11 +248,7 @@ as.ggplot <- function(x){
       gates_parsed <- lapply(x$layers, function(layer){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-          .filterList2dataframe(layer$data, colnames(pd))
-        # else if(isTRUE(layer[["is_1d_gate"]]))
-        # {
-        #   .gate2dataframe(layer$data)
-        # }
+          .dataframe2filterList(layer$data, colnames(pd))
         else
           NULL
       })

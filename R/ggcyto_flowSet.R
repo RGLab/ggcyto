@@ -170,6 +170,24 @@ add_ggcyto <- function(e1, e2, e2name){
     #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
     #so that it won't be applied later on
     e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+  }else if(is.ggproto(e2)){
+    layer_data <- e2$data  
+    if(!is.null(layer_data)){
+      pd <- .pd2dt(pData(fs))
+    }
+    
+    if(is(layer_data, "filterList")){
+      
+      if(!isTRUE(attr(layer_data, "pd")))
+        attr(layer_data, "pd") <- pd
+      #do the lazy-fortify here since we  may need the pd info from main flow data
+      
+      layer_data <- fortify(layer_data)
+      
+      attr(layer_data, "annotated") <- TRUE
+      e2$data <- layer_data
+      
+    }
   }else if(is(e2, "filter.layer")){#coerce filter to filterList to ensure the consistent behavior later for other layers
     e2$data <- filterList(sapply(sampleNames(fs), function(x)e2$filter))
     thisCall <- quote(geom_gate(data = e2$data))
@@ -352,7 +370,7 @@ is.geom_gate_filterList <- function(layer){
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
 #' @noRd 
-.filterList2dataframe <- function(df, pcols = ".rownames"){
+.dataframe2filterList <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
   df <- df[, c(markers, ".rownames"), with = FALSE]
@@ -362,14 +380,14 @@ is.geom_gate_filterList <- function(layer){
     
     sub_df[[".rownames"]] <- NULL
     
-    .gate2dataframe(sub_df)    
+    .dataframe2gate(sub_df)    
   })
   
   filterList(glist)
 }
 
 # Convert data.frame back to original gate format
-.gate2dataframe <- function(df){
+.dataframe2gate <- function(df){
   markers <- colnames(df)
   nDim <- length(markers)
   if(nDim == 2){
