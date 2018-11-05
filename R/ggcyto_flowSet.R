@@ -72,7 +72,6 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     if(is.null(filter)&&is.finite(max_nrow_to_plot))
       filter <- sampleFilter(size = max_nrow_to_plot)
     attr(fs, "filter") <- filter
-    p[["fs"]] <- fs  
     p[["data"]] <- fs #update data as well
     p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
     
@@ -155,13 +154,10 @@ setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
 #'@importFrom rlang !!!
 add_ggcyto <- function(e1, e2, e2name){
-
-  dims <- attr(e1[["fs"]], "dims")
-  filter <- attr(e1[["fs"]], "filter")
+  fs <- e1[["data"]]
+  dims <- attr(fs, "dims")
   chnl <- dims[, name]
-  flowData <- e1$data
-  gs <- e1[["gs"]]
-  fs <- e1[["fs"]]
+
   is.recorded <- attr(e2, "is.recorded")
   if(is.null(is.recorded))
     is.recorded <- FALSE
@@ -174,40 +170,6 @@ add_ggcyto <- function(e1, e2, e2name){
     #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
     #so that it won't be applied later on
     e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
-  }else if(is.ggproto(e2)){
-    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
-    if(is(e2$geom, "GeomHex"))
-    {
-
-        #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range 
-        #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
-        if(!is(flowData, "data.table")){ #check if already fortified
-          if(!is.null(gs)){#check if it is currently gs
-            fs <- fortify_fs(gs)
-            attr(fs, "dims") <- dims
-            attr(fs, "filter") <- filter
-            e1[["fs"]] <- fs
-          }
-          dt <- fortify(fs)
-          if(nrow(dt)>0)
-          {
-            data_range <- apply(dt[, chnl, with = FALSE], 2, range)
-            rownames(data_range) <- c("min", "max")
-          }
-          else
-            data_range <- NULL
-
-          e1[["data_range"]] <- data_range
-          e1$data <- dt
-        }
-        
-        if(is.null(e2$stat_params[["binwidth"]]))
-        {
-          dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
-          e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
-        }
-    }
-
   }else if(is(e2, "filter.layer")){#coerce filter to filterList to ensure the consistent behavior later for other layers
     e2$data <- filterList(sapply(sampleNames(fs), function(x)e2$filter))
     thisCall <- quote(geom_gate(data = e2$data))
@@ -333,10 +295,10 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is(e2, "logicalGates")){
     
     if(is(fs, "GatingSet")){
-      thisfs <- getData(gs)  
+      thisfs <- getData(fs)  
       #make sure pass on subset attr here so that lazy-fortify will succeed in as.ggplot call. 
       #otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
-      attr(e1[["data"]], "subset") <- attr(gs, "subset")
+      attr(e1[["data"]], "subset") <- attr(fs, "subset")
     }else{
       thisfs <- fs
     }

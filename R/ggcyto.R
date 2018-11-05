@@ -120,21 +120,44 @@ as.ggplot <- function(x){
   #####################
   #lazy-fortifying the plot data
   #####################
-  dims <- attr(x[["fs"]], "dims")
+  dims <- attr(x[["data"]], "dims")
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
   instrument_range <- x[["instrument_range"]]
-  
+  dtype <- class(x[["data"]])
+  gs <- fs <- NULL
   #data needs to be fortified here if geom_gate was not added
-  if(!is(x[["data"]], "data.table")){
-    x[["data"]] <- fortify(x[["data"]])
+  if(dtype != "data.table"){
+    if(dtype %in% c("GatingSet", "GatingSetList")){#check if it is currently gs
+      gs <- x[["data"]]
+      fs <- fortify_fs(gs)
+      
+    }else
+      fs <- x[["data"]]
+    
+    x[["data"]] <- fortify(fs)
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
   }else
     data_range <- x[["data_range"]]
   
-
+  #post process geom_hex layers 
+  for(i in seq_along(x$layers))
+  {
+    e2 <- x$layers[[i]]
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex"))
+    {
+      
+      if(is.null(e2$stat_params[["binwidth"]]))
+      {
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+        x$layers[[i]] <- e2
+      }
+    }
+  }
   #####################
   #update default scales
   #####################
@@ -149,7 +172,9 @@ as.ggplot <- function(x){
     {
       #add new one if not present 
       new.scale <- ggplot2:::make_scale("continuous", this_aes)
-      x <- x + new.scale
+      
+      x <- ggplot2:::`+.gg`(x, new.scale)      
+      
     }
     ind <- which(x$scales$find(this_aes))
     #apply lazy limits setting
@@ -178,7 +203,6 @@ as.ggplot <- function(x){
     
   }else
     stats_limits <- NULL
-  fs <- x[["fs"]]
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
   {
@@ -271,9 +295,7 @@ as.ggplot <- function(x){
       x <- ggplot2:::`+.gg`(x, e2.new)      
     }
   }
-  #clear the raw data format
-  x[["fs"]] <- NULL
-  x[["gs"]] <- NULL 
+  
   #strip the ggcyto class attributes
   asS3(x)
 }
