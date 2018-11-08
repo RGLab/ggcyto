@@ -10,7 +10,7 @@
                       , lab = labs_cyto("both") 
                       )
 }
-.lazy_element <- c("limits")
+# .lazy_element <- c("limits")
 #' Set some default parameters for ggcyto
 #'
 #'

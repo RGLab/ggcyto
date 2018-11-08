@@ -20,14 +20,10 @@
 #' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
 #'
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
-  gs <- data
-  attr(gs, "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
-
-  p <- ggcyto.flowSet(data = gs, mapping = mapping, ...)
-  # p[["layer.history"]][["type"]] = "gs"
+  p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
+  attr(p[["data"]], "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
   p[["layer.history"]][["subset"]] = subset
-  attr(gs, "filter") <- attr(p[["data"]], "filter")#copy the attr over
-  p[["gs"]] <- gs
+
   
   p <- p + labs(title  = subset)
   
@@ -91,14 +87,13 @@ add_ggcyto_gs <- function(e1, e2){
   
   plot_mapping <- e1$mapping
   prj <- sapply(plot_mapping, quo_name)
-  gs <- e1[["gs"]]
-  
+
   is.recorded <- attr(e2, "is.recorded")
   if(is.null(is.recorded))
     is.recorded <- FALSE
   if(!is.recorded)
     e1[["layer.history"]][[length(e1[["layer.history"]]) + 1]] <- e2
-  
+  gs <- e1[["data"]]
     
   parent <- attr(gs, "subset")
   if(is(e2, "overlay.node")){
@@ -125,7 +120,7 @@ add_ggcyto_gs <- function(e1, e2){
     #instantiate the subset/parent info
     if(parent == "_parent_"){
       parent <- getParent(gs[[1]], nodes[[1]])
-      attr(e1[["gs"]], "subset") <- parent
+      attr(e1[["data"]], "subset") <- parent
     }
 
     if(e1$labels[["title"]] == "_parent_")

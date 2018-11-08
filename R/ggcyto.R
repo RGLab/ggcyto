@@ -120,21 +120,43 @@ as.ggplot <- function(x){
   #####################
   #lazy-fortifying the plot data
   #####################
-  dims <- attr(x[["fs"]], "dims")
+  dims <- attr(x[["data"]], "dims")
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
   instrument_range <- x[["instrument_range"]]
-  
+  dtype <- class(x[["data"]])
+  gs <- fs <- NULL
   #data needs to be fortified here if geom_gate was not added
-  if(!is(x[["data"]], "data.table")){
-    x[["data"]] <- fortify(x[["data"]])
+  if(dtype != "data.table"){
+    if(dtype %in% c("GatingSet", "GatingSetList")){#check if it is currently gs
+      gs <- x[["data"]]
+      fs <- fortify_fs(gs)
+      
+    }else
+      fs <- x[["data"]]
+    x[["data"]] <- fortify(fs)
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
   }else
     data_range <- x[["data_range"]]
   
-
+  #post process geom_hex layers 
+  for(i in seq_along(x$layers))
+  {
+    e2 <- x$layers[[i]]
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex"))
+    {
+      
+      if(is.null(e2$stat_params[["binwidth"]]))
+      {
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+        x$layers[[i]] <- e2
+      }
+    }
+  }
   #####################
   #update default scales
   #####################
@@ -149,54 +171,71 @@ as.ggplot <- function(x){
     {
       #add new one if not present 
       new.scale <- ggplot2:::make_scale("continuous", this_aes)
-      x <- x + new.scale
+      
+      x <- ggplot2:::`+.gg`(x, new.scale)      
+      
     }
     ind <- which(x$scales$find(this_aes))
-    #set the default limits if it has not been set
-    if(is.null(x$scales$scales[[ind]][["limits"]])){
-      par_limits <- x$ggcyto_pars[["limits"]]
-      if(is.list(par_limits)){
-        this_limits <- par_limits[[this_aes]]
-      }else if(is.character(par_limits)){
-        if(par_limits == "instrument")
-          this_limits <- instrument_range[, dim]
-        else if(par_limits == "data")#need to scale by flow data only in case gate data screw up the entire scale
-          this_limits <- data_range[, dim]
-        else
-          this_limits <- NULL
-      }
+    #apply lazy limits setting
+    par_limits <- x$ggcyto_pars[["limits"]]
+    if(is.character(par_limits)&&par_limits == "data")
+    {
+      this_limits <- data_range[, dim]
+      x$coordinates[["limits"]][[this_aes]] <- this_limits
       
-      if(!is.null(par_limits)){
+    }else if(!is.null(par_limits))
+      stop("How did you end up here?")
         
-        #trans the given limits if trans is also present
-        thisTrans <- x$scales$scales[[ind]][["trans"]]
-        if(is(thisTrans, "trans"))
-        {
-          trans[[dim]] <- thisTrans
-          this_limits <- thisTrans[["transform"]](this_limits)
-        }
-          
-        x$scales$scales[[ind]][["limits"]] <- this_limits
-      }
-        
-    }
-    stats_limits[[dim]] <- x$scales$scales[[ind]][["limits"]]
+    stats_limits[[dim]] <- x$coordinates[["limits"]][[this_aes]]
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
     if(!is.null(thisBreaks)){
+      # set limits
+      if(!x$scales$has_scale(this_aes))
+      {
+        #add new one if not present 
+        new.scale <- ggplot2:::make_scale("continuous", this_aes)
+        x <- x + new.scale
+      }
+      ind <- which(x$scales$find(this_aes))
       x$scales$scales[[ind]]$breaks <- thisBreaks[["at"]]
       x$scales$scales[[ind]]$labels <- thisBreaks[["label"]]  
     }
     
   }
-  if(!is.null(data_range))
+  if(!is.null(data_range)&&length(stats_limits)!=0)
   {
     stats_limits <- as.data.frame(stats_limits, check.names = FALSE)
     stats_limits[["density"]] <- c(0,1e-4)
     
   }else
     stats_limits <- NULL
-  fs <- x[["fs"]]
+  
+  #retrospect geom_hex layer to fix binwidth
+  for(i in seq_along(x$layers))
+  {
+    e2 <- x$layers[[i]]
+    #override default bindwidth that is based on the entire scale limits
+    #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
+    if(is(e2$geom, "GeomHex"))
+    {
+      bw <- e2$stat_params[["binwidth"]]
+      bins <- e2$stat_params[["bins"]]
+      if(is.null(bins)||length(bins)==0)
+      {
+        bins <- formals(stat_bin_hex)[["bins"]]
+      }
+      
+      if(is.null(bw)||length(bw)==0)
+      {
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
+        x$layers[[i]] <- e2  
+      }
+      
+    }
+    
+  }
   #lazy parsing stats layer since the stats_limits is set at the end
   for(e2 in x[["GeomStats"]])
   {
@@ -209,11 +248,7 @@ as.ggplot <- function(x){
       gates_parsed <- lapply(x$layers, function(layer){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
-          .filterList2dataframe(layer$data, colnames(pd))
-        # else if(isTRUE(layer[["is_1d_gate"]]))
-        # {
-        #   .gate2dataframe(layer$data)
-        # }
+          .dataframe2filterList(layer$data, colnames(pd))
         else
           NULL
       })
@@ -289,9 +324,7 @@ as.ggplot <- function(x){
       x <- ggplot2:::`+.gg`(x, e2.new)      
     }
   }
-  #clear the raw data format
-  x[["fs"]] <- NULL
-  x[["gs"]] <- NULL 
+  
   #strip the ggcyto class attributes
   asS3(x)
 }

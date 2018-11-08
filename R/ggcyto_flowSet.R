@@ -72,7 +72,6 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     if(is.null(filter)&&is.finite(max_nrow_to_plot))
       filter <- sampleFilter(size = max_nrow_to_plot)
     attr(fs, "filter") <- filter
-    p[["fs"]] <- fs  
     p[["data"]] <- fs #update data as well
     p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
     
@@ -155,13 +154,10 @@ setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
 #'@importFrom rlang !!!
 add_ggcyto <- function(e1, e2, e2name){
-
-  dims <- attr(e1[["fs"]], "dims")
-  filter <- attr(e1[["fs"]], "filter")
+  fs <- e1[["data"]]
+  dims <- attr(fs, "dims")
   chnl <- dims[, name]
-  flowData <- e1$data
-  gs <- e1[["gs"]]
-  fs <- e1[["fs"]]
+
   is.recorded <- attr(e2, "is.recorded")
   if(is.null(is.recorded))
     is.recorded <- FALSE
@@ -169,55 +165,29 @@ add_ggcyto <- function(e1, e2, e2name){
     e1[["layer.history"]][[length(e1[["layer.history"]]) + 1]] <- e2
   # modifying e2 layer by adding pd attribute to layered data 
   # it is used solely for geom_gate.filterList layer
-  if(is.ggproto(e2)){
+  if(is.Coord(e2))
+  {
+    #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
+    #so that it won't be applied later on
+    e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+  }else if(is.ggproto(e2)){
     layer_data <- e2$data  
     if(!is.null(layer_data)){
-        pd <- .pd2dt(pData(fs))
+      pd <- .pd2dt(pData(fs))
     }
     
     if(is(layer_data, "filterList")){
       
-        if(!isTRUE(attr(layer_data, "pd")))
-            attr(layer_data, "pd") <- pd
-                
-        #try to fortify the flow data(if it has not been fortified yet) here in order to get actual data range for the reasonable gate interpolation
-        #can't do it ealier than this because 'subset` attribute of gs won't be necessarily set until gate layer is added
-        if(!is(flowData, "data.table")){ #check if already fortified
-          if(!is.null(gs)){#check if it is currently gs
-            fs <- fortify_fs(gs)  
-            attr(fs, "dims") <- dims
-            attr(fs, "filter") <- filter
-            e1[["fs"]] <- fs
-          }
-          dt <- fortify(fs)
-          if(nrow(dt)>0)
-          {
-            data_range <- apply(dt[, chnl, with = FALSE], 2, range)
-            rownames(data_range) <- c("min", "max")  
-          }
-          else
-            data_range <- NULL
-          
-          e1[["data_range"]] <- data_range
-          e1$data <- dt
-        }
-          
-        
-        
-          
-          #do the lazy-fortify here since we need the range info from main flow data
-
-          layer_data <- fortify(layer_data
-                                         , data = e1[["data_range"]]
-                                         , nPoints = attr(layer_data, "nPoints")
-                                         ) 
-                          
-        attr(layer_data, "annotated") <- TRUE
-        e2$data <- layer_data
-                
-        
+      if(!isTRUE(attr(layer_data, "pd")))
+        attr(layer_data, "pd") <- pd
+      #do the lazy-fortify here since we  may need the pd info from main flow data
+      
+      layer_data <- fortify(layer_data)
+      
+      attr(layer_data, "annotated") <- TRUE
+      e2$data <- layer_data
+      
     }
-    
   }else if(is(e2, "filter.layer")){#coerce filter to filterList to ensure the consistent behavior later for other layers
     e2$data <- filterList(sapply(sampleNames(fs), function(x)e2$filter))
     thisCall <- quote(geom_gate(data = e2$data))
@@ -277,17 +247,40 @@ add_ggcyto <- function(e1, e2, e2name){
     e1[["GeomStats"]] <- c(e1[["GeomStats"]], list(e2)) #stats needs to be compputed after limits is set at as.ggplot function
     return(e1)
   }else if (is.ggcyto_par(e2)) {
-    # store the ggcyto pars for the lazy-eval elements
-    e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
-    # apply the non-lazy-eval elements right away
-    to_apply <- e2[!names(e2) %in% .lazy_element] 
-    
-    for(element in names(to_apply)){
+      
+    for(element in names(e2)){
       #skip hex_fill for 1d plot
       
       if(element == "hex_fill" && nrow(dims) == 1)
         next
-      e2.new <- to_apply[[element]]
+      e2.new <- e2[[element]]
+      #apply instrument range to limits
+      if(element == "limits" ){
+            instrument_range <- e1[["instrument_range"]]
+            if(is.list(e2.new))
+            {
+              this_limits <- e2.new
+            }else if(is.character(e2.new))
+            {
+              this_limits <- list()
+              if(e2.new == "instrument")
+              {
+                for(aes_name in dims[, axis])
+                  this_limits[[aes_name]] <- instrument_range[, dims[axis == aes_name, name]]    
+              }else if(e2.new == "data")
+              {
+                # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
+                e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
+                next
+              }else
+                stop("invalid 'limits' setting!")
+            
+            }
+            #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
+            #so that it won't be applied later on
+            e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+            e2.new <- coord_cartesian(xlim = this_limits[["x"]], ylim = this_limits[["y"]])
+      }
       attr(e2.new, "is.recorded") <- TRUE
       e1 <- e1 + e2.new
     }
@@ -320,10 +313,10 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is(e2, "logicalGates")){
     
     if(is(fs, "GatingSet")){
-      thisfs <- getData(gs)  
+      thisfs <- getData(fs)  
       #make sure pass on subset attr here so that lazy-fortify will succeed in as.ggplot call. 
       #otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
-      attr(e1[["data"]], "subset") <- attr(gs, "subset")
+      attr(e1[["data"]], "subset") <- attr(fs, "subset")
     }else{
       thisfs <- fs
     }
@@ -377,7 +370,7 @@ is.geom_gate_filterList <- function(layer){
 #' @importFrom plyr dlply
 #' @param pcols the pData columns
 #' @noRd 
-.filterList2dataframe <- function(df, pcols = ".rownames"){
+.dataframe2filterList <- function(df, pcols = ".rownames"){
   
   markers <- setdiff(colnames(df), pcols)
   df <- df[, c(markers, ".rownames"), with = FALSE]
@@ -387,14 +380,14 @@ is.geom_gate_filterList <- function(layer){
     
     sub_df[[".rownames"]] <- NULL
     
-    .gate2dataframe(sub_df)    
+    .dataframe2gate(sub_df)    
   })
   
   filterList(glist)
 }
 
 # Convert data.frame back to original gate format
-.gate2dataframe <- function(df){
+.dataframe2gate <- function(df){
   markers <- colnames(df)
   nDim <- length(markers)
   if(nDim == 2){
