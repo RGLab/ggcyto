@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.11.1
+Version: 1.11.2
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -36,7 +36,7 @@ Suggests:
     vdiffr
 License: Artistic-2.0
 URL: https://github.com/RGLab/ggcyto/issues
-biocViews: FlowCytometry, CellBasedAssays, Infrastructure, Visualization
+biocViews: ImmunoOncology, FlowCytometry, CellBasedAssays, Infrastructure, Visualization
 Collate: 
     'AllClasses.R'
     'autoplot.R'
