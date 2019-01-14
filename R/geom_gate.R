@@ -107,7 +107,7 @@ geom_gate.filter <- function(data, mapping = NULL, fill = "transparent", colour 
                             ,...)
     )
     , class = c("filter.layer", "ggcyto_virtual_layer")
-  ) 
+  )
 }
 
 
@@ -129,7 +129,7 @@ geom_gate_impl.rectangleGate <- function(data, mapping = NULL, fill = "transpare
   param <- parameters(data)
   nDim <- length(param)
   if (nDim ==  2){
-    geom_gate(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, nPoints = nPoints, ...)
+    geom_gate_impl(data = as(data, "polygonGate"), mapping = mapping, fill = fill, colour = colour, nPoints = nPoints, ...)
   }else if(nDim ==  1){
 
      layer <- geom_hvline(data = data, colour = colour, ...)
