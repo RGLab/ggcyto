@@ -12,7 +12,10 @@ test_that("autoplot -- flowset", {
 
 
 test_that("autoplot -- gatingset", {
-  
+ #exaggerate the gate difference between two samples in order to test whether plot will refect it
+  g <- getGate(gs[[2]], "CD3")
+  g@min[1] <- 1800
+  setGate(gs[[2]], "CD3", g)
   suppressWarnings(expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3")))
   suppressWarnings(expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19"))))
   
