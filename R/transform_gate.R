@@ -1,4 +1,4 @@
-#' transform methods for gates
+#' rescale methods for gates
 #' 
 #' rescale the gate coordinates with the transformation provided
 #' 
@@ -37,11 +37,11 @@ setMethod("transform", signature = c("filterList"), function(`_data`, ...){
     for(p in names(trans@transforms))
     {
       if(p %in% dims)
-        `_data` <- transform_gate(`_data`, trans@transforms[[p]]@f, p)
+        `_data` <- rescale_gate(`_data`, trans@transforms[[p]]@f, p)
     }
     `_data`
   }else if(is(trans, "function"))
-    transform_gate(`_data`, trans, ...)
+    rescale_gate(`_data`, trans, ...)
   else
     stop("unsupported `trans` type!")
 }
@@ -49,14 +49,14 @@ setMethod("transform", signature = c("filterList"), function(`_data`, ...){
 #' transform methods for gates
 #' @export
 #' @rdname transform-gate
-transform_gate <- function(gate, trans, param)UseMethod("transform_gate")
+rescale_gate <- function(gate, trans, param)UseMethod("rescale_gate")
 
 #' @param gate gate object
 #' @param trans the transformation function
 #' @param param the parameter/dimension to be transformed. 
 #' @export
 #' @rdname transform-gate
-transform_gate.polygonGate <- function(gate, trans, param){
+rescale_gate.polygonGate <- function(gate, trans, param){
   gate@boundaries[, param] <- trans(gate@boundaries[, param])
   gate
 }
@@ -64,11 +64,11 @@ transform_gate.polygonGate <- function(gate, trans, param){
 
 #' @export
 #' @rdname transform-gate
-transform_gate.ellipsoidGate <- function(gate, ...){
-  transform_gate(as(gate, "polygonGate"), ...)
+rescale_gate.ellipsoidGate <- function(gate, ...){
+  rescale_gate(as(gate, "polygonGate"), ...)
 }
 # somehow ellips shape is not well perseved after transforming the two antipods and mean
-transform_gate_old_ellipsoidGate <- function(gate, trans, param){
+rescale_gate_old_ellipsoidGate <- function(gate, trans, param){
   #convert cov format to antipotal format since cov can not be transformed independently on each param
   #it is based on 5.3.1 of gatingML2 doc
   mu <- gate@mean
@@ -141,7 +141,7 @@ transform_gate_old_ellipsoidGate <- function(gate, trans, param){
 
 #' @export
 #' @rdname transform-gate
-transform_gate.rectangleGate <- function(gate, trans, param){
+rescale_gate.rectangleGate <- function(gate, trans, param){
 
   min <- gate@min[[param]]
   if(!is.infinite(min))
@@ -157,7 +157,7 @@ transform_gate.rectangleGate <- function(gate, trans, param){
 
 #' @export
 #' @rdname transform-gate
-transform_gate.quadGate <- function(gate, trans, param){
+rescale_gate.quadGate <- function(gate, trans, param){
 
   boundary <- gate@boundary[[param]]
   if(!is.infinite(boundary))
