@@ -4,26 +4,26 @@
 \name{transform,filter-method}
 \alias{transform,filter-method}
 \alias{transform,filterList-method}
-\alias{transform_gate}
-\alias{transform_gate.polygonGate}
-\alias{transform_gate.ellipsoidGate}
-\alias{transform_gate.rectangleGate}
-\alias{transform_gate.quadGate}
-\title{transform methods for gates}
+\alias{rescale_gate}
+\alias{rescale_gate.polygonGate}
+\alias{rescale_gate.ellipsoidGate}
+\alias{rescale_gate.rectangleGate}
+\alias{rescale_gate.quadGate}
+\title{rescale methods for gates}
 \usage{
 \S4method{transform}{filter}(`_data`, ...)
 
 \S4method{transform}{filterList}(`_data`, ...)
 
-transform_gate(gate, trans, param)
+rescale_gate(gate, trans, param)
 
-\method{transform_gate}{polygonGate}(gate, trans, param)
+\method{rescale_gate}{polygonGate}(gate, trans, param)
 
-\method{transform_gate}{ellipsoidGate}(gate, ...)
+\method{rescale_gate}{ellipsoidGate}(gate, ...)
 
-\method{transform_gate}{rectangleGate}(gate, trans, param)
+\method{rescale_gate}{rectangleGate}(gate, trans, param)
 
-\method{transform_gate}{quadGate}(gate, trans, param)
+\method{rescale_gate}{quadGate}(gate, trans, param)
 }
 \arguments{
 \item{_data}{the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.}
