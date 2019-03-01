@@ -11,11 +11,6 @@
 
 \item{data}{data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.}
 
-\item{nPoints}{total number of vertices of the polygon after interpolation. Default is NULL, which is no interpolation.
-The actual number may be more or less based on the lengths of edges due to the maximun and minimum limits on each edge.
-  Interpolation is mainly for the purpose of plotting (so that it won't lose its shape from subsetting through 'limits').
-   But it is not necessary for other purposes like centroid calculation.}
-
 \item{...}{not used.}
 }
 \value{
@@ -23,12 +18,10 @@ data.table
 }
 \description{
 It converts the boundaries slot into a data.table
-When 'nPoints' is supplied, the method tries to interpolate the polygon with more verticies.
 }
 \examples{
 sqrcut <- matrix(c(300,300,600,600,50,300,300,50),ncol=2,nrow=4)
 colnames(sqrcut) <- c("FSC-H","SSC-H")
 pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
-fortify(pg) #no interpolation
-fortify(pg, nPoints = 30) # with interpolation
+fortify(pg) 
 }
