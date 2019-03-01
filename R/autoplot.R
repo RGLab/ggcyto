@@ -43,6 +43,7 @@
 #' #To display the gate name
 #' #autoplot(gh , strip.text = "gate")
 #' @export
+#' @export autoplot
 autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
 
   # check the dimensions
