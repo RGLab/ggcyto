@@ -9,10 +9,6 @@
 \arguments{
 \item{model}{filterList}
 
-\item{data}{data range used for polygon interpolation}
-
-\item{nPoints}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
-
 \item{...}{not used.}
 }
 \value{
