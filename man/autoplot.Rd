@@ -53,7 +53,7 @@
 
 \item{strip.text}{either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE}
 
-\item{path}{the gating path format (passed to \link{getNodes})}
+\item{path}{the gating path format (passed to \link{gs_get_pop_paths})}
 }
 \value{
 a ggcyto object

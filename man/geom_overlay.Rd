@@ -47,7 +47,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 p <- autoplot(gs, "CD3+")
 
 # add a flowSet as the overlay
-fs <- getData(gs, "DPT")
+fs <- gs_get_data(gs, "DPT")
 p + geom_overlay(data = fs, size = 0.3, alpha = 0.7)
 
 # add overlay layer by gate name

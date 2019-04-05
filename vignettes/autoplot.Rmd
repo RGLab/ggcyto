@@ -59,7 +59,7 @@ autoplot(gs, c("CD3", "CD19"), bins = 64)
 Multiple cell populations with their asssociated gates can be plotted in different panels of the same plot.
 ```{r, fig.width = 4, fig.height=3}
 gh <- gs[[1]]
-nodes <- getNodes(gh, path = "auto")[c(3:6)]
+nodes <- gs_get_pop_paths(gh, path = "auto")[c(3:6)]
 nodes
 
 autoplot(gh, nodes, bins = 64)

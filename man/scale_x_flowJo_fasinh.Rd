@@ -12,7 +12,7 @@ scale_y_flowJo_fasinh(..., m = 4, t = 1200)
 \arguments{
 \item{...}{common continuous scale parameters passed to 'continuous_scale' (not used currently)}
 
-\item{m, t}{see 'help(flowJo.fasinh')}
+\item{m, t}{see 'help(flowjo_fasinh')}
 }
 \value{
 ScaleContinuous object

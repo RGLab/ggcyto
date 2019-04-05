@@ -129,7 +129,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
     #determine dimensions from gate
-    g <- getGate(object[[1]], gate[1])
+    g <- gh_get_gate(object[[1]], gate[1])
     params <- parameters(g)
     nDims <- length(params)
     if(nDims == 1){
@@ -157,7 +157,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
 #' @param merge wehther to merge multiple gates into the same panel when they share the same parent and projections
 #' @param projections a list of customized projections
 #' @param strip.text either "parent" (the parent population name) or "gate "(the gate name). The latter usually is used when merge is FALSE
-#' @param path the gating path format (passed to \link{getNodes})
+#' @param path the gating path format (passed to \link{gs_get_pop_paths})
 #' @importFrom gridExtra arrangeGrob
 #' @export
 #' @rdname autoplot
@@ -169,14 +169,14 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                          , ...){
   strip.text <- match.arg(strip.text)
   if(missing(gate)){
-    gate <- getNodes(object, path = path)
+    gate <- gs_get_pop_paths(object, path = path)
     gate <- setdiff(gate,"root")
   }else if (is.numeric(gate)){
-    gate <- getNodes(object, path = path)[gate]
+    gate <- gs_get_pop_paths(object, path = path)[gate]
   }
 
   #match given axis to channel names
-  fr <- getData(object, use.exprs = FALSE)
+  fr <- gh_get_data(object, use.exprs = FALSE)
   projections <- lapply(projections, function(thisPrj){
     sapply(thisPrj, function(thisAxis)getChannelMarker(fr, thisAxis)[["name"]])
   })
@@ -192,7 +192,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
 
     }else{
       gate <- plotObjs
-      parent <- getParent(object, gate, path = path)
+      parent <- gs_get_parent(object, gate, path = path)
       myPrj <- projections[[as.character(gate)]]
     }
 

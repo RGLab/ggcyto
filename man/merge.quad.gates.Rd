@@ -26,10 +26,10 @@ dataDir <- system.file("extdata",package="flowWorkspaceData")
 gs <- load_gs(file.path(dataDir, "gs_manual"))
 #get the GatingHierarchy object
 gh <- gs[[1]]
-pops <- getChildren(gh, "CD4")
+pops <- gs_get_children(gh, "CD4")
 grps  <- ggcyto:::merge.quad.gates(gh, pops)
 length(grps) # pops are grouped into two
 grps[[1]] # each group is annotaed with quadGate information
 
-ggcyto:::merge.quad.gates(gh, getChildren(gh, "CD3+")) # cd3 subsets are not coercible to quadgate thus return as they are
+ggcyto:::merge.quad.gates(gh, gs_get_children(gh, "CD3+")) # cd3 subsets are not coercible to quadgate thus return as they are
 }
