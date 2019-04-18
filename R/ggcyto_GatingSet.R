@@ -98,7 +98,7 @@ add_ggcyto_gs <- function(e1, e2){
   parent <- attr(gs, "subset")
   if(is(e2, "overlay.node")){
     node <- e2[["node"]]  
-    fs.overlay <- gs_get_data(gs, node)
+    fs.overlay <- gs_pop_get_data(gs, node)
     
     thisCall <- quote(geom_overlay(fs.overlay))
     thisCall <- as.call(c(as.list(thisCall), e2[["overlay_params"]]))
@@ -119,7 +119,7 @@ add_ggcyto_gs <- function(e1, e2){
     }
     #instantiate the subset/parent info
     if(parent == "_parent_"){
-      parent <- gs_get_parent(gs[[1]], nodes[[1]])
+      parent <- gs_pop_get_parent(gs[[1]], nodes[[1]])
       attr(e1[["data"]], "subset") <- parent
     }
 
@@ -128,11 +128,11 @@ add_ggcyto_gs <- function(e1, e2){
     
     for(node in nodes)
     {
-      gate <- filterList(gs_get_gate(gs, node))
+      gate <- filterList(gs_pop_get_gate(gs, node))
       #must convert bool gate to indices since
       #flowset doesn't know about booleanFilter
       if(is(gate[[1]], "booleanFilter"))
-        gate <- lapply(gs, gh_get_indices, y = node)
+        gate <- lapply(gs, gh_pop_get_indices, y = node)
       
       thisCall <- quote(geom_gate(gate))
       thisCall <- as.call(c(as.list(thisCall), e2[["gate_params"]]))
@@ -160,7 +160,7 @@ add_ggcyto_gs <- function(e1, e2){
     if(is.character(gates)){#if it is character then use it as node names
       #update the gate argument with the actual gates
       for(node in gates){
-        gates <- filterList(gs_get_gate(gs, node))
+        gates <- filterList(gs_pop_get_gate(gs, node))
        
         stat_type <- e2[["type"]]
         value <- e2[["value"]]
@@ -170,16 +170,16 @@ add_ggcyto_gs <- function(e1, e2){
         if(is.null(value)){
           value <- lapply(stat_type, function(stype){
             if(stype == "count")
-              lapply(gs, gh_get_count, y = node)
+              lapply(gs, gh_pop_get_count, y = node)
             else if(stype == "percent")
-              lapply(gs, gh_get_proportion, y = node)
+              lapply(gs, gh_pop_get_proportion, y = node)
             else if(stype == "gate_name")
               sapply(sampleNames(gs), function(sn)basename(node), simplify = FALSE)
           })
           
         }
         
-       negated <- flowWorkspace:::gh_is_negated(gs[[1]], node)
+       negated <- flowWorkspace:::gh_pop_is_negated(gs[[1]], node)
        thisCall <- quote(geom_stats(gates))
        
        thisCall <- as.call(c(as.list(thisCall)
@@ -232,13 +232,13 @@ setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
 #' match the subpopulation based on the given projections and parentID
 #' @noRd 
 .getChildren_by_projection <- function(gs, parentID, x, y){
-  cids <- gs_get_children(gs[[1]], parentID, showHidden = FALSE, path = "auto")
+  cids <- gs_pop_get_children(gs[[1]], parentID, showHidden = FALSE, path = "auto")
   if(length(cids)>0)
   {
     #try to match to projections
     
     isMatched<-lapply(cids,function(cid){
-      g<-gh_get_gate(gs[[1]],cid)
+      g<-gh_pop_get_gate(gs[[1]],cid)
       if(class(g)!="booleanFilter") 
       {
         prj<-parameters(g)

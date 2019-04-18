@@ -69,7 +69,7 @@ p + labs_cyto("channel") #default is "both"
 # overlay another population 'IgD-CD27-' as dots on top of the existing plot
 p + geom_overlay("IgD-CD27-", alpha = 0.5, size = 0.1, color = "purple")
 # plot a population without gate
-fs <- gs_get_data(gs, "CD20") #extract the gated data as a flowSet
+fs <- gs_pop_get_data(gs, "CD20") #extract the gated data as a flowSet
 autoplot(fs, "CD20", "CD19") #plot 2D
 ```
 ```{r}

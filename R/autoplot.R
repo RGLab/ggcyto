@@ -129,7 +129,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
     stop("Must specifiy 'gate'!")
   if(is.null(x)){
     #determine dimensions from gate
-    g <- gh_get_gate(object[[1]], gate[1])
+    g <- gh_pop_get_gate(object[[1]], gate[1])
     params <- parameters(g)
     nDims <- length(params)
     if(nDims == 1){
@@ -176,7 +176,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
   }
 
   #match given axis to channel names
-  fr <- gh_get_data(object, use.exprs = FALSE)
+  fr <- gh_pop_get_data(object, use.exprs = FALSE)
   projections <- lapply(projections, function(thisPrj){
     sapply(thisPrj, function(thisAxis)getChannelMarker(fr, thisAxis)[["name"]])
   })
@@ -192,7 +192,7 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
 
     }else{
       gate <- plotObjs
-      parent <- gs_get_parent(object, gate, path = path)
+      parent <- gs_pop_get_parent(object, gate, path = path)
       myPrj <- projections[[as.character(gate)]]
     }
 
