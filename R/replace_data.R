@@ -33,6 +33,7 @@
 #' #replace the data with gs2 and see the same visual effect
 #' p %+% gs2
 #' 
+setGeneric("%+%")
 setMethod("%+%", c("ggcyto"),function(e1,e2)replace.ggcyto.data(e1,e2))
 
 replace.ggcyto.data <- function(e1, e2){
