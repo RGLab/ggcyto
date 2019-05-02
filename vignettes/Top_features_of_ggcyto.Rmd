@@ -41,13 +41,13 @@ ggplot(gs, aes(x = `<B710-A>`, y = `<R780-A>`)) + geom_hex(bins = 128) + scale_f
 
 #### `flowSet/ncdfFlowSet/flowFrame` 
 ```{r}
-fs <- getData(gs, "CD3+")
+fs <- gs_pop_get_data(gs, "CD3+")
 ggplot(fs, aes(x = `<B710-A>`)) + geom_density(fill = "blue", alpha= 0.5)
 ```
 
 #### `gates`
 ```{r}
-gates <- filterList(getGate(gs, "CD8"))
+gates <- filterList(gs_pop_get_gate(gs, "CD8"))
 ggplot(gs, aes(x = `<B710-A>`, y = `<R780-A>`)) + geom_hex(bins = 128) + geom_polygon(data = gates, fill = "transparent", col = "purple")
 ```
 
@@ -109,7 +109,7 @@ p + geom_gate(gate_1d_h)
 gate_rect <- rectangleGate("<B710-A>" = c(gate_1d_v@min, 4e3), "<R780-A>" = c(gate_1d_h@min, 4e3))
 p + geom_gate(gate_rect)
 #ellipsoid Gate
-gate_ellip <- getGate(gs[[1]], "CD4")
+gate_ellip <- gh_pop_get_gate(gs[[1]], "CD4")
 class(gate_ellip)
 p + geom_gate(gate_ellip)
 ```
@@ -178,7 +178,7 @@ Layout many gate plots on the same page
 When plooting a `GatingHierarchy`, multiple cell populations with their asssociated gates can be plotted in different panels of the same plot.
 ```{r, fig.height = 4}
 gh <- gs[[1]]
-nodes <- getNodes(gh, path = "auto")[c(3:9, 14)]
+nodes <- gs_get_pop_paths(gh, path = "auto")[c(3:9, 14)]
 nodes
 p <- autoplot(gh, nodes, bins = 64)
 class(p)
@@ -196,7 +196,7 @@ plot(gt)
 
 or even combine it with other `ggcyto_GatingLayout` objects(or any `gtable` objects) and print it on the sampe page
 ```{r}
-p2 <- autoplot(getData(gh, "CD3+")[,5:8]) # some density plot
+p2 <- autoplot(gh_pop_get_data(gh, "CD3+")[,5:8]) # some density plot
 p2@arrange.main <- ""#clear the default title
 gt2 <- ggcyto_arrange(p2, nrow = 1)
 

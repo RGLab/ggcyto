@@ -14,12 +14,12 @@
 #' gs <- load_gs(file.path(dataDir, "gs_manual"))
 #' #get the GatingHierarchy object
 #' gh <- gs[[1]]
-#' pops <- getChildren(gh, "CD4")
+#' pops <- gs_pop_get_children(gh, "CD4")
 #' grps  <- ggcyto:::merge.quad.gates(gh, pops)
 #' length(grps) # pops are grouped into two
 #' grps[[1]] # each group is annotaed with quadGate information
 #'
-#' ggcyto:::merge.quad.gates(gh, getChildren(gh, "CD3+")) # cd3 subsets are not coercible to quadgate thus return as they are
+#' ggcyto:::merge.quad.gates(gh, gs_pop_get_children(gh, "CD3+")) # cd3 subsets are not coercible to quadgate thus return as they are
 merge.quad.gates <- function(gh, pops, bool = TRUE){
   #split pops into groups based on parent and projections
   groups <- flowWorkspace:::.mergeGates(gh, pops, bool = bool, merge = TRUE)
@@ -36,7 +36,7 @@ merge.quad.gates <- function(gh, pops, bool = TRUE){
         env[["isQuad"]] <- TRUE
         #extract coord and check the number of points first
         points.list <- lapply(pops, function(pop){
-          gate <- getGate(gh, pop)
+          gate <- gh_pop_get_gate(gh, pop)
           df <- as.data.frame(fortify(gate))
           df <- unique(df)
 

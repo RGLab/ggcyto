@@ -313,7 +313,7 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is(e2, "logicalGates")){
     
     if(is(fs, "GatingSet")){
-      thisfs <- getData(fs)  
+      thisfs <- gs_pop_get_data(fs)  
       #make sure pass on subset attr here so that lazy-fortify will succeed in as.ggplot call. 
       #otherwise fortifying usually takes place early at the regular geom_gate layer thought gs directly'
       attr(e1[["data"]], "subset") <- attr(fs, "subset")
