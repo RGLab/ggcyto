@@ -37,11 +37,11 @@ getFlowFrame.GatingSetList <- function(x){
 #' @rdname getFlowFrame
 #' @export
 getFlowFrame.GatingSet <- function(x){
-  getFlowFrame(getData(x))
+  getFlowFrame(gs_pop_get_data(x))
 }
 
 #' @rdname getFlowFrame
 #' @export
 getFlowFrame.GatingHierarchy <- function(x){
-  getData(x, use.exprs = FALSE)
+  gh_pop_get_data(x, use.exprs = FALSE)
 }

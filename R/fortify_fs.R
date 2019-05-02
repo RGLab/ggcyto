@@ -59,7 +59,7 @@ fortify_fs.GatingSet <- function(model, data, ...){
     stop("subset must be supplied!")
   else if(subset == "_parent_")
     stop("'subset' must be instantiated by the actual node name!\nMake sure either 'subset' is specified or the 'geom_gate' layer is added. ")
-  fs <- getData(model, subset)  
+  fs <- gs_pop_get_data(model, subset)  
   
   
   #copy dims attribute to fs

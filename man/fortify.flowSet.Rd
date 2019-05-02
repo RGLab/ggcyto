@@ -43,7 +43,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 attr(gs, "subset") <- "CD4" #must attach subset information to GatingSet object before foritfying it
 fortify(gs)
 
-fs <- getData(gs, "CD8")
+fs <- gs_pop_get_data(gs, "CD8")
 fortify(fs)#fs is a flowSet/ncdfFlowSet
 
 fr <- fs[[1]]
