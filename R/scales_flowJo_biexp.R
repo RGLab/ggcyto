@@ -4,7 +4,7 @@
 #' @param maxValue,widthBasis,pos,neg see 'help(flowJoTrans')
 #' @param equal.space whether to display the breaks in equal.space format
 #' @return ScaleContinuous object
-#' @importFrom flowWorkspace flowJo_biexp_trans
+#' @importFrom flowWorkspace flowjo_biexp_trans
 #' @examples 
 #' data(GvHD)
 #' fr <- GvHD[[1]]
@@ -12,17 +12,31 @@
 #' #display at raw scale
 #' p 
 #' #display at transformed scale
-#' p + scale_x_flowJo_biexp(maxValue = 1e4, widthBasis = 0)
+#' p + scale_x_flowjo_biexp(maxValue = 1e4, widthBasis = 0)
+#' @rdname scale_x_flowjo_biexp
 #' @export
-scale_x_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, equal.space = FALSE){
-  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, equal.space = equal.space)
+scale_x_flowjo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, equal.space = FALSE){
+  myTrans <- flowjo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, equal.space = equal.space)
   scale_x_continuous(..., trans = myTrans)
 }
 
-#' @rdname scale_x_flowJo_biexp
+#' @rdname scale_x_flowjo_biexp
 #' @export
-scale_y_flowJo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, equal.space = FALSE){
-  myTrans <- flowJo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, equal.space = equal.space)
+scale_x_flowJo_biexp <- function(...){
+  .Deprecated("scale_x_flowjo_biexp")
+  scale_x_flowjo_biexp(...)
+}
+
+#' @rdname scale_x_flowjo_biexp
+#' @export
+scale_y_flowjo_biexp <- function(..., maxValue = 262144, widthBasis = -10, pos = 4.5, neg = 0, equal.space = FALSE){
+  myTrans <- flowjo_biexp_trans(maxValue = maxValue, widthBasis = widthBasis, pos = pos, neg = neg, equal.space = equal.space)
   scale_y_continuous(..., trans = myTrans)
 }
 
+#' @rdname scale_x_flowjo_biexp
+#' @export
+scale_y_flowJo_biexp <- function(...){
+  .Deprecated("scale_x_flowjo_biexp")
+  scale_x_flowjo_biexp(...)
+}

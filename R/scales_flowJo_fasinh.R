@@ -11,18 +11,33 @@
 #' #display at raw scale
 #' p 
 #' #display at transformed scale
-#' p + scale_x_flowJo_fasinh(t = 1e4)
+#' p + scale_x_flowjo_fasinh(t = 1e4)
+#' @rdname scale_x_flowjo_fasinh
 #' @export
-scale_x_flowJo_fasinh <- function(..., m = 4, t = 1200){
+scale_x_flowjo_fasinh <- function(..., m = 4, t = 1200){
   myTrans <- flowjo_fasinh_trans(m = m, t = t)
   scale_x_continuous(..., trans = myTrans)
 
 }
 
-#' @rdname scale_x_flowJo_fasinh
+#' @rdname scale_x_flowjo_fasinh
 #' @export
-scale_y_flowJo_fasinh <- function(..., m = 4, t = 1200){
+scale_x_flowJo_fasinh <- function(...){
+  .Deprecated("scale_x_flowjo_fasinh")
+  scale_x_flowjo_fasinh(...)
+}
+
+#' @rdname scale_x_flowjo_fasinh
+#' @export
+scale_y_flowjo_fasinh <- function(..., m = 4, t = 1200){
   myTrans <- flowjo_fasinh_trans(m = m, t = t)
   scale_y_continuous(..., trans = myTrans)
 
+}
+
+#' @rdname scale_x_flowjo_fasinh
+#' @export
+scale_y_flowJo_fasinh <- function(...){
+  .Deprecated("scale_x_flowjo_fasinh")
+  scale_x_flowjo_fasinh(...)
 }
