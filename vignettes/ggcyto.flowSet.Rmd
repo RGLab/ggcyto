@@ -103,21 +103,17 @@ p + scale_fill_gradient(trans = "sqrt", low = "gray", high = "black")
 
 ### Add `geom_gate` and `geom_stats` layers
 
-Firstly we create the `polygonGate` with a data-driven method provided by `flowStats` package.
+Firstly we create an `ellipsoidGate` with a data-driven method provided by `flowStats` package.
 ```{r}
-# estimate a lymphGate
-lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
-norm.filter <- lg$n2gate
-#fit norm2 filter to multiple samples
-fres <- filter(fs, norm.filter)
-#extract the polygonGate for each sample
-poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
-poly.gates
+# estimate a lymphGate (which is an ellipsoidGate) for each sample
+lg <- flowStats::lymphGate(fs, channels=c("FSC-H", "SSC-H"),scale=0.6)
+# apply the ellipsoidGates to their corresponding samples
+fres <- filter(fs, lg)
 ```
 
 Then pass the gates to the gate layer
 ```{r}
-p + geom_gate(poly.gates)
+p + geom_gate(lg)
 ```
 
 We can also plot the `rectangleGate`, this time we simply replicate a static gate across samples:
@@ -160,13 +156,13 @@ ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..))
 
 Without supplying `data` for `geom_stats`, we add stats layer for all the gate layers implicitly
 ```{r}
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(size = 3)
+p + geom_gate(lg) + geom_gate(rect.gates) + geom_stats(size = 3)
 ```
 
 
 Or we can add stats layer specificly just for one of the gate layer
 ```{r}
-p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates, size = 3)
+p + geom_gate(lg) + geom_gate(rect.gates) + geom_stats(gate = lg, size = 3)
 ```
 
 
