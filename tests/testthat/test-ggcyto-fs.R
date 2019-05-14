@@ -33,14 +33,10 @@ test_that("fs", {
   suppressWarnings(expect_doppelganger("ggcyto-fs-2d-hex-lim", p))  
   
   suppressWarnings(expect_doppelganger("ggcyto-fs-2d-hex-gradien", p + scale_fill_gradientn(colours = rainbow(7), trans = "sqrt")))  
-  
-  lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
-  norm.filter <- lg$n2gate
-  #fit norm2 filter to multiple samples
-  fres <- filter(fs, norm.filter)
-  #extract the polygonGate for each sample
-  poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
-  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-hex-polygates", p + geom_gate(poly.gates)))  
+  lg <- flowStats::lymphGate(fs, channels=c("FSC-H", "SSC-H"),scale=0.6)
+  #Apply lg to multiple samples
+  fres <- filter(fs, lg)
+  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-hex-polygates", p + geom_gate(lg)))  
   
   ## ------------------------------------------------------------------------
   rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
@@ -64,10 +60,10 @@ test_that("fs", {
   suppressWarnings(expect_doppelganger("ggcyto-fs-1d-den-stats", ggcyto(fs, aes(x = `FSC-H`)) + geom_density(fill = "black", aes(y = ..scaled..)) + geom_gate(den.gates.x)  + geom_stats(type = "count")))  
   
   ## ------------------------------------------------------------------------
-  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multi-gates", p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(size = 3)))  
+  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multi-gates", p + geom_gate(lg) + geom_gate(rect.gates) + geom_stats(size = 3)))  
   
   ## ------------------------------------------------------------------------
-  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multi-gates-single-stats", p + geom_gate(poly.gates) + geom_gate(rect.gates) + geom_stats(gate = poly.gates, size = 3)))  
+  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multi-gates-single-stats", p + geom_gate(lg) + geom_gate(rect.gates) + geom_stats(gate = lg, size = 3)))  
   
   ## ------------------------------------------------------------------------
   expect_is(p, "ggcyto_flowSet")

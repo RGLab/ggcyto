@@ -51,7 +51,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
 ```
 
 ```{r echo=FALSE}
-gs@transformation <- transformerList(colnames(gs)[-(1:2)], flowJo_biexp_trans())
+gs@transformation <- transformerList(colnames(gs)[-(1:2)], flowjo_biexp_trans())
 ```
 
 ```{r}
