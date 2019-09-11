@@ -151,7 +151,13 @@ as.ggplot <- function(x){
       
       if(is.null(e2$stat_params[["binwidth"]]))
       {
-        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        transformed_range <- data_range
+        for(col in c("x","y")){
+          if(!is.null(x$scales$get_scales(col)$secondary.axis)){
+            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+          }
+        }
+        dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
         e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
         x$layers[[i]] <- e2
       }
@@ -228,9 +234,15 @@ as.ggplot <- function(x){
       
       if(is.null(bw)||length(bw)==0)
       {
-        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(data_range[,dims[axis==i, name]])))
+        transformed_range <- data_range
+        for(col in c("x","y")){
+          if(!is.null(x$scales$get_scales(col)$secondary.axis)){
+            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+          }
+        }
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
         e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
-        x$layers[[i]] <- e2  
+        x$layers[[i]] <- e2
       }
       
     }
