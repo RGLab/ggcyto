@@ -53,7 +53,7 @@ as.GatingSet <- function(gh){
   trans <- gs@transformation 
   if(!is.null(trans)&&length(trans)>0)
   {
-    trans <- list(trans)
+    # trans <- list(trans)
     names(trans) <- sn
     gs@transformation <- trans
   }
