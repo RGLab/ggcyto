@@ -51,7 +51,7 @@ is.ggcyto <- function(x) inherits(x, "ggcyto")
 #' @export
 #' @rdname  ggcyto
 ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
-  ggcyto.flowSet(fortify_fs(data, ...), mapping)
+  ggcyto.flowSet(fortify_fs(data, ...), mapping, ...)
 }
 
 #' Draw ggcyto on current graphics device.
