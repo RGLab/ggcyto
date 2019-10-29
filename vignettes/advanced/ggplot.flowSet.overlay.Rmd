@@ -33,8 +33,7 @@ myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
 myColor_scale_fill <- scale_fill_gradientn(colours = myColor)
 # get a gated data
 lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
-norm.filter <- lg$n2gate
-overlay.fr <- lg$x
+overlay.fr <- Subset(fr, lg)
 
 # add the overlay and dim the background
 p1 <- p + stat_binhex(bins = 64, alpha = 0.2)
@@ -47,7 +46,7 @@ overlay.fr2 <- Subset(fr, rect.g)
 p1 + geom_point(data = overlay.fr2, color = "black", cex = 0.5, pch = 19)
 
 # overlay for multiple samples
-overlay.fs1 <- Subset(fs, norm.filter)
+overlay.fs1 <- Subset(fs, lg)
 overlay.fs2 <- Subset(fs, rect.g)
 ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + 
           scale_fill_gradientn(colours = myColor)  +
