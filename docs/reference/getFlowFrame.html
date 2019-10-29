@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcyto</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -195,21 +195,22 @@ is not read and an empty flowFrame is returned.</p>
 #&gt; $P8  Time Time (51.20 sec.)  1024        0     1023
 #&gt; 153 keywords are stored in the 'description' slot</div><div class='input'>
 <span class='no'>dataDir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"flowWorkspaceData"</span>)
-<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>loading R object...</span></div><div class='output co'>#&gt; <span class='message'>loading tree object...</span></div><div class='output co'>#&gt; <span class='message'>Done</span></div><div class='input'><span class='fu'>getFlowFrame</span>(<span class='no'>gs</span>)<span class='co'># gs is a GatingSet</span></div><div class='output co'>#&gt; flowFrame object '7817b649-f92d-4103-bd46-6364fdbe85db'
-#&gt; with 0 cells and 0 observables:
+<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+<span class='fu'>getFlowFrame</span>(<span class='no'>gs</span>)<span class='co'># gs is a GatingSet</span></div><div class='output co'>#&gt; flowFrame object 'CytoTrol_CytoTrol_1.fcs'
+#&gt; with 0 cells and 12 observables:
 #&gt;          name         desc      range  minRange   maxRange
-#&gt; $P1     FSC-A         &lt;NA&gt; 262143.000    0.0000 262143.000
-#&gt; $P2     FSC-H         &lt;NA&gt; 262143.000    0.0000 262143.000
-#&gt; $P3     FSC-W         &lt;NA&gt; 262143.000    0.0000 262143.000
-#&gt; $P4     SSC-A         &lt;NA&gt; 262143.000    0.0000 262143.000
-#&gt; $P5  &lt;B710-A&gt;  CD4 PcpCy55   3671.475  426.3119   4097.787
-#&gt; $P6  &lt;R660-A&gt;     CD38 APC   3578.944  518.5215   4097.465
-#&gt; $P7  &lt;R780-A&gt;    CD8 APCH7   3217.039  877.4007   4094.440
-#&gt; $P8  &lt;V450-A&gt;     CD3 V450   5002.292 -903.5115   4098.781
-#&gt; $P9  &lt;V545-A&gt;  HLA-DR V500   3884.821  213.4430   4098.264
-#&gt; $P10 &lt;G560-A&gt;      CCR7 PE   3988.170  110.2343   4098.404
-#&gt; $P11 &lt;G780-A&gt; CD45RA PECy7   3648.810  448.9122   4097.723
-#&gt; $P12     Time         &lt;NA&gt;    295.390    0.0020    295.392
+#&gt; $P1     FSC-A         &lt;NA&gt; 262142.000    0.0000 262142.000
+#&gt; $P2     FSC-H         &lt;NA&gt; 262142.000    0.0000 262142.000
+#&gt; $P3     FSC-W         &lt;NA&gt; 262142.000    0.0000 262142.000
+#&gt; $P4     SSC-A         &lt;NA&gt; 262142.000    0.0000 262142.000
+#&gt; $P5  &lt;B710-A&gt;  CD4 PcpCy55   4096.787  426.3119   4096.787
+#&gt; $P6  &lt;R660-A&gt;     CD38 APC   4096.465  518.5215   4096.465
+#&gt; $P7  &lt;R780-A&gt;    CD8 APCH7   4093.440  877.4007   4093.440
+#&gt; $P8  &lt;V450-A&gt;     CD3 V450   4097.781 -903.5115   4097.781
+#&gt; $P9  &lt;V545-A&gt;  HLA-DR V500   4097.264  213.4429   4097.264
+#&gt; $P10 &lt;G560-A&gt;      CCR7 PE   4097.404  110.2343   4097.404
+#&gt; $P11 &lt;G780-A&gt; CD45RA PECy7   4096.723  448.9122   4096.723
+#&gt; $P12     Time         &lt;NA&gt;    294.392    0.0020    294.392
 #&gt; 198 keywords are stored in the 'description' slot</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

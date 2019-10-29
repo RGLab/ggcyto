@@ -67,7 +67,7 @@ It can be passed directly to ggcyto constructor. See the examples for details." 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcyto</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -205,7 +205,8 @@ It can be passed directly to ggcyto constructor. See the examples for details.</
 #&gt; </div><div class='input'>
 <span class='co'>#pass the function directly to ggcyto</span>
 <span class='no'>dataDir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"flowWorkspaceData"</span>)
-<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>loading R object...</span></div><div class='output co'>#&gt; <span class='message'>loading tree object...</span></div><div class='output co'>#&gt; <span class='message'>Done</span></div><div class='input'><span class='co'># with marginal events</span>
+<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+<span class='co'># with marginal events</span>
 <span class='fu'><a href='ggcyto.html'>ggcyto</a></span>(<span class='no'>gs</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>CD4</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>CD8</span>), <span class='kw'>subset</span> <span class='kw'>=</span> <span class='st'>"CD3+"</span>) + <span class='fu'>geom_hex</span>(<span class='kw'>bins</span> <span class='kw'>=</span> <span class='fl'>64</span>)</div><div class='img'><img src='marginalFilter-1.png' alt='' width='700' height='433' /></div><div class='input'>
 <span class='co'># using marginalFilter to remove these events</span>
 <span class='fu'><a href='ggcyto.html'>ggcyto</a></span>(<span class='no'>gs</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>CD4</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>CD8</span>), <span class='kw'>subset</span> <span class='kw'>=</span> <span class='st'>"CD3+"</span>, <span class='kw'>filter</span> <span class='kw'>=</span> <span class='no'>marginalFilter</span>) + <span class='fu'>geom_hex</span>(<span class='kw'>bins</span> <span class='kw'>=</span> <span class='fl'>64</span>)</div><div class='img'><img src='marginalFilter-2.png' alt='' width='700' height='433' /></div><div class='input'>

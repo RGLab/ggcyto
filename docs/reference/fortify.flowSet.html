@@ -66,7 +66,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcyto</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
       </span>
     </div>
 
@@ -188,7 +188,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>dataDir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"flowWorkspaceData"</span>)
-<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))</div><div class='output co'>#&gt; <span class='message'>loading R object...</span></div><div class='output co'>#&gt; <span class='message'>loading tree object...</span></div><div class='output co'>#&gt; <span class='message'>Done</span></div><div class='input'>
+<span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
+
 <span class='fu'><a href='https://rdrr.io/r/base/attr.html'>attr</a></span>(<span class='no'>gs</span>, <span class='st'>"subset"</span>) <span class='kw'>&lt;-</span> <span class='st'>"CD4"</span> <span class='co'>#must attach subset information to GatingSet object before foritfying it</span>
 <span class='fu'>fortify</span>(<span class='no'>gs</span>)</div><div class='output co'>#&gt;                      .rownames                    name     FSC-A  FSC-H
 #&gt;     1: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 140733.05 133376
@@ -264,54 +265,42 @@
 #&gt; 14563: 1511.588 295.29098511
 #&gt; 14564: 2399.039 295.30499268</div><div class='input'>
 <span class='no'>fr</span> <span class='kw'>&lt;-</span> <span class='no'>fs</span><span class='kw'>[[</span><span class='fl'>1</span>]]
-<span class='fu'>fortify</span>(<span class='no'>fr</span>)<span class='co'>#fr is a flowFrame</span></div><div class='output co'>#&gt;                                   .rownames
-#&gt;     1: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;     2: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;     3: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;     4: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;     5: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;    ---                                     
-#&gt; 14560: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt; 14561: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt; 14562: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt; 14563: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt; 14564: 7817b649-f92d-4103-bd46-6364fdbe85db
-#&gt;                                        name     FSC-A  FSC-H    FSC-W    SSC-A
-#&gt;     1: 7817b649-f92d-4103-bd46-6364fdbe85db 127717.88 119616 69974.92 76954.91
-#&gt;     2: 7817b649-f92d-4103-bd46-6364fdbe85db  84330.34  77826 71013.20 66052.55
-#&gt;     3: 7817b649-f92d-4103-bd46-6364fdbe85db 113783.64 107160 69586.83 62380.92
-#&gt;     4: 7817b649-f92d-4103-bd46-6364fdbe85db 103148.27  97894 69053.52 47501.16
-#&gt;     5: 7817b649-f92d-4103-bd46-6364fdbe85db 110324.17 106074 68161.90 34369.44
-#&gt;    ---                                                                        
-#&gt; 14560: 7817b649-f92d-4103-bd46-6364fdbe85db 102727.06  94475 71260.34 65382.24
-#&gt; 14561: 7817b649-f92d-4103-bd46-6364fdbe85db  83445.57  75251 72672.64 87513.72
-#&gt; 14562: 7817b649-f92d-4103-bd46-6364fdbe85db 100791.84  94089 70204.73 76909.55
-#&gt; 14563: 7817b649-f92d-4103-bd46-6364fdbe85db 130091.12 122710 69478.05 44694.72
-#&gt; 14564: 7817b649-f92d-4103-bd46-6364fdbe85db  95898.64  88870 70719.18 58815.12
-#&gt;         &lt;B710-A&gt; &lt;R660-A&gt; &lt;R780-A&gt; &lt;V450-A&gt; &lt;V545-A&gt; &lt;G560-A&gt; &lt;G780-A&gt;
-#&gt;     1: 1296.8107 1931.995 3769.838 2749.284 1660.914 2883.802 3480.662
-#&gt;     2: 1465.2563 1523.407 3702.229 2657.550 1612.924 2800.220 3415.069
-#&gt;     3:  702.0428 1987.221 3515.332 2662.169 1504.550 2636.746 2711.044
-#&gt;     4: 1390.0245 1483.048 3615.137 2466.290 1489.376 1574.406 2576.902
-#&gt;     5:  873.0049 2161.021 3541.025 2420.300 1641.068 2183.459 3235.186
-#&gt;    ---                                                                
-#&gt; 14560: 1230.4995 1108.483 3658.750 2514.224 1823.440 1003.388 3320.624
-#&gt; 14561:  803.3681 1025.842 3718.617 2378.552 1611.274 1642.994 1203.638
-#&gt; 14562: 1565.2583 2149.152 3852.465 2640.989 1611.140 2159.423 3430.178
-#&gt; 14563: 1382.2026 1212.209 3426.707 2435.800 1783.091 1653.393 1511.588
-#&gt; 14564:  864.5154 1592.644 3717.394 2332.334 1551.008 1315.681 2399.039
-#&gt;                Time
-#&gt;     1:   0.00700000
-#&gt;     2:   0.01500000
-#&gt;     3:   0.04800000
-#&gt;     4:   0.06699999
-#&gt;     5:   0.06800000
-#&gt;    ---             
-#&gt; 14560: 295.16098022
-#&gt; 14561: 295.27697754
-#&gt; 14562: 295.28399658
-#&gt; 14563: 295.29098511
-#&gt; 14564: 295.30499268</div></pre>
+<span class='fu'>fortify</span>(<span class='no'>fr</span>)<span class='co'>#fr is a flowFrame</span></div><div class='output co'>#&gt;                      .rownames                    name     FSC-A  FSC-H
+#&gt;     1: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 127717.88 119616
+#&gt;     2: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs  84330.34  77826
+#&gt;     3: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 113783.64 107160
+#&gt;     4: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 103148.27  97894
+#&gt;     5: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 110324.17 106074
+#&gt;    ---                                                                 
+#&gt; 14560: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 102727.06  94475
+#&gt; 14561: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs  83445.57  75251
+#&gt; 14562: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 100791.84  94089
+#&gt; 14563: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs 130091.12 122710
+#&gt; 14564: CytoTrol_CytoTrol_1.fcs CytoTrol_CytoTrol_1.fcs  95898.64  88870
+#&gt;           FSC-W    SSC-A  &lt;B710-A&gt; &lt;R660-A&gt; &lt;R780-A&gt; &lt;V450-A&gt; &lt;V545-A&gt; &lt;G560-A&gt;
+#&gt;     1: 69974.92 76954.91 1296.8107 1931.995 3769.838 2749.284 1660.914 2883.802
+#&gt;     2: 71013.20 66052.55 1465.2563 1523.407 3702.229 2657.550 1612.924 2800.220
+#&gt;     3: 69586.83 62380.92  702.0428 1987.221 3515.332 2662.169 1504.550 2636.746
+#&gt;     4: 69053.52 47501.16 1390.0245 1483.048 3615.137 2466.290 1489.376 1574.406
+#&gt;     5: 68161.90 34369.44  873.0049 2161.021 3541.025 2420.300 1641.068 2183.459
+#&gt;    ---                                                                         
+#&gt; 14560: 71260.34 65382.24 1230.4995 1108.483 3658.750 2514.224 1823.440 1003.388
+#&gt; 14561: 72672.64 87513.72  803.3681 1025.842 3718.617 2378.552 1611.274 1642.994
+#&gt; 14562: 70204.73 76909.55 1565.2583 2149.152 3852.465 2640.989 1611.140 2159.423
+#&gt; 14563: 69478.05 44694.72 1382.2026 1212.209 3426.707 2435.800 1783.091 1653.393
+#&gt; 14564: 70719.18 58815.12  864.5154 1592.644 3717.394 2332.334 1551.008 1315.681
+#&gt;        &lt;G780-A&gt;         Time
+#&gt;     1: 3480.662   0.00700000
+#&gt;     2: 3415.069   0.01500000
+#&gt;     3: 2711.044   0.04800000
+#&gt;     4: 2576.902   0.06699999
+#&gt;     5: 3235.186   0.06800000
+#&gt;    ---                      
+#&gt; 14560: 3320.624 295.16098022
+#&gt; 14561: 1203.638 295.27697754
+#&gt; 14562: 3430.178 295.28399658
+#&gt; 14563: 1511.588 295.29098511
+#&gt; 14564: 2399.039 295.30499268</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
