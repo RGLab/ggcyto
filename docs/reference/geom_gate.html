@@ -153,38 +153,7 @@ However It is not necessary when used with 'ggcyto' wrapper since the latter wil
     
     </div>
 
-    <pre class="usage"><span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for default</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for list</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for filterList</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for filter</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>,
-  <span class='kw'>colour</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>nPoints</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for quadGate</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for character</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for filters</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for filtersList</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for logicalFilterResult</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)
-
-<span class='co'># S3 method for logical</span>
-<span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>geom_gate</span>(<span class='no'>data</span>, <span class='kw'>mapping</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"transparent"</span>, <span class='kw'>colour</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>nPoints</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -198,16 +167,15 @@ or character specifying a gated cell population in the GatingSet</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>other arguments
-pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList</p></td>
+      <td><p>other arguments</p></td>
     </tr>
     <tr>
-      <th>mapping, </th>
-      <td><p>The mapping aesthetic mapping</p></td>
+      <th>mapping</th>
+      <td><p>The aesthetic mapping</p></td>
     </tr>
     <tr>
       <th>fill</th>
-      <td><p>polygonGate is not filled by default</p></td>
+      <td><p>fill color for the gate. Not filled by default.</p></td>
     </tr>
     <tr>
       <th>colour</th>
@@ -215,7 +183,11 @@ pd pData (data.frame) that has rownames represents the sample names used as key 
     </tr>
     <tr>
       <th>nPoints</th>
-      <td><p>used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits</p></td>
+      <td><p>used for interpolating polygonGates to prevent them from losing shape when truncated by axis limits</p></td>
+    </tr>
+    <tr>
+      <th>pd</th>
+      <td><p>pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList</p></td>
     </tr>
     </table>
     
