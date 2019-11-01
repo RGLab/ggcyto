@@ -8,27 +8,20 @@
 \title{Compute the positions of the population statistics based on the geometic gate centroid for a ggcyto plot.}
 \usage{
 stat_position(gate, ...)
-
-\method{stat_position}{filter}(gate, ...)
-
-\method{stat_position}{filterList}(gate, ...)
-
-\method{stat_position}{list}(gate, ...)
 }
 \arguments{
 \item{gate}{a flowCore filter}
 
-\item{...}{other arguments
-adjust adjust the position of the centroid
+\item{...}{other arguments}
 
-abs logical
+\item{adjust}{adjust the position of the centroid}
 
-data_range the actual data range}
+\item{abs}{logical}
+
+\item{data_range}{the actual data range}
 }
 \value{
-a data.table
-
-the gate centroid coordinates
+a data.table of gate centroid coordinates
 }
 \description{
 It is usually not called directly by user but mainly used by compute_stats function (which is called by ggcyto add method when geom_states layer is added).

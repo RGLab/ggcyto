@@ -59,9 +59,9 @@
 a ggcyto object
 }
 \description{
-Overloaded autoplot methods for the cytometry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
-It plots the cytometry data with geom_histogram, geom_density or geom_hex.
-When autoplot a GatingSet/Gatinghierarchy, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
+Overloaded autoplot methods for the cytometry data structure: \code{flowFrame} or \code{flowSet}, \code{Gatinghierarchy}, \code{GatingSet}.
+It plots the cytometry data with \code{geom_histogram}, \code{geom_density} or \code{geom_hex}.
+When autoplot is called on a \code{GatingSet}/\code{Gatinghierarchy}, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
 }
 \examples{
 library(flowCore)

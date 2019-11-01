@@ -2,7 +2,9 @@
 #' 
 #' It is useful for "backgating" plots.
 #' 
-#'
+#' @name geom_overlay
+#' @aliases geom_overlay.default geom_overlay.character geom_overlay.ncdfFlowList geom_overlay.flowSet
+#' geom_overlay.flowFrame
 #' @param data a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
 #'              or a list of these gates 
 #'              or filterList
@@ -14,7 +16,6 @@
 #'        fill polygonGate is not filled by default
 #'        colour default is red
 #'        pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
-#' @export
 #' @return a geom_overlay layer
 #' @examples 
 #' library(ggcyto)
@@ -32,16 +33,15 @@
 #' #add overlay for 1d densityplot
 #' p <- ggcyto(gs, aes(x = CD4), subset = "CD3+") + geom_density(aes(y = ..count..))
 #' p + geom_overlay("DNT", aes(y = ..count..), fill = "red")
+#' @export
 geom_overlay <- function(data, ...)UseMethod("geom_overlay")
 
 #' @export
-#' @rdname geom_overlay
 geom_overlay.default <- function(data, ...){
   
     stop("unsupported overlay data type: ", class(data), call. = FALSE)
 }
 
-#' @rdname geom_overlay
 #' @export
 geom_overlay.character <- function(data, ...){
   if(length(data) > 1)
@@ -54,14 +54,12 @@ geom_overlay.character <- function(data, ...){
   )
 }
 
-#' @rdname geom_overlay
 #' @export
 geom_overlay.ncdfFlowList <- function(data, ...){
   geom_overlay.flowSet(data, ...)
   
 }
 
-#' @rdname geom_overlay
 #' @export
 geom_overlay.flowSet <- function(data, ...){
   
@@ -74,7 +72,6 @@ geom_overlay.flowSet <- function(data, ...){
   
 }
 
-#' @rdname geom_overlay
 #' @export
 geom_overlay.flowFrame <- function(data, ...){
   geom_overlay.flowSet(data, ...)

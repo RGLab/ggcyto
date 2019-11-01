@@ -1,5 +1,5 @@
 #' Plot cytometry data using the ggcyto API
-#'
+#' 
 #' \code{ggcyto()} initializes a ggcyto object that inherits ggplot class.
 #' Similarly the + operator can be used to add layers to the
 #' existing ggcyto object. 
@@ -9,12 +9,22 @@
 #'    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
 #'   }
 #'
-#'  @return ggcyto object      
+#' @name ggcyto
+#' @aliases ggcyto.default ggcyto.flowSet ggcyto.GatingHierarchy ggcyto.GatingSet
+#' ggcyto.GatingSetList
 #' @import methods ggplot2 flowCore ncdfFlow flowWorkspace
-#' @export
-#' @keywords internal
-#' @param data The data source. A core cytometry data structure. (flowSet,flowFrame, GatingSet or GatingHierarchy)
+#' @importFrom rlang quo_name
+#' @param data The data source. A core cytometry data structure. (flowSet, flowFrame, ncdfFlowSet, GatingSet or GatingHierarchy)
+#' @param mapping default list of aesthetic mappings (these can be colour,
+#'   size, shape, line type -- see individual geom functions for more details)
+#' @param filter a flowcore gate object or a function that takes a flowSet and channels as input and returns a data-dependent flowcore gate.
+#'                The gate is used to filter the flow data before it is plotted.
+#' @param max_nrow_to_plot the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 5e4. To turn off the subsampling, simply set it to a large enough number or Inf.
+#' @param subset character that specifies the node path or node name in the case of GatingSet. 
+#'               Default is "_parent_", which will be substituted with the actual node name 
+#'               based on the geom_gate layer to be added later.
 #' @param ... other arguments passed to specific methods
+#' @return ggcyto object 
 #' @examples
 #' 
 #' data(GvHD)
@@ -34,6 +44,42 @@
 #' col1 <- "`FSC-H`" #note that the dimension names with special characters needs to be quoted by backticks
 #' col2 <- "`SSC-H`"
 #' ggcyto(fs, aes_string(col1,col2)) + geom_hex()
+#' 
+#' ## More flowSet examples
+#' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+#' # 1d histogram/densityplot
+#' p <- ggcyto(fs, aes(x = `FSC-H`)) 
+#' #facet_wrap(~name)` is used automatically
+#' p1 <- p + geom_histogram() 
+#' p1
+#' #overwriting the default faceeting
+#' p1 + facet_grid(Patient~Visit)
+#'
+#' #display density
+#' p + geom_density()
+#' 
+#' #you can use ggridges package to display stacked density plot
+#' require(ggridges)
+#' #stack by fcs file ('name')
+#' p + geom_density_ridges(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
+#' #or to stack by Visit and facet by patient
+#' p + geom_density_ridges(aes(y = Visit)) + facet_grid(~Patient)
+#' 
+#' # 2d scatter/dot plot
+#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+#' p <- p + geom_hex(bins = 128)
+#' p
+#' 
+#' ## GatingSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' # 2d plot 
+#' ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' 
+#' # 1d plot
+#' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
+#' 
+#' @export
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 
@@ -49,7 +95,6 @@ ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 is.ggcyto <- function(x) inherits(x, "ggcyto")
 
 #' @export
-#' @rdname  ggcyto
 ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
   ggcyto.flowSet(fortify_fs(data, ...), mapping, ...)
 }
@@ -59,6 +104,9 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' A wrapper for print.ggplot. It converts the ggcyto to conventional ggplot object before printing it.
 #' This is usually invoked automatically when a ggcyto object is returned to R console.
 #' 
+#' @name print.ggcyto
+#' @aliases print,ggcyto-method plot.ggcyto show.ggcyto show,ggcyto-method
+#' @usage print(x, ...)
 #' @return nothing
 #' @param x ggcyto object to display
 #' @param ... other arguments not used by this method
@@ -73,6 +121,7 @@ print.ggcyto <- function(x, ...) {
     ggplot2:::print.ggplot(x)
 }
 
+#' @usage plot(x, ...)
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
@@ -80,17 +129,16 @@ plot.ggcyto <- print.ggcyto
 
 #--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
 #' @export
-#' @rdname print.ggcyto
 setMethod("print", c("ggcyto"), print.ggcyto)
 
 
+#' @usage show(object)
 #' @param object ggcyto object
 #' @rdname print.ggcyto
 #' @method show ggcyto
 #' @export
 show.ggcyto <- function(object){print(object)}
 
-#' @rdname print.ggcyto
 #' @method show ggcyto
 #' @export
 setMethod("show", "ggcyto", show.ggcyto)

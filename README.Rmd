@@ -14,6 +14,13 @@ vignette: >
 library(knitr)
 opts_chunk$set(message = FALSE, warning = FALSE, fig.height= 3, fig.width= 5)
 ```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.path = "man/figures/"
+)
+```
+
 `ggcyto` is a cytometry data visualization tool built around ggplot and the grammar of graphics paradigm. The software extends the popular ggplot2 framework, already familiar to many data scientists, enabling it to recog-nize the core Bioconductor flow cytometry data structures for gated and annotated cytometry data. It simplifies visualization and plotting of flow data for publication quality graphics. 
 
 
@@ -47,11 +54,12 @@ The package overloads ggplot's `fortify` S3 method so that `Cytometry` data stru
 ```{r}
 library(ggcyto)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
-gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+gs_orig <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+gs <- gs_clone(gs_orig)
 ```
 
 ```{r echo=FALSE}
-gs@transformation <- transformerList(colnames(gs)[-(1:2)], flowjo_biexp_trans())
+gs@transformation <- sapply(sampleNames(gs), function(sn)transformerList(colnames(gs)[-(1:2)], flowjo_biexp_trans()), simplify = F)
 ```
 
 ```{r}

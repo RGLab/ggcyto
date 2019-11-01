@@ -1,15 +1,4 @@
----
-title: 'ggcyto : Visualize `Cytometry` data with `ggplot`'
-output:
-  html_document:
-    fig_height: 1
-    fig_width: 1
-    keep_md: yes
-vignette: >    
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Feature summary of ggcyto}
----
-
+# ggcyto : Visualize `Cytometry` data with `ggplot`
 
 `ggcyto` is a cytometry data visualization tool built around ggplot and the grammar of graphics paradigm. The software extends the popular ggplot2 framework, already familiar to many data scientists, enabling it to recog-nize the core Bioconductor flow cytometry data structures for gated and annotated cytometry data. It simplifies visualization and plotting of flow data for publication quality graphics. 
 
@@ -45,7 +34,8 @@ The package overloads ggplot's `fortify` S3 method so that `Cytometry` data stru
 ```r
 library(ggcyto)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
-gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+gs_orig <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
+gs <- gs_clone(gs_orig)
 ```
 
 
@@ -56,7 +46,7 @@ gs <- load_gs(list.files(dataDir, pattern = "gs_bcell_auto",full = TRUE))
 autoplot(gs, "CD3")
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/unnamed-chunk-5-1.png)<!-- -->
 
 ```r
 #change the resolution
@@ -64,43 +54,43 @@ p <- autoplot(gs, "CD3", bins = 64)
 p
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-2.png)<!-- -->
+![](man/figures/unnamed-chunk-5-2.png)<!-- -->
 
 ```r
 #display the transformed value at breaks label by turning off the inverse transform
 autoplot(gs, "CD3", axis_inverse_trans = FALSE)
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-3.png)<!-- -->
+![](man/figures/unnamed-chunk-5-3.png)<!-- -->
 
 ```r
 #you can switch the limits from default `instrument` to the actual `data` range
 p + ggcyto_par_set(limits = "data")
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-4.png)<!-- -->
+![](man/figures/unnamed-chunk-5-4.png)<!-- -->
 
 ```r
 # Choose between `marker` and `channel` names for axis label text
 p + labs_cyto("channel") #default is "both"
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-5.png)<!-- -->
+![](man/figures/unnamed-chunk-5-5.png)<!-- -->
 
 ```r
 # overlay another population 'IgD-CD27-' as dots on top of the existing plot
 p + geom_overlay("IgD-CD27-", alpha = 0.5, size = 0.1, color = "purple")
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-6.png)<!-- -->
+![](man/figures/unnamed-chunk-5-6.png)<!-- -->
 
 ```r
 # plot a population without gate
-fs <- getData(gs, "CD20") #extract the gated data as a flowSet
+fs <- gs_pop_get_data(gs, "CD20") #extract the gated data as a flowSet
 autoplot(fs, "CD20", "CD19") #plot 2D
 ```
 
-![](README_files/figure-html/unnamed-chunk-4-7.png)<!-- -->
+![](man/figures/unnamed-chunk-5-7.png)<!-- -->
 
 ```r
 gs1 <- gs[1]
@@ -121,21 +111,21 @@ p <- p + guides(fill=FALSE)
 p
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
 #replace the data with gs2 and see the same visual effect
 p %+% gs2
 ```
 
-![](README_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+![](man/figures/unnamed-chunk-6-2.png)<!-- -->
 
 
 ```r
 autoplot(fs, "CD20") #1d density
 ```
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/unnamed-chunk-7-1.png)<!-- -->
 
 ```r
 #extract one sample as a flowFrame
@@ -144,19 +134,19 @@ fr <- fs[[1]]
 autoplot(fr)
 ```
 
-![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/unnamed-chunk-8-1.png)<!-- -->
 
  
 
 ```r
 gh <- gs[[1]] # extract a `GatingHierarchy` object for one sample
 # layout multiple cell populations with their asssociated gates in the same plot.
-nodes <- getNodes(gh)[c(3:9, 14)]
+nodes <- gs_get_pop_paths(gh)[c(3:9, 14)]
 p <- autoplot(gh, nodes, bins = 64)
 p
 ```
 
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/unnamed-chunk-9-1.png)<!-- -->
 
 
 ```r
@@ -165,7 +155,7 @@ gt <- ggcyto_arrange(p, nrow = 1)
 plot(gt)
 ```
 
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/unnamed-chunk-10-1.png)<!-- -->
 
 
 

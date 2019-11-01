@@ -10,19 +10,9 @@
 \title{extract flowFrame data structure from the given R object}
 \usage{
 getFlowFrame(x)
-
-\method{getFlowFrame}{flowSet}(x)
-
-\method{getFlowFrame}{ncdfFlowList}(x)
-
-\method{getFlowFrame}{GatingSetList}(x)
-
-\method{getFlowFrame}{GatingSet}(x)
-
-\method{getFlowFrame}{GatingHierarchy}(x)
 }
 \arguments{
-\item{x}{flowSet or GatingSet/GatingHierarchy}
+\item{x}{flowSet, ncdfFlowList, GatingSet, GatingHierarchy, or GatingSetList}
 }
 \value{
 a flowFrame. When x is a ncdfFlowSet or GatingSet that is associated with ncdfFlowSet, the raw event data

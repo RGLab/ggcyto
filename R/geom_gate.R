@@ -7,15 +7,22 @@
 #' 
 #' When 'data' is a character, it construct an abstract geom layer for a character that represents nodes in a Gating tree
 #' and will be instanatiated later as a specific geom_gate layer or layers based on the gates extracted from the given GatingSet object.
-#'
+#' 
+#' @name geom_gate
+#' @aliases geom_gate.default geom_gate.list geom_gate.filter geom_gate.filterList
+#' geom_gate.quadGate geom_gate.character geom_gate.filters geom_gate.filtersList
+#' geom_gate.logical geom_gate.logicalFilterResult
+#' @usage geom_gate(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...)
 #' @param data a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
 #'              or a list of these gates 
 #'              or filterList
 #'              or character specifying a gated cell population in the GatingSet
-#'              
+#' @param mapping The aesthetic mapping
+#' @param fill fill color for the gate. Not filled by default.
+#' @param colour default is red
+#' @param nPoints used for interpolating polygonGates to prevent them from losing shape when truncated by axis limits
 #' @param ... other arguments
-#'        pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
-#' @export
+#' @param pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList
 #' @return a geom_gate layer
 #' @examples 
 #' data(GvHD)
@@ -32,12 +39,12 @@
 #' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
 #' # add gate layer by gate name
 #' p + geom_gate("CD4")
+#' @export
 geom_gate <- function(data, ...)UseMethod("geom_gate")
 
 geom_gate_impl <- function(data, ...)UseMethod("geom_gate_impl")
 
 #' @export
-#' @rdname geom_gate
 geom_gate.default <- function(data, ...){
   
   if(missing(data)){
@@ -47,7 +54,6 @@ geom_gate.default <- function(data, ...){
     stop("ggcyto doesn't know how to deal with gate of class ", class(data), call. = FALSE)
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.list <- function(data, ...){
   element <- data[[1]]
@@ -64,8 +70,6 @@ geom_gate.list <- function(data, ...){
   
 }
 
-
-#' @rdname geom_gate
 #' @export
 geom_gate.filterList <- function(data, ...){
   .geom_gate_filterList(data, ...)
@@ -91,12 +95,7 @@ geom_gate.filterList <- function(data, ...){
   geom_gate_layer
 }
 
-#' @param mapping, The mapping aesthetic mapping
-#' @param fill polygonGate is not filled by default
-#' @param  colour default is red
-#' @param nPoints used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits
 #' @export
-#' @rdname geom_gate
 geom_gate.filter <- function(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...){
   structure(
     list(filter = data
@@ -170,7 +169,6 @@ setAs(from = "quadGate", to = "filters", function(from){
   filters(list(ul, ur, br, bl))
 })
 
-#' @rdname geom_gate
 #' @export
 geom_gate.quadGate <- function(data, ...){
  
@@ -179,7 +177,6 @@ geom_gate.quadGate <- function(data, ...){
   geom_gate(data, ...)
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.character <- function(data, ...){
         structure(
@@ -190,7 +187,6 @@ geom_gate.character <- function(data, ...){
                 )
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.filters <- function(data, ...){
   structure(
@@ -201,7 +197,6 @@ geom_gate.filters <- function(data, ...){
   )
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.filtersList <- function(data, ...){
   structure(
@@ -212,13 +207,11 @@ geom_gate.filtersList <- function(data, ...){
   )
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.logicalFilterResult <- function(data, ...){
   geom_gate.logical(data, ...)
 }
 
-#' @rdname geom_gate
 #' @export
 geom_gate.logical <- function(data, ...){
   structure(

@@ -8,16 +8,33 @@
 \alias{ggcyto_GatingLayout-class}
 \alias{ggcyto}
 \alias{ggcyto.default}
+\alias{ggcyto.flowSet}
+\alias{ggcyto.GatingHierarchy}
+\alias{ggcyto.GatingSet}
+\alias{ggcyto.GatingSetList}
 \title{Plot cytometry data using the ggcyto API}
 \usage{
 ggcyto(data = NULL, ...)
-
-\method{ggcyto}{default}(data = NULL, mapping = aes(), ...)
 }
 \arguments{
-\item{data}{The data source. A core cytometry data structure. (flowSet,flowFrame, GatingSet or GatingHierarchy)}
+\item{data}{The data source. A core cytometry data structure. (flowSet, flowFrame, ncdfFlowSet, GatingSet or GatingHierarchy)}
 
 \item{...}{other arguments passed to specific methods}
+
+\item{mapping}{default list of aesthetic mappings (these can be colour,
+size, shape, line type -- see individual geom functions for more details)}
+
+\item{filter}{a flowcore gate object or a function that takes a flowSet and channels as input and returns a data-dependent flowcore gate.
+The gate is used to filter the flow data before it is plotted.}
+
+\item{max_nrow_to_plot}{the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 5e4. To turn off the subsampling, simply set it to a large enough number or Inf.}
+
+\item{subset}{character that specifies the node path or node name in the case of GatingSet. 
+Default is "_parent_", which will be substituted with the actual node name 
+based on the geom_gate layer to be added later.}
+}
+\value{
+ggcyto object
 }
 \description{
 \code{ggcyto()} initializes a ggcyto object that inherits ggplot class.
@@ -29,8 +46,6 @@ To invoke \code{ggcyto}:
 \itemize{
    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
   }
-
-@return ggcyto object
 }
 \examples{
 
@@ -51,5 +66,39 @@ p + geom_hex(bins = 128)
 col1 <- "`FSC-H`" #note that the dimension names with special characters needs to be quoted by backticks
 col2 <- "`SSC-H`"
 ggcyto(fs, aes_string(col1,col2)) + geom_hex()
+
+## More flowSet examples
+fs <- GvHD[subset(pData(GvHD), Patient \%in\%5:7 & Visit \%in\% c(5:6))[["name"]]]
+# 1d histogram/densityplot
+p <- ggcyto(fs, aes(x = `FSC-H`)) 
+#facet_wrap(~name)` is used automatically
+p1 <- p + geom_histogram() 
+p1
+#overwriting the default faceeting
+p1 + facet_grid(Patient~Visit)
+
+#display density
+p + geom_density()
+
+#you can use ggridges package to display stacked density plot
+require(ggridges)
+#stack by fcs file ('name')
+p + geom_density_ridges(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
+#or to stack by Visit and facet by patient
+p + geom_density_ridges(aes(y = Visit)) + facet_grid(~Patient)
+
+# 2d scatter/dot plot
+p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+p <- p + geom_hex(bins = 128)
+p
+
+## GatingSet
+dataDir <- system.file("extdata",package="flowWorkspaceData")
+gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+# 2d plot 
+ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+
+# 1d plot
+ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
+
 }
-\keyword{internal}

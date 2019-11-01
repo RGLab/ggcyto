@@ -2,8 +2,15 @@
 #' 
 #' It is usually not called directly by user but mainly used by compute_stats function (which is called by ggcyto add method when geom_states layer is added).
 #' 
+#' @name stat_position
+#' @aliases stat_position.filter stat_position.filterList stat_position.list
 #' @param gate a flowCore filter
-#' @return a data.table
+#' @param ... other arguments
+#' @param adjust adjust the position of the centroid
+#' @param abs logical
+#' @param data_range the actual data range
+#'        
+#' @return a data.table of gate centroid coordinates
 #' @export
 #' @examples 
 #' data(GvHD)
@@ -36,17 +43,7 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   return(x)
 }
 
-
-#' @param ... other arguments
-#'        adjust adjust the position of the centroid
-#'        
-#'        abs logical
-#'        
-#'        data_range the actual data range
-#'        
-#' @return the gate centroid coordinates
 #' @export
-#' @rdname stat_position
  stat_position.filter <- function(gate, ...){
    .stat_position_filter(gate, ...)
  }
@@ -122,7 +119,6 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
 # }
 
 #' @export
-#' @rdname stat_position
 stat_position.filterList<- function(gate, ...){
   
   .ldply(gate, stat_position, ..., .id = ".rownames")
@@ -130,7 +126,6 @@ stat_position.filterList<- function(gate, ...){
 }
 
 #' @export
-#' @rdname stat_position
 stat_position.list<- function(gate, ...){
   stat_position(filterList(gate), ...)
 }

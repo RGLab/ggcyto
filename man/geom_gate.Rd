@@ -4,38 +4,17 @@
 \alias{geom_gate}
 \alias{geom_gate.default}
 \alias{geom_gate.list}
-\alias{geom_gate.filterList}
 \alias{geom_gate.filter}
+\alias{geom_gate.filterList}
 \alias{geom_gate.quadGate}
 \alias{geom_gate.character}
 \alias{geom_gate.filters}
 \alias{geom_gate.filtersList}
-\alias{geom_gate.logicalFilterResult}
 \alias{geom_gate.logical}
+\alias{geom_gate.logicalFilterResult}
 \title{Add a gate layer to a ggcyto plot.}
 \usage{
-geom_gate(data, ...)
-
-\method{geom_gate}{default}(data, ...)
-
-\method{geom_gate}{list}(data, ...)
-
-\method{geom_gate}{filterList}(data, ...)
-
-\method{geom_gate}{filter}(data, mapping = NULL, fill = "transparent",
-  colour = "red", nPoints = 100, ...)
-
-\method{geom_gate}{quadGate}(data, ...)
-
-\method{geom_gate}{character}(data, ...)
-
-\method{geom_gate}{filters}(data, ...)
-
-\method{geom_gate}{filtersList}(data, ...)
-
-\method{geom_gate}{logicalFilterResult}(data, ...)
-
-\method{geom_gate}{logical}(data, ...)
+geom_gate(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
@@ -43,16 +22,17 @@ or a list of these gates
 or filterList
 or character specifying a gated cell population in the GatingSet}
 
-\item{...}{other arguments
-pd pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
+\item{...}{other arguments}
 
-\item{mapping, }{The mapping aesthetic mapping}
+\item{mapping}{The aesthetic mapping}
 
-\item{fill}{polygonGate is not filled by default}
+\item{fill}{fill color for the gate. Not filled by default.}
 
 \item{colour}{default is red}
 
-\item{nPoints}{used for interpolating polygonGates to prevent it from losing shape when truncated by axis limits}
+\item{nPoints}{used for interpolating polygonGates to prevent them from losing shape when truncated by axis limits}
+
+\item{pd}{pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
 }
 \value{
 a geom_gate layer
