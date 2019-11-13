@@ -52,7 +52,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
   p[["GeomStats"]] <- list()
   
   p <- p + ggcyto_par_default()
-  p <-  p + guides(fill=FALSE) #the counts at legend could be reflecting the subsampled data and we want to hide this from user to avoid confusion
+  # the counts at legend could be reflecting the subsampled data and we want to hide this from user to avoid confusion
+  p <- p + theme(legend.position = 'none')
   
   p
 }
