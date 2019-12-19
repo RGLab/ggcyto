@@ -150,6 +150,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' by user so that it can be used as a regular ggplot object.
 #' 
 #' @param x ggcyto object with the data that has not yet been fortified to data.frame.
+#' @param pre_binning whether to pass the binned data to ggplot to avoid the overhead to scaling the original raw data for geom_hex layer
 #' 
 #' @return ggplot object
 #' @examples 
@@ -163,7 +164,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' class(p1) 
 #' p1$data # data is fortified
 #' @export
-as.ggplot <- function(x){
+as.ggplot <- function(x, pre_binning = FALSE){
 
   #####################
   #lazy-fortifying the plot data
@@ -207,6 +208,25 @@ as.ggplot <- function(x){
         }
         dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
         e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+        x$layers[[i]] <- e2
+      }
+      #optionally pass the binned data to ggplot for speed
+      if(pre_binning)
+      {
+        pd <- pData(fs)
+        df <- x[["data"]]
+        cols <- c(".rownames", colnames(pd))
+
+        df <- df[, {
+
+          binned <- hexbin::hexbin(.SD, xbins = e2$stat_params[["bins"]])
+          sd <- hexbin::hcell2xy(binned)
+          names(sd) <- colnames(.SD)
+          data.table(data.frame(sd,hex_cell_id = binned@cell, count=binned@count, check.names = FALSE))
+        }, by = cols]
+
+        x[["data"]] <- df
+        e2 <- geom_hex(stat="identity",aes(fill=count))
         x$layers[[i]] <- e2
       }
     }

@@ -4,10 +4,12 @@
 \alias{as.ggplot}
 \title{It fortifies the data, fills some default settings and returns a regular ggplot object.}
 \usage{
-as.ggplot(x)
+as.ggplot(x, pre_binning = FALSE)
 }
 \arguments{
 \item{x}{ggcyto object with the data that has not yet been fortified to data.frame.}
+
+\item{pre_binning}{whether to pass the binned data to ggplot to avoid the overhead to scaling the original raw data for geom_hex layer}
 }
 \value{
 ggplot object
