@@ -197,37 +197,47 @@ as.ggplot <- function(x, pre_binning = FALSE){
     #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
     if(is(e2$geom, "GeomHex"))
     {
-      
-      if(is.null(e2$stat_params[["binwidth"]]))
+      bins <- e2$stat_params[["bins"]]
+      if(is.null(bins))
+        bins <- 32
+      if(bins > 0)
       {
-        transformed_range <- data_range
-        for(col in c("x","y")){
-          if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+        if(is.null(e2$stat_params[["binwidth"]]))
+        {
+          transformed_range <- data_range
+          for(col in c("x","y")){
+            if(!is.null(x$scales$get_scales(col)$secondary.axis)){
+              transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+            }
           }
+          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+          e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+          x$layers[[i]] <- e2
         }
-        dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
-        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
-        x$layers[[i]] <- e2
-      }
-      #optionally pass the binned data to ggplot for speed
-      if(pre_binning)
+        #optionally pass the binned data to ggplot for speed
+        if(pre_binning)
+        {
+          pd <- pData(fs)
+          df <- x[["data"]]
+          cols <- c(".rownames", colnames(pd))
+  
+          df <- df[, {
+  
+            binned <- hexbin::hexbin(.SD, xbins = e2$stat_params[["bins"]])
+            sd <- hexbin::hcell2xy(binned)
+            names(sd) <- colnames(.SD)
+            data.table(data.frame(sd,hex_cell_id = binned@cell, count=binned@count, check.names = FALSE))
+          }, by = cols]
+  
+          x[["data"]] <- df
+          e2 <- geom_hex(stat="identity",aes(fill=count))
+          x$layers[[i]] <- e2
+        }
+      }else
       {
-        pd <- pData(fs)
         df <- x[["data"]]
-        cols <- c(".rownames", colnames(pd))
-
-        df <- df[, {
-
-          binned <- hexbin::hexbin(.SD, xbins = e2$stat_params[["bins"]])
-          sd <- hexbin::hcell2xy(binned)
-          names(sd) <- colnames(.SD)
-          data.table(data.frame(sd,hex_cell_id = binned@cell, count=binned@count, check.names = FALSE))
-        }, by = cols]
-
-        x[["data"]] <- df
-        e2 <- geom_hex(stat="identity",aes(fill=count))
-        x$layers[[i]] <- e2
+        cols <- densCols(df[, chnls, with = F], colramp =colorRampPalette(rev(brewer.pal(11, "Spectral"))))
+        x$layers[[i]] <- geom_point(color = cols, size = 0.2)
       }
     }
   }
