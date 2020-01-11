@@ -78,3 +78,5 @@ reference:
     contents:
       - ggcyto_par_set
       - ggcyto_par_default
+figures:
+  fig.width: 4.5

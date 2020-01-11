@@ -8,16 +8,25 @@
 
 <title>overloaded '+' method for ggcyto — ggcyto_add • ggcyto</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -32,13 +41,15 @@
 
 
 
-<meta property="og:title" content="overloaded '+' method for ggcyto — ggcyto_add" />
 
+<meta property="og:title" content="overloaded '+' method for ggcyto — ggcyto_add" />
 <meta property="og:description" content="It tries to copy pData from ggcyto object to the gate layers
 so that the gate layer does not need to have `pd` to be supplied explicitly by users.
 It also calculates population statistics when geom_stats layer is added.
 It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'." />
+<meta property="og:image" content="/logo.png" />
 <meta name="twitter:card" content="summary" />
+
 
 
 
@@ -69,7 +80,7 @@ It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggcyto</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.15.0</span>
       </span>
     </div>
 
@@ -118,7 +129,6 @@ It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'." />
   </ul>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/RGLab/ggcyto">
@@ -145,16 +155,14 @@ It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'." />
     </div>
 
     <div class="ref-description">
-    
     <p>It tries to copy pData from ggcyto object to the gate layers
 so that the gate layer does not need to have `pd` to be supplied explicitly by users.
 It also calculates population statistics when geom_stats layer is added.
 It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'.</p>
-    
     </div>
 
     <pre class="usage"><span class='no'>e1</span> + <span class='no'>e2</span></pre>
-    
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -169,11 +177,10 @@ of <code>ggcyto_GatingLayout</code>, the component of <code>e2</code> will be ad
       <td><p>A component to add to <code>e1</code></p></td>
     </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>ggcyto object</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
@@ -184,13 +191,13 @@ of <code>ggcyto_GatingLayout</code>, the component of <code>e2</code> will be ad
 <span class='co'>#add rectangleGate layer (2d)</span>
 <span class='no'>rect.g</span> <span class='kw'>&lt;-</span> <span class='fu'>rectangleGate</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"FSC-H"</span> <span class='kw'>=</span>  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>300</span>,<span class='fl'>500</span>), <span class='st'>"SSC-H"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>50</span>,<span class='fl'>200</span>)))
 <span class='no'>rect.gates</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='fu'>sampleNames</span>(<span class='no'>fs</span>), <span class='kw'>function</span>(<span class='no'>sn</span>)<span class='no'>rect.g</span>)
-<span class='no'>p</span> + <span class='fu'><a href='geom_gate.html'>geom_gate</a></span>(<span class='no'>rect.gates</span>) + <span class='fu'><a href='geom_stats.html'>geom_stats</a></span>()</div><div class='img'><img src='ggcyto_add-1.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>p</span> + <span class='fu'><a href='geom_gate.html'>geom_gate</a></span>(<span class='no'>rect.gates</span>) + <span class='fu'><a href='geom_stats.html'>geom_stats</a></span>()</div><div class='img'><img src='ggcyto_add-1.png' alt='' width='432' height='267' /></div><div class='input'>
 <span class='co'>## GatingSet</span>
 <span class='no'>dataDir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"flowWorkspaceData"</span>)
 <span class='no'>gs</span> <span class='kw'>&lt;-</span> <span class='fu'>load_gs</span>(<span class='fu'><a href='https://rdrr.io/r/base/list.files.html'>list.files</a></span>(<span class='no'>dataDir</span>, <span class='kw'>pattern</span> <span class='kw'>=</span> <span class='st'>"gs_manual"</span>,<span class='kw'>full</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>))
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='ggcyto.html'>ggcyto</a></span>(<span class='no'>gs</span>, <span class='fu'>aes</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>CD4</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>CD8</span>), <span class='kw'>subset</span> <span class='kw'>=</span> <span class='st'>"CD3+"</span>) + <span class='fu'>geom_hex</span>(<span class='kw'>bins</span> <span class='kw'>=</span> <span class='fl'>64</span>)
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='no'>p</span> + <span class='fu'><a href='geom_gate.html'>geom_gate</a></span>(<span class='st'>"CD4"</span>) + <span class='fu'><a href='geom_stats.html'>geom_stats</a></span>() <span class='co'>#plot CD4 gate and it is stats</span>
-<span class='no'>p</span></div><div class='img'><img src='ggcyto_add-2.png' alt='' width='700' height='433' /></div><div class='input'><span class='no'>p</span> + <span class='fu'><a href='axis_x_inverse_trans.html'>axis_x_inverse_trans</a></span>() <span class='co'>#inverse transform the x axis into raw scale</span></div><div class='img'><img src='ggcyto_add-3.png' alt='' width='700' height='433' /></div><div class='input'>
+<span class='no'>p</span></div><div class='img'><img src='ggcyto_add-2.png' alt='' width='432' height='267' /></div><div class='input'><span class='no'>p</span> + <span class='fu'><a href='axis_x_inverse_trans.html'>axis_x_inverse_trans</a></span>() <span class='co'>#inverse transform the x axis into raw scale</span></div><div class='img'><img src='ggcyto_add-3.png' alt='' width='432' height='267' /></div><div class='input'>
 <span class='co'>## GatingLayout</span>
 <span class='co'>#autplot for GatingSet</span>
 <span class='no'>dataDir</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata"</span>,<span class='kw'>package</span><span class='kw'>=</span><span class='st'>"flowWorkspaceData"</span>)
@@ -199,15 +206,13 @@ of <code>ggcyto_GatingLayout</code>, the component of <code>e2</code> will be ad
 <span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='autoplot.html'>autoplot</a></span>(<span class='no'>gh</span>)</div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='output co'>#&gt; <span class='message'>Coordinate system already present. Adding new coordinate system, which will replace the existing one.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span>(<span class='no'>p</span>)</div><div class='output co'>#&gt; [1] "ggcyto_GatingLayout"
 #&gt; attr(,"package")
 #&gt; [1] "ggcyto"</div><div class='input'><span class='co'># customize the font size of strip text for each ggcyo plots contained in GatingLayout object</span>
-<span class='no'>p</span> + <span class='fu'>theme</span>(<span class='kw'>strip.text</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>14</span>))</div><div class='img'><img src='ggcyto_add-4.png' alt='' width='700' height='433' /></div></pre>
+<span class='no'>p</span> + <span class='fu'>theme</span>(<span class='kw'>strip.text</span> <span class='kw'>=</span> <span class='fu'>element_text</span>(<span class='kw'>size</span> <span class='kw'>=</span> <span class='fl'>14</span>))</div><div class='img'><img src='ggcyto_add-4.png' alt='' width='432' height='267' /></div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      
       <li><a href="#value">Value</a></li>
-      
       <li><a href="#examples">Examples</a></li>
     </ul>
 

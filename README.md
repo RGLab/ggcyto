@@ -1,3 +1,4 @@
+# <img src="logo_mid.png" align="right" />
 # ggcyto : Visualize `Cytometry` data with `ggplot`
 
 `ggcyto` is a cytometry data visualization tool built around ggplot and the grammar of graphics paradigm. The software extends the popular ggplot2 framework, already familiar to many data scientists, enabling it to recog-nize the core Bioconductor flow cytometry data structures for gated and annotated cytometry data. It simplifies visualization and plotting of flow data for publication quality graphics. 
