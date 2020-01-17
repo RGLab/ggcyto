@@ -48,7 +48,7 @@ ggplot(fs, aes(x = `<B710-A>`)) + geom_density(fill = "blue", alpha= 0.5)
 #### `gates`
 ```{r}
 gates <- filterList(gs_pop_get_gate(gs, "CD8"))
-ggplot(gs, aes(x = `<B710-A>`, y = `<R780-A>`)) + geom_hex(bins = 128) + geom_polygon(data = gates, fill = "transparent", col = "purple")
+ggplot(gs, aes(x = `<B710-A>`, y = `<R780-A>`)) + geom_hex(bins = 128) + geom_polygon(data = gates, fill = NA, col = "purple")
 ```
 
 ### medium level: `ggcyto`
