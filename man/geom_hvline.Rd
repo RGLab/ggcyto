@@ -4,8 +4,13 @@
 \alias{geom_hvline}
 \title{Vertical or horizontal line.}
 \usage{
-geom_hvline(mapping = NULL, data = NULL, position = "identity",
-  show.legend = FALSE, ...)
+geom_hvline(
+  mapping = NULL,
+  data = NULL,
+  position = "identity",
+  show.legend = FALSE,
+  ...
+)
 }
 \arguments{
 \item{mapping}{The aesthetic mapping, usually constructed with

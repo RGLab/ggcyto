@@ -14,7 +14,7 @@
 \alias{geom_gate.logicalFilterResult}
 \title{Add a gate layer to a ggcyto plot.}
 \usage{
-geom_gate(data, mapping = NULL, fill = "transparent", colour = "red", nPoints = 100, ...)
+geom_gate(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
