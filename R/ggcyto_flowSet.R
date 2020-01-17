@@ -139,6 +139,7 @@ is.ggcyto_flowSet <- function(x){
 setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 
 #'@importFrom rlang !!!
+#' @importFrom ggplot2 ggplot_add
 add_ggcyto <- function(e1, e2, e2name){
   fs <- e1[["data"]]
   dims <- attr(fs, "dims")
@@ -294,8 +295,7 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is.theme(e2)){
     #have to take care of theme object since it inherits gg class and will
     #cause the dispatch conflicts due to the special rule of groupGeneric
-    e1$theme <- ggplot2:::update_theme(e1$theme, e2)
-    return(e1)
+   ggplot_add(e2, e1)
   }else if(is(e2, "logicalGates")){
     
     if(is(fs, "GatingSet")){
