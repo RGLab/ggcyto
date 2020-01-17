@@ -1,5 +1,5 @@
 #' Plot cytometry data using the ggcyto API
-#'
+#' 
 #' \code{ggcyto()} initializes a ggcyto object that inherits ggplot class.
 #' Similarly the + operator can be used to add layers to the
 #' existing ggcyto object. 
@@ -9,12 +9,22 @@
 #'    \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
 #'   }
 #'
-#'  @return ggcyto object      
+#' @name ggcyto
+#' @aliases ggcyto.default ggcyto.flowSet ggcyto.GatingHierarchy ggcyto.GatingSet
+#' ggcyto.GatingSetList
 #' @import methods ggplot2 flowCore ncdfFlow flowWorkspace
-#' @export
-#' @keywords internal
-#' @param data The data source. A core cytometry data structure. (flowSet,flowFrame, GatingSet or GatingHierarchy)
+#' @importFrom rlang quo_name
+#' @param data The data source. A core cytometry data structure. (flowSet, flowFrame, ncdfFlowSet, GatingSet or GatingHierarchy)
+#' @param mapping default list of aesthetic mappings (these can be colour,
+#'   size, shape, line type -- see individual geom functions for more details)
+#' @param filter a flowcore gate object or a function that takes a flowSet and channels as input and returns a data-dependent flowcore gate.
+#'                The gate is used to filter the flow data before it is plotted.
+#' @param max_nrow_to_plot the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 5e4. To turn off the subsampling, simply set it to a large enough number or Inf.
+#' @param subset character that specifies the node path or node name in the case of GatingSet. 
+#'               Default is "_parent_", which will be substituted with the actual node name 
+#'               based on the geom_gate layer to be added later.
 #' @param ... other arguments passed to specific methods
+#' @return ggcyto object 
 #' @examples
 #' 
 #' data(GvHD)
@@ -34,6 +44,42 @@
 #' col1 <- "`FSC-H`" #note that the dimension names with special characters needs to be quoted by backticks
 #' col2 <- "`SSC-H`"
 #' ggcyto(fs, aes_string(col1,col2)) + geom_hex()
+#' 
+#' ## More flowSet examples
+#' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
+#' # 1d histogram/densityplot
+#' p <- ggcyto(fs, aes(x = `FSC-H`)) 
+#' #facet_wrap(~name)` is used automatically
+#' p1 <- p + geom_histogram() 
+#' p1
+#' #overwriting the default faceeting
+#' p1 + facet_grid(Patient~Visit)
+#'
+#' #display density
+#' p + geom_density()
+#' 
+#' #you can use ggridges package to display stacked density plot
+#' require(ggridges)
+#' #stack by fcs file ('name')
+#' p + geom_density_ridges(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
+#' #or to stack by Visit and facet by patient
+#' p + geom_density_ridges(aes(y = Visit)) + facet_grid(~Patient)
+#' 
+#' # 2d scatter/dot plot
+#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
+#' p <- p + geom_hex(bins = 128)
+#' p
+#' 
+#' ## GatingSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' # 2d plot 
+#' ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' 
+#' # 1d plot
+#' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
+#' 
+#' @export
 ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 
 
@@ -49,9 +95,8 @@ ggcyto <- function(data = NULL, ...) UseMethod("ggcyto")
 is.ggcyto <- function(x) inherits(x, "ggcyto")
 
 #' @export
-#' @rdname  ggcyto
 ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
-  ggcyto.flowSet(fortify_fs(data, ...), mapping)
+  ggcyto.flowSet(fortify_fs(data, ...), mapping, ...)
 }
 
 #' Draw ggcyto on current graphics device.
@@ -59,6 +104,9 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' A wrapper for print.ggplot. It converts the ggcyto to conventional ggplot object before printing it.
 #' This is usually invoked automatically when a ggcyto object is returned to R console.
 #' 
+#' @name print.ggcyto
+#' @aliases print,ggcyto-method plot.ggcyto show.ggcyto show,ggcyto-method
+#' @usage print(x, ...)
 #' @return nothing
 #' @param x ggcyto object to display
 #' @param ... other arguments not used by this method
@@ -73,6 +121,7 @@ print.ggcyto <- function(x, ...) {
     ggplot2:::print.ggplot(x)
 }
 
+#' @usage plot(x, ...)
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
@@ -80,17 +129,16 @@ plot.ggcyto <- print.ggcyto
 
 #--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
 #' @export
-#' @rdname print.ggcyto
 setMethod("print", c("ggcyto"), print.ggcyto)
 
 
+#' @usage show(object)
 #' @param object ggcyto object
 #' @rdname print.ggcyto
 #' @method show ggcyto
 #' @export
 show.ggcyto <- function(object){print(object)}
 
-#' @rdname print.ggcyto
 #' @method show ggcyto
 #' @export
 setMethod("show", "ggcyto", show.ggcyto)
@@ -102,6 +150,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' by user so that it can be used as a regular ggplot object.
 #' 
 #' @param x ggcyto object with the data that has not yet been fortified to data.frame.
+#' @param pre_binning whether to pass the binned data to ggplot to avoid the overhead to scaling the original raw data for geom_hex layer
 #' 
 #' @return ggplot object
 #' @examples 
@@ -115,7 +164,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' class(p1) 
 #' p1$data # data is fortified
 #' @export
-as.ggplot <- function(x){
+as.ggplot <- function(x, pre_binning = FALSE){
 
   #####################
   #lazy-fortifying the plot data
@@ -148,18 +197,47 @@ as.ggplot <- function(x){
     #with the one that is based on data limits to avoid oversized bins caused by exagerated gates
     if(is(e2$geom, "GeomHex"))
     {
-      
-      if(is.null(e2$stat_params[["binwidth"]]))
+      bins <- e2$stat_params[["bins"]]
+      if(is.null(bins))
+        bins <- 32
+      if(bins > 0)
       {
-        transformed_range <- data_range
-        for(col in c("x","y")){
-          if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+        if(is.null(e2$stat_params[["binwidth"]]))
+        {
+          transformed_range <- data_range
+          for(col in c("x","y")){
+            if(!is.null(x$scales$get_scales(col)$secondary.axis)){
+              transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+            }
           }
+          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+          e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
+          x$layers[[i]] <- e2
         }
-        dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
-        e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
-        x$layers[[i]] <- e2
+        #optionally pass the binned data to ggplot for speed
+        if(pre_binning)
+        {
+          pd <- pData(fs)
+          df <- x[["data"]]
+          cols <- c(".rownames", colnames(pd))
+  
+          df <- df[, {
+  
+            binned <- hexbin::hexbin(.SD, xbins = e2$stat_params[["bins"]])
+            sd <- hexbin::hcell2xy(binned)
+            names(sd) <- colnames(.SD)
+            data.table(data.frame(sd,hex_cell_id = binned@cell, count=binned@count, check.names = FALSE))
+          }, by = cols]
+  
+          x[["data"]] <- df
+          e2 <- geom_hex(stat="identity",aes(fill=count))
+          x$layers[[i]] <- e2
+        }
+      }else
+      {
+        df <- x[["data"]]
+        cols <- densCols(df[, chnls, with = F], colramp =colorRampPalette(rev(brewer.pal(11, "Spectral"))))
+        x$layers[[i]] <- geom_point(color = cols, size = 0.2)
       }
     }
   }

@@ -27,14 +27,11 @@ fr <- fs[[1]]
 ```{r}
 # get a lymphGate
 lg <- flowStats::lymphGate(fr, channels=c("FSC-H", "SSC-H"),scale=0.6)
-norm.filter <- lg$n2gate
-#extract the polygonGate
-poly.g <- flowViz:::norm2Polygon(filterDetails(lg[["n2gateResults"]], identifier(norm.filter)))
 p <- ggplot(fr, aes(x = `FSC-H`, y =  `SSC-H`))
 p <- p + stat_binhex(bins = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2))   
 
 # add polygonGate layer
-p1 <- p + geom_path(data = poly.g, colour = "red")#can't use geom_gate since it is specialized layer to be used with ggcyto wrapper
+p1 <- p + geom_path(data = lg, colour = "red")#can't use geom_gate since it is specialized layer to be used with ggcyto wrapper
 p1
 
 # add rectangleGate layer (2d)
@@ -51,22 +48,22 @@ p1 + geom_hvline(data = rectangleGate("SSC-H" = c(550, Inf)), colour = "red") #h
 myColor <- rev(RColorBrewer::brewer.pal(11, "Spectral"))
 myColor_scale_fill <- scale_fill_gradientn(colours = myColor)
 p <- ggplot(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + myColor_scale_fill + stat_binhex(bins = 64) + ylim(c(10,9e2)) + xlim(c(10,9e2)) + facet_wrap(~name)    
-p + geom_path(data = poly.g, colour = "red")
+p + geom_path(data = lg, colour = "red")
     
 # n samples + n gates
-#fit norm2 filter to multiple samples
-fres <- filter(fs, norm.filter)
-#extract the polygonGate for each sample
-poly.gates <- lapply(fres, function(res)flowViz:::norm2Polygon(filterDetails(res, "defaultLymphGate")))
-poly.gates <- filterList(poly.gates)
+#fit lymphgate filter to multiple samples
+lgs <- lapply(1:length(fs), function(idx) flowStats::lymphGate(fs[[idx]], channels=c("FSC-H", "SSC-H"),scale=0.6))
+names(lgs) <- sampleNames(fs)
+
 # add a list of gates as gate layer
 # Note: pData must be explicitly attached to geom_gate layer for facetting
-attr(poly.gates, "pd") <- pData(fs)
-p + geom_path(data = poly.gates, colour = "red")
+lgs <- filterList(lgs)
+attr(lgs, "pd") <- pData(fs)
+p + geom_path(data = lgs, colour = "red")
 
 # add stats
-stats <- compute_stats(fs, poly.gates, type = "percent")# calculate cell % and ccentroid of the gates
-p + geom_path(data = poly.gates, colour = "red") + geom_label(data = stats , aes(label = percent))
+stats <- compute_stats(fs, lgs, type = "percent")# calculate cell % and ccentroid of the gates
+p + geom_path(data = lgs, colour = "red") + geom_label(data = stats , aes(label = value))
 
 # a list of 1d gate
 den.gates <- fsApply(fs, openCyto::mindensity, channel = "FSC-H", gate_range = c(100, 300), adjust = 1)
@@ -80,14 +77,16 @@ den.gates <- filterList(den.gates)
 attr(den.gates, "pd") <- pData(fs)
 
 # add stats
-stats <- compute_stats(fs, den.gates)# calculate cell % and ccentroid of the gates
-p + geom_hvline(data = den.gates, colour = "red") + geom_label(data = stats , aes(label = percent), fill = "yellow")
+# stats <- compute_stats(fs, den.gates)# calculate cell % and ccentroid of the gates
+# p + geom_hvline(data = den.gates, colour = "red") + geom_label(data = stats , aes(label = value), fill = "yellow")
+p + geom_hvline(data = den.gates, colour = "red")
 
 # 1d gate on density plot
 p1 <- ggplot(fs, aes(x = `SSC-H`)) + geom_density(aes(y = ..scaled..),fill = "black") + facet_wrap(~name) 
 p1 <- p1 + geom_hvline(data = den.gates, colour = "red") 
 #must define y aes here since ggplot object does not have y defined in aes
-p1 + geom_label(data = stats , aes(label = percent, y = density))
+# p1 + geom_label(data = stats , aes(label = value, y = density))
+p1
 
 ```
 

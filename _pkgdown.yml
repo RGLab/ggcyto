@@ -1,0 +1,82 @@
+destination: docs
+reference:
+  - title: "Plot basics"
+    desc: >
+      The base method, ggcyto, is deliberately designed to mirror the semantics
+      of ggplot2, but with added support for cytoverse data structures and layers.
+      Where there is no need for function to be extended for the cytoverse 
+      (like aes() for adding aesthetic mappings), the ggplot2 versions should 
+      function as expected.
+    contents:
+      - ggcyto-class
+      - ggcyto
+      - ggcyto.GatingSet
+      - ggcyto.flowSet
+      - "`+.ggcyto_GatingSet`"
+      - "`+.ggcyto_GatingLayout`"
+      - "`+.ggcyto_flowSet`"
+      - "`%+%`"
+      - as.ggplot
+      - ggcyto_arrange
+  - title: "Added layers"
+    desc: >
+      geom_gate and geom_overlay are layers for easy addition of the gate
+      geometries and additional populations to ggcyto plots.
+    contents:
+      - geom_gate
+      - transform,filter-method
+      - geom_overlay
+      - geom_hvline
+      - geom_stats
+      - stat_position
+  - title: "Added scales"
+    desc: >
+      A few additional scaling functions for determining axis scales and labels
+    contents:
+      - labs_cyto
+      - axis_x_inverse_trans
+      - axis_y_inverse_trans
+      - scale_x_flowCore_fasinh
+      - scale_y_flowCore_fasinh
+      - scale_x_flowjo_fasinh
+      - scale_y_flowjo_fasinh
+      - flowCore_asinht_trans
+      - scale_x_flowjo_biexp
+      - scale_y_flowjo_biexp
+      - scale_x_logicle
+      - scale_y_logicle
+  - title: "Programming with ggcyto"
+    desc: >
+      These functions provide tools for obtaining information from cytoverse data
+      types to aid in constructing plots and also for explicitly
+      generating plots
+    contents:
+      - is.ggcyto
+      - is.ggcyto_flowSet
+      - is.ggcyto_par
+      - getFlowFrame
+      - compute_stats
+      - marginalFilter
+      - print.ggcyto
+      - print.ggcyto_GatingLayout
+  - title: "Autoplot and fortify"
+    desc: >
+      autoplot() will quickly generate common default plots according
+      for cytoverse data types and fortify() will turn cytoverse data
+      types in to data.tables that can be used with ggplot2.
+    contents:
+      - autoplot
+      - fortify
+      - fortify.polygonGate
+      - fortify.ellipsoidGate
+      - fortify.rectangleGate
+      - fortify.filterList
+      - fortify_fs
+  - title: "Controlling ggcyto behavior"
+    desc: >
+      Specify the ggcyto settings/parameters for a plot or get the default settings
+    contents:
+      - ggcyto_par_set
+      - ggcyto_par_default
+figures:
+  fig.width: 4.5

@@ -1,13 +1,13 @@
 #' replace current cytometry data
 #' 
-#' It essentially reconstruct the entire ggcyto plot object based on the new data and the original mapping and layers
-#' recorded in the plot object
+#' It essentially reconstructs the entire ggcyto plot object based on the new data and the original mapping and layers
+#' recorded in the plot object.
 #' 
-#' @rdname replace_data
+#' @name replace_data
+#' @aliases %+% %+%,ggcyto_GatingLayout-method
 #' @param e1 the ggcyto object
 #' @param e2 the new cytometry data . It can be 'GatingSet' or 'flowSet'.
 #' @return the new ggcyto object
-#' @export
 #' @importFrom ggplot2 %+%
 #' @examples 
 #' dataDir <- system.file("extdata",package="flowWorkspaceData")
@@ -33,6 +33,7 @@
 #' #replace the data with gs2 and see the same visual effect
 #' p %+% gs2
 #' 
+#' @export
 setGeneric("%+%")
 setMethod("%+%", c("ggcyto"),function(e1,e2)replace.ggcyto.data(e1,e2))
 
@@ -65,7 +66,6 @@ replace.ggcyto.data <- function(e1, e2){
     p
 }
 
-#' @rdname replace_data
 #' @export
 setMethod("%+%", c("ggcyto_GatingLayout"),function(e1,e2)replace.ggcyto_GatingLayout.data(e1,e2))
 replace.ggcyto_GatingLayout.data <- function(e1, e2){

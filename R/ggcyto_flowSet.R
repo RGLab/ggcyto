@@ -1,43 +1,4 @@
-#' Create a new ggcyto plot from a flowSet
-#'
-#' @param data default flowSet for plot
-#' @param mapping default list of aesthetic mappings (these can be colour,
-#'   size, shape, line type -- see individual geom functions for more details)
-#' @param filter a flowcore gate object or a function that takes flowSet and channels as input and returns a data-dependent flowcore gate
-#'                The gate is used to filter the flow data before it is plotted. 
-#' @param max_nrow_to_plot the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 2e5.To turn off the subsampling, simply set it to a large enough number or Inf
-#' @param ... ignored
-#' @method ggcyto flowSet
-#' @return a ggcyto_GatingSet object which is a subclass of ggcyto class.
-#' @importFrom rlang quo_name
 #' @export
-#' @examples
-#' 
-#' data(GvHD)
-#' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
-#' # 1d histogram/densityplot
-#' p <- ggcyto(fs, aes(x = `FSC-H`)) 
-#' #facet_wrap(~name)` is used automatically
-#' p1 <- p + geom_histogram() 
-#' p1
-#' #overwriting the default faceeting
-#' p1 + facet_grid(Patient~Visit)
-#'
-#' #display density
-#' p + geom_density()
-#' 
-#' #you can use ggridges package to display stacked density plot
-#' require(ggridges)
-#' #stack by fcs file ('name')
-#' p + geom_density_ridges(aes(y = name)) + facet_null() #facet_null is used to remove the default facet_wrap (by 'name' column)
-#' #or to stack by Visit and facet by patient
-#' p + geom_density_ridges(aes(y = Visit)) + facet_grid(~Patient)
-#' 
-#' # 2d scatter/dot plot
-#' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
-#' p <- p + geom_hex(bins = 128)
-#' p
-#'
 ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
   #add empty layers recording
   
@@ -91,12 +52,12 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
   p[["GeomStats"]] <- list()
   
   p <- p + ggcyto_par_default()
-  p <-  p + guides(fill=FALSE) #the counts at legend could be reflecting the subsampled data and we want to hide this from user to avoid confusion
+  # the counts at legend could be reflecting the subsampled data and we want to hide this from user to avoid confusion
+  p <- p + theme(legend.position = 'none')
   
   p
 }
 
-#' @rdname ggcyto.flowSet
 #' @export
 ggcyto.ncdfFlowList <- function(data, ...){
   getS3method("ggcyto", "flowSet")(data, ...)
@@ -123,14 +84,21 @@ is.ggcyto_flowSet <- function(x){
 #' It also calculates population statistics when geom_stats layer is added.
 #' It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'.
 #' 
-#' @param e1 An object of class \code{ggcyto_flowSet}
+#' @name ggcyto_add
+#' @usage e1 + e2
+#' @aliases +.ggcyto_flowSet +,ggcyto_flowSet-method
+#' +.ggcyto_GatingSet +,ggcyto_GatingSet-method
+#' +.ggcyto_GatingLayout +,ggcyto_GatingLayout-method
+#' +.ggcyto_ncdfFlowList
+#' @param e1 An object of class \code{ggcyto} or a class inheriting from \code{ggcyto}, such
+#' as \code{ggcyto_flowSet}, \code{ggcyto_GatingSet}, or \code{ggcyto_GatingLayout}. In the case
+#' of \code{ggcyto_GatingLayout}, the component of \code{e2} will be added to each subsidiary plot.
 #' @param e2 A component to add to \code{e1}
-#' @return ggcyto_flowSet object
-#' @rdname ggcyto_flowSet_add
+#' @return ggcyto object
 #' @importFrom plyr defaults
-#' @export
 #' @examples
 #' 
+#' ## flowSet
 #' data(GvHD)
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`)) + geom_hex(bins = 128)
@@ -138,6 +106,25 @@ is.ggcyto_flowSet <- function(x){
 #' rect.g <- rectangleGate(list("FSC-H" =  c(300,500), "SSC-H" = c(50,200)))
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' p + geom_gate(rect.gates) + geom_stats()
+#' 
+#' ## GatingSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
+#' p <- p + geom_gate("CD4") + geom_stats() #plot CD4 gate and it is stats
+#' p
+#' p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
+#' 
+#' ## GatingLayout
+#' #autplot for GatingSet
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' gh <- gs[[1]]
+#' p <- autoplot(gh)
+#' class(p)
+#' # customize the font size of strip text for each ggcyo plots contained in GatingLayout object
+#' p + theme(strip.text = element_text(size = 14))
+#' @export
 `+.ggcyto_flowSet` <- function(e1, e2){
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
@@ -148,7 +135,6 @@ is.ggcyto_flowSet <- function(x){
     
 }
 
-#' @rdname ggcyto_flowSet_add
 #' @export
 setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 

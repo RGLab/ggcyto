@@ -18,13 +18,29 @@
 
 \method{autoplot}{GatingSetList}(object, ...)
 
-\method{autoplot}{GatingSet}(object, gate, x = NULL, y = "SSC-A",
-  bins = 30, axis_inverse_trans = TRUE, ...)
+\method{autoplot}{GatingSet}(
+  object,
+  gate,
+  x = NULL,
+  y = "SSC-A",
+  bins = 30,
+  axis_inverse_trans = TRUE,
+  ...
+)
 
-\method{autoplot}{GatingHierarchy}(object, gate, y = "SSC-A",
-  bool = FALSE, arrange.main = sampleNames(object), arrange = TRUE,
-  merge = TRUE, projections = list(), strip.text = c("parent",
-  "gate"), path = "auto", ...)
+\method{autoplot}{GatingHierarchy}(
+  object,
+  gate,
+  y = "SSC-A",
+  bool = FALSE,
+  arrange.main = sampleNames(object),
+  arrange = TRUE,
+  merge = TRUE,
+  projections = list(),
+  strip.text = c("parent", "gate"),
+  path = "auto",
+  ...
+)
 }
 \arguments{
 \item{object}{The data source. A core cytometry data structure. A flowFrame, flowSet, GatingSet or GatingHierarchy object}
@@ -59,9 +75,9 @@
 a ggcyto object
 }
 \description{
-Overloaded autoplot methods for the cytometry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
-It plots the cytometry data with geom_histogram, geom_density or geom_hex.
-When autoplot a GatingSet/Gatinghierarchy, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
+Overloaded autoplot methods for the cytometry data structure: \code{flowFrame} or \code{flowSet}, \code{Gatinghierarchy}, \code{GatingSet}.
+It plots the cytometry data with \code{geom_histogram}, \code{geom_density} or \code{geom_hex}.
+When autoplot is called on a \code{GatingSet}/\code{Gatinghierarchy}, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
 }
 \examples{
 library(flowCore)

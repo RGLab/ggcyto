@@ -10,16 +10,6 @@
 \title{Overlay a population on an existing ggcyto plot analogous to backgating.}
 \usage{
 geom_overlay(data, ...)
-
-\method{geom_overlay}{default}(data, ...)
-
-\method{geom_overlay}{character}(data, ...)
-
-\method{geom_overlay}{ncdfFlowList}(data, ...)
-
-\method{geom_overlay}{flowSet}(data, ...)
-
-\method{geom_overlay}{flowFrame}(data, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)

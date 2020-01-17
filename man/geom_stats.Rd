@@ -4,9 +4,17 @@
 \alias{geom_stats}
 \title{Add a popluation statistics layer to a ggcyto plot.}
 \usage{
-geom_stats(gate = NULL, ..., value = NULL, type = "percent",
-  negated = FALSE, adjust = 0.5, label.padding = unit(0.05, "lines"),
-  label.size = 0, digits = 3)
+geom_stats(
+  gate = NULL,
+  ...,
+  value = NULL,
+  type = "percent",
+  negated = FALSE,
+  adjust = 0.5,
+  label.padding = unit(0.05, "lines"),
+  label.size = 0,
+  digits = 3
+)
 }
 \arguments{
 \item{gate}{a 'filterList` or character (represent as a population node in GatingSet)

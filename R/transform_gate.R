@@ -2,19 +2,22 @@
 #' 
 #' rescale the gate coordinates with the transformation provided
 #' 
+#' @name transform-gate
+#' @aliases transform transform,filter-method transform-filterList-method
+#' rescale_gate rescale_gate.polygonGate rescale_gate.ellipsoidGate
+#' rescale_gate.quadGate rescale_gate.rectangleGate
+#' @usage transform(`_data`, ...)
 #' @param _data the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
 #' @param ...
 #'      trans the transformation function or transformList object
 #'      param the parameter/dimension to be transformed. When trans is transformList object, param is not needed since it is derived from transformList.
 #' @return the transformed filter/filterList object
 #' @export
-#' @rdname transform-gate
 setMethod("transform", signature = c("filter"), function(`_data`, ...){
   .transform.filter(`_data`, ...)
 })
 
 #' @export
-#' @rdname transform-gate
 setMethod("transform", signature = c("filterList"), function(`_data`, ...){
   res <- lapply(`_data`, function(g){transform(g, ...)})
   filterList(res)
@@ -46,16 +49,14 @@ setMethod("transform", signature = c("filterList"), function(`_data`, ...){
     stop("unsupported `trans` type!")
 }
 
-#' transform methods for gates
-#' @export
-#' @rdname transform-gate
-rescale_gate <- function(gate, trans, param)UseMethod("rescale_gate")
-
 #' @param gate gate object
 #' @param trans the transformation function
-#' @param param the parameter/dimension to be transformed. 
-#' @export
+#' @param param the parameter/dimension to be transformed.
 #' @rdname transform-gate
+#' @export
+rescale_gate <- function(gate, trans, param)UseMethod("rescale_gate")
+
+#' @export
 rescale_gate.polygonGate <- function(gate, trans, param){
   gate@boundaries[, param] <- trans(gate@boundaries[, param])
   gate
@@ -63,7 +64,6 @@ rescale_gate.polygonGate <- function(gate, trans, param){
 
 
 #' @export
-#' @rdname transform-gate
 rescale_gate.ellipsoidGate <- function(gate, ...){
   rescale_gate(as(gate, "polygonGate"), ...)
 }
@@ -140,7 +140,6 @@ rescale_gate_old_ellipsoidGate <- function(gate, trans, param){
 }
 
 #' @export
-#' @rdname transform-gate
 rescale_gate.rectangleGate <- function(gate, trans, param){
 
   min <- gate@min[[param]]
@@ -156,7 +155,6 @@ rescale_gate.rectangleGate <- function(gate, trans, param){
 }
 
 #' @export
-#' @rdname transform-gate
 rescale_gate.quadGate <- function(gate, trans, param){
 
   boundary <- gate@boundary[[param]]

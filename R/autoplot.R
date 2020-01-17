@@ -1,8 +1,8 @@
 #' Plot cytometry data in one or two dimension with the ggcyto package.
 #'
-#' Overloaded autoplot methods for the cytometry data structure: flowFrame or flowSet, Gatinghierarchy, GatingSet.
-#' It plots the cytometry data with geom_histogram, geom_density or geom_hex.
-#' When autoplot a GatingSet/Gatinghierarchy, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
+#' Overloaded autoplot methods for the cytometry data structure: \code{flowFrame} or \code{flowSet}, \code{Gatinghierarchy}, \code{GatingSet}.
+#' It plots the cytometry data with \code{geom_histogram}, \code{geom_density} or \code{geom_hex}.
+#' When autoplot is called on a \code{GatingSet}/\code{Gatinghierarchy}, the second argument should be a gate or population node. And the dimensions(channels/markers) are deduced from the gate dimensions.
 #'
 #' @param object The data source. A core cytometry data structure. A flowFrame, flowSet, GatingSet or GatingHierarchy object
 #' @param x define the x dimension of the plot (not used when object is a GatingSet). When object is a flowFrame, it can be missing, which plots 1d density plot on all the channels. 
@@ -203,12 +203,13 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
       p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
     }
 
-    p <- p + guides(fill=FALSE) + labs(title = NULL)
+    p <- p + labs(title = NULL)
     myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
                      , axis.text = element_text(color = gray(0.3), size = 6)
                      , strip.text = element_text(size = 10)
                      , plot.margin = unit(c(0,0,0,0), "cm")
                      , panel.spacing = unit(0, "cm")
+                     , legend.position = 'none'
     )
     p <- p + myTheme
 

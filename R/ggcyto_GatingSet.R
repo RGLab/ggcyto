@@ -1,24 +1,4 @@
-
-#' Create a new ggcyto plot from a GatingSet
-#'
-#' @param data GatingSet to plot
-#' @param subset character that specifies the node path or node name in the GatingSet. 
-#'                Default is "_parent_", which will be substitute with the actual node name 
-#'                based on the geom_gate layer to be added later.
-#' @inheritParams ggcyto.flowSet
-#' @method ggcyto GatingSet
-#' @return a ggcyto_GatingSet object which is a subclass of ggcyto_flowSet class.
 #' @export
-#' @examples
-#' 
-#' dataDir <- system.file("extdata",package="flowWorkspaceData")
-#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
-#' # 2d plot 
-#' ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
-#' 
-#' # 1d plot
-#' ggcyto(gs, aes(x = CD4), subset = "CD3+")  + geom_density()
-#'
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
   attr(p[["data"]], "subset") <- subset#must attach parent info to attribute since foritfy method needs it to coerce it to data.frame
@@ -35,13 +15,10 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p
 }
 
-#' @rdname ggcyto.GatingSet
 #' @export
 ggcyto.GatingSetList <- function(data, ...){
   getS3method("ggcyto", "GatingSet")(data, ...)
 }
-
-#' @rdname ggcyto.GatingSet
 #' @export
 ggcyto.GatingHierarchy <- function(data, ...){
   data <- as.GatingSet(data)
@@ -53,7 +30,7 @@ as.GatingSet <- function(gh){
   trans <- gs@transformation 
   if(!is.null(trans)&&length(trans)>0)
   {
-    # trans <- list(trans)
+    trans <- list(trans)
     names(trans) <- sn
     gs@transformation <- trans
   }
@@ -61,24 +38,6 @@ as.GatingSet <- function(gh){
   gs[sn]
 }
 
-
-#' overloaded '+' method for ggcyto.gs
-#' 
-#' It takes care the speical format of some ggcyto layers. For example geom_gate or geom_stats layer with just gate(population) name specified,
-#' It only supports some special axis transformations. (See examples below)
-#'
-#' @param e1 An object of class \code{ggcyto}
-#' @param e2 A component to add to \code{e1}
-#' @return ggcyto_GatingSet object
-#' @rdname ggcyto_GatingSet_add
-#' @examples 
-#' 
-#'  dataDir <- system.file("extdata",package="flowWorkspaceData")
-#'  gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
-#'  p <- ggcyto(gs, aes(x = CD4, y = CD8), subset = "CD3+") + geom_hex(bins = 64)
-#'  p <- p + geom_gate("CD4") + geom_stats() #plot CD4 gate and it is stats
-#'  p
-#'  p + axis_x_inverse_trans() #inverse transform the x axis into raw scale
 #' @export
 `+.ggcyto_GatingSet` <- function(e1, e2){
   add_ggcyto_gs(e1,e2)
@@ -227,7 +186,6 @@ add_ggcyto_gs <- function(e1, e2){
   
 }
 #' @export
-#' @rdname ggcyto_GatingSet_add
 setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
 #' match the subpopulation based on the given projections and parentID
 #' @noRd 
