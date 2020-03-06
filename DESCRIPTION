@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.15.1
+Version: 1.15.2
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -13,7 +13,7 @@ Description: With the dedicated fortify method implemented for flowSet,
 VignetteBuilder: knitr
 Depends:
     methods,
-    ggplot2(>= 2.2.1.9000),
+    ggplot2(>= 3.3.0),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
     flowWorkspace(>= 3.33.1)
