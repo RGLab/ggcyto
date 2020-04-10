@@ -286,7 +286,7 @@ add_ggcyto <- function(e1, e2, e2name){
       lab_txt[[axis_name]] <- switch(e2[["labels"]]
                                   , "marker" = ifelse(is.na(marker), chnl, marker)
                                   , "channel" = chnl
-                                  , "both" = sub("NA","",paste(chnl, marker))
+                                  , "both" = paste0(chnl, ifelse(is.na(marker), "", paste0(" ", marker)))
                                   )
                         
     }
