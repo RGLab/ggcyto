@@ -235,6 +235,9 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is(e2, "GeomStats")){
     e1[["GeomStats"]] <- c(e1[["GeomStats"]], list(e2)) #stats needs to be compputed after limits is set at as.ggplot function
     return(e1)
+  }else if(is(e2, "statsNull")){
+    e1[["GeomStats"]] <- NULL
+    return(e1)
   }else if (is.ggcyto_par(e2)) {
       
     for(element in names(e2)){

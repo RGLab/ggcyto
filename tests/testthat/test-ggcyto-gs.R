@@ -57,4 +57,20 @@ test_that("gs", {
 
 
 })
+
+test_that("stats_null", {
+  
+  p <- autoplot(gs1, "CD4")
+  p <- p + stats_null()
+  suppressWarnings(expect_doppelganger("stats_null_1gate", p))
+  p <- p + geom_stats(type = "count")
+  suppressWarnings(expect_doppelganger("stats_null_1gate_geom_stats", p))
+  
+  p <- autoplot(gs1, c("CD4", "CD8"))
+  p <- p + stats_null()
+  suppressWarnings(expect_doppelganger("stats_null_2gates", p))
+  p <- p + geom_stats()
+  suppressWarnings(expect_doppelganger("stats_null_2gates_geom_stats", p))
+  
+})
 # options(warn = 0)#restore default
