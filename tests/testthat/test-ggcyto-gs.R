@@ -73,4 +73,14 @@ test_that("stats_null", {
   suppressWarnings(expect_doppelganger("stats_null_2gates_geom_stats", p))
   
 })
+
+test_that("gate_null", {
+  
+  p <- autoplot(gs1, c("CD4", "CD8"))
+  p <- p + gate_null()
+  suppressWarnings(expect_doppelganger("gate_null_2gates", p))
+  p <- p + geom_gate("CD4")
+  suppressWarnings(expect_doppelganger("gate_null_2gates_geom_gate", p))
+  
+})
 # options(warn = 0)#restore default

@@ -52,7 +52,7 @@ geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", negated
 #' dataDir <- system.file("extdata",package="flowWorkspaceData")
 #' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
 #' #autoplot display pop stats by default
-#' p <- autoplot(gs1, "CD4")
+#' p <- autoplot(gs, "CD4")
 #' #it is easy to remove the default stats
 #' p <- p + stats_null()
 #' #and add a new one
