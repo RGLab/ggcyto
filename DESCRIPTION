@@ -4,7 +4,7 @@ Title: Visualize Cytometry data with ggplot
 Version: 1.15.4
 Date: 2015-11-02
 Author: Mike Jiang
-Maintainer: Mike Jiang <wjiang2@fhcrc.org>
+Maintainer: Mike Jiang <wjiang2@fhcrc.org>,Jake Wagner <jpwagner@fhcrc.org>
 Description: With the dedicated fortify method implemented for flowSet,
     ncdfFlowSet and GatingSet classes, both raw and gated flow cytometry data
     can be plotted directly with ggplot. ggcyto wrapper and some customed
