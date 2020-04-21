@@ -8,7 +8,7 @@
 #' @param negated logical indicating whether position needs to be moved to negative side of gate
 #' @param limits used to fix the gate range
 #' @param ... other arguments
-#' @param adjust adjust the position of the centroid
+#' @param adjust adjust the position of the centroid. This can be a length-2 vector with an adjustment in each dimension.
 #' @param abs logical
 #' @param data_range a two-row data.frame representing the actual data range. Each column is a a range for a specific channel. First row is min, Second row is max.
 #'        
@@ -95,7 +95,8 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   # adjust the position
   #   adjust <- rep(adjust, length=2)[1:2]
   diffs <- apply(gate_range,2, diff)
-  centroids <- centroids + diffs * (adjust - 0.5)
+  not_density <- names(centroids) != "density"
+  centroids[not_density] <- centroids[not_density] + diffs[not_density] * (adjust - 0.5)
   
   
   as.data.table(t(centroids))

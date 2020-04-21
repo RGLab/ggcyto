@@ -26,7 +26,7 @@ stat_position(gate, ...)
 
 \item{negated}{logical indicating whether position needs to be moved to negative side of gate}
 
-\item{adjust}{adjust the position of the centroid}
+\item{adjust}{adjust the position of the centroid. This can be a length-2 vector with an adjustment in each dimension.}
 
 \item{abs}{logical}
 
