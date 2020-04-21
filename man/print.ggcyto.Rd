@@ -8,11 +8,11 @@
 \alias{show,ggcyto-method}
 \title{Draw ggcyto on current graphics device.}
 \usage{
-print(x, ...)
+\method{print}{ggcyto}(x, ...)
 
-plot(x, ...)
+\method{plot}{ggcyto}(x, ...)
 
-show(object)
+\method{show}{ggcyto}(object)
 }
 \arguments{
 \item{x}{ggcyto object to display}

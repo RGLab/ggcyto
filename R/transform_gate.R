@@ -3,7 +3,7 @@
 #' rescale the gate coordinates with the transformation provided
 #' 
 #' @name transform-gate
-#' @aliases transform transform,filter-method transform-filterList-method
+#' @aliases transform transform,filter-method transform,filterList-method
 #' rescale_gate rescale_gate.polygonGate rescale_gate.ellipsoidGate
 #' rescale_gate.quadGate rescale_gate.rectangleGate
 #' @usage transform(`_data`, ...)

@@ -1,6 +1,5 @@
 #' print method for ggcyto_gate_layout class
 #' 
-#' @usage print(x, ...)
 #' @inheritParams ggcyto_arrange
 #' @export
 #' @return nothing
@@ -60,7 +59,6 @@ ggcyto_arrange <- function(x, ...){
 #' @rdname print.ggcyto_GatingLayout
 #' @method show ggcyto_GatingLayout
 #' @aliases show,ggcyto_GatingLayout-method
-#' @usage show(object)
 #' @param object ggcyto_GatingLayout
 #' @export
 show.ggcyto_GatingLayout <- function(object){print(object)}

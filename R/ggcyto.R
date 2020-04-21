@@ -106,7 +106,6 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' 
 #' @name print.ggcyto
 #' @aliases print,ggcyto-method plot.ggcyto show.ggcyto show,ggcyto-method
-#' @usage print(x, ...)
 #' @return nothing
 #' @param x ggcyto object to display
 #' @param ... other arguments not used by this method
@@ -121,7 +120,6 @@ print.ggcyto <- function(x, ...) {
     ggplot2:::print.ggplot(x)
 }
 
-#' @usage plot(x, ...)
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
@@ -132,7 +130,6 @@ plot.ggcyto <- print.ggcyto
 setMethod("print", c("ggcyto"), print.ggcyto)
 
 
-#' @usage show(object)
 #' @param object ggcyto object
 #' @rdname print.ggcyto
 #' @method show ggcyto
@@ -163,6 +160,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' p1 <- as.ggplot(p) # convert it to a ggplot object explictily 
 #' class(p1) 
 #' p1$data # data is fortified
+#' @importFrom hexbin hexbin hcell2xy
 #' @export
 as.ggplot <- function(x, pre_binning = FALSE){
 

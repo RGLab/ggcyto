@@ -9,6 +9,10 @@
 \arguments{
 \item{model}{filterList}
 
+\item{data}{not used}
+
+\item{nPoints}{not used}
+
 \item{...}{not used.}
 }
 \value{

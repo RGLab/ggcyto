@@ -1,3 +1,4 @@
+#' @rdname ggcyto
 #' @export
 ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p <- ggcyto.flowSet(data = data, mapping = mapping, ...)
@@ -15,10 +16,12 @@ ggcyto.GatingSet <- function(data, mapping, subset = "_parent_", ...){
   p
 }
 
+#' @rdname ggcyto
 #' @export
 ggcyto.GatingSetList <- function(data, ...){
   getS3method("ggcyto", "GatingSet")(data, ...)
 }
+#' @rdname ggcyto
 #' @export
 ggcyto.GatingHierarchy <- function(data, ...){
   data <- as.GatingSet(data)

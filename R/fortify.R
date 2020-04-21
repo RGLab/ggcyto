@@ -121,6 +121,7 @@ fortify.GatingSet <- function(model, ...){
 #' 
 #' @param model polygonGate
 #' @param data data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.
+#' @param nPoints not used
 #' @param ... not used.
 #' 
 #' @export
@@ -167,6 +168,8 @@ fortify.ellipsoidGate <- function(model, data = NULL, ...){
 #' It tries to merge with pData that is associated with filterList as attribute 'pd'
   
 #' @param model filterList
+#' @param data not used
+#' @param nPoints not used
 #' @param ... not used.
 #' 
 #' @importFrom plyr name_rows

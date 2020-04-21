@@ -20,6 +20,7 @@ Depends:
 Imports:
     plyr,
     scales,
+    hexbin,
     data.table,
     RColorBrewer,
     gridExtra,
@@ -65,4 +66,4 @@ Collate:
     'stat_position.R'
     'transform_gate.R'
     'utility.R'
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
