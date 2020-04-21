@@ -5,10 +5,12 @@
 #' @name stat_position
 #' @aliases stat_position.filter stat_position.filterList stat_position.list
 #' @param gate a flowCore filter
+#' @param negated logical indicating whether position needs to be moved to negative side of gate
+#' @param limits used to fix the gate range
 #' @param ... other arguments
 #' @param adjust adjust the position of the centroid
 #' @param abs logical
-#' @param data_range the actual data range
+#' @param data_range a two-row data.frame representing the actual data range. Each column is a a range for a specific channel. First row is min, Second row is max.
 #'        
 #' @return a data.table of gate centroid coordinates
 #' @export
@@ -43,14 +45,9 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   return(x)
 }
 
+#' @rdname stat_position
 #' @export
- stat_position.filter <- function(gate, ...){
-   .stat_position_filter(gate, ...)
- }
-
-#' @param data_range a two-row data.frame. Each column is a a range for a specific channel. First row is min, Second row is max.
-#' @noRd 
-.stat_position_filter <- function(gate, negated = FALSE, adjust = 0.5, abs = FALSE, data_range = NULL, limits = NULL, ...){
+ stat_position.filter  <- function(gate, negated = FALSE, adjust = 0.5, abs = FALSE, data_range = NULL, limits = NULL, ...){
   
   params <- parameters(gate)
   if(abs)#plot label whithin the boundary by default 

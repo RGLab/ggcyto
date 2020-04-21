@@ -14,7 +14,11 @@
 \alias{geom_gate.logicalFilterResult}
 \title{Add a gate layer to a ggcyto plot.}
 \usage{
-geom_gate(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...)
+geom_gate(data, ...)
+
+\method{geom_gate}{filterList}(data, pd, nPoints = 100, ...)
+
+\method{geom_gate}{filter}(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
@@ -24,15 +28,15 @@ or character specifying a gated cell population in the GatingSet}
 
 \item{...}{other arguments}
 
+\item{pd}{pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
+
+\item{nPoints}{used for interpolating polygonGates to prevent them from losing shape when truncated by axis limits}
+
 \item{mapping}{The aesthetic mapping}
 
 \item{fill}{fill color for the gate. Not filled by default.}
 
 \item{colour}{default is red}
-
-\item{nPoints}{used for interpolating polygonGates to prevent them from losing shape when truncated by axis limits}
-
-\item{pd}{pData (data.frame) that has rownames represents the sample names used as key to be merged with filterList}
 }
 \value{
 a geom_gate layer

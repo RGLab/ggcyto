@@ -8,17 +8,31 @@
 \title{Compute the positions of the population statistics based on the geometic gate centroid for a ggcyto plot.}
 \usage{
 stat_position(gate, ...)
+
+\method{stat_position}{filter}(
+  gate,
+  negated = FALSE,
+  adjust = 0.5,
+  abs = FALSE,
+  data_range = NULL,
+  limits = NULL,
+  ...
+)
 }
 \arguments{
 \item{gate}{a flowCore filter}
 
 \item{...}{other arguments}
 
+\item{negated}{logical indicating whether position needs to be moved to negative side of gate}
+
 \item{adjust}{adjust the position of the centroid}
 
 \item{abs}{logical}
 
-\item{data_range}{the actual data range}
+\item{data_range}{a two-row data.frame representing the actual data range. Each column is a a range for a specific channel. First row is min, Second row is max.}
+
+\item{limits}{used to fix the gate range}
 }
 \value{
 a data.table of gate centroid coordinates

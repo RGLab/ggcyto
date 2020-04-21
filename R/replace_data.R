@@ -4,7 +4,7 @@
 #' recorded in the plot object.
 #' 
 #' @name replace_data
-#' @aliases %+% %+%,ggcyto_GatingLayout-method
+#' @aliases %+% %+%,ggcyto_GatingLayout-method %+%,ggcyto_GatingLayout,ANY-method %+%,ggcyto-method
 #' @param e1 the ggcyto object
 #' @param e2 the new cytometry data . It can be 'GatingSet' or 'flowSet'.
 #' @return the new ggcyto object

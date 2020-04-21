@@ -1,3 +1,4 @@
+#' @rdname ggcyto
 #' @export
 ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
   #add empty layers recording
@@ -86,10 +87,11 @@ is.ggcyto_flowSet <- function(x){
 #' 
 #' @name ggcyto_add
 #' @usage e1 + e2
-#' @aliases +.ggcyto_flowSet +,ggcyto_flowSet-method
+#' @aliases + +.ggcyto_flowSet +,ggcyto_flowSet-method
 #' +.ggcyto_GatingSet +,ggcyto_GatingSet-method
 #' +.ggcyto_GatingLayout +,ggcyto_GatingLayout-method
-#' +.ggcyto_ncdfFlowList
+#' +.ggcyto_ncdfFlowList +,ggcyto_GatingLayout,ANY-method
+#' +,ggcyto_GatingSet,ANY-method +,ggcyto_flowSet,ANY-method
 #' @param e1 An object of class \code{ggcyto} or a class inheriting from \code{ggcyto}, such
 #' as \code{ggcyto_flowSet}, \code{ggcyto_GatingSet}, or \code{ggcyto_GatingLayout}. In the case
 #' of \code{ggcyto_GatingLayout}, the component of \code{e2} will be added to each subsidiary plot.

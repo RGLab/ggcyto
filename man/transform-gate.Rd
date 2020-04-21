@@ -4,7 +4,7 @@
 \alias{transform-gate}
 \alias{transform}
 \alias{transform,filter-method}
-\alias{transform-filterList-method}
+\alias{transform,filterList-method}
 \alias{rescale_gate}
 \alias{rescale_gate.polygonGate}
 \alias{rescale_gate.ellipsoidGate}

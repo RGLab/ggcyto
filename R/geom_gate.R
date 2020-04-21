@@ -12,7 +12,6 @@
 #' @aliases geom_gate.default geom_gate.list geom_gate.filter geom_gate.filterList
 #' geom_gate.quadGate geom_gate.character geom_gate.filters geom_gate.filtersList
 #' geom_gate.logical geom_gate.logicalFilterResult
-#' @usage geom_gate(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...)
 #' @param data a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
 #'              or a list of these gates 
 #'              or filterList
@@ -70,11 +69,9 @@ geom_gate.list <- function(data, ...){
   
 }
 
+#' @rdname geom_gate
 #' @export
-geom_gate.filterList <- function(data, ...){
-  .geom_gate_filterList(data, ...)
-}
-.geom_gate_filterList <- function(data, pd, nPoints = 100, ...){  
+geom_gate.filterList <- function(data, pd, nPoints = 100, ...){  
   #construct gate-type specific layer
   geom_gate_layer <- geom_gate_impl(data[[1]], nPoints = nPoints, ...)
 
@@ -95,6 +92,7 @@ geom_gate.filterList <- function(data, ...){
   geom_gate_layer
 }
 
+#' @rdname geom_gate
 #' @export
 geom_gate.filter <- function(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...){
   structure(

@@ -6,9 +6,9 @@
 \alias{show,ggcyto_GatingLayout-method}
 \title{print method for ggcyto_gate_layout class}
 \usage{
-print(x, ...)
+\method{print}{ggcyto_GatingLayout}(x, ...)
 
-show(object)
+\method{show}{ggcyto_GatingLayout}(object)
 }
 \arguments{
 \item{x}{ggcyto_gate_layout, which is essentially a list of ggplot objects that were previously stored as ggcyto_gate_layout object by autoplot function.}

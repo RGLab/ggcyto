@@ -11,6 +11,8 @@
 
 \item{data}{data range used to reset off-bound gate coordinates to prevent interpolating on the extremely large space unnecessarily.}
 
+\item{nPoints}{not used}
+
 \item{...}{not used.}
 }
 \value{

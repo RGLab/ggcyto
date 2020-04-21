@@ -4,6 +4,8 @@
 \alias{replace_data}
 \alias{\%+\%}
 \alias{\%+\%,ggcyto_GatingLayout-method}
+\alias{\%+\%,ggcyto_GatingLayout,ANY-method}
+\alias{\%+\%,ggcyto-method}
 \title{replace current cytometry data}
 \usage{
 e1 \%+\% e2

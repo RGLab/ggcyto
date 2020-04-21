@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.15.2
+Version: 1.15.3
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <wjiang2@fhcrc.org>
@@ -20,6 +20,7 @@ Depends:
 Imports:
     plyr,
     scales,
+    hexbin,
     data.table,
     RColorBrewer,
     gridExtra,
@@ -65,4 +66,4 @@ Collate:
     'stat_position.R'
     'transform_gate.R'
     'utility.R'
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

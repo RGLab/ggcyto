@@ -3,12 +3,16 @@
 \name{ggcyto_add}
 \alias{ggcyto_add}
 \alias{+.ggcyto_flowSet}
+\alias{+}
 \alias{+,ggcyto_flowSet-method}
 \alias{+.ggcyto_GatingSet}
 \alias{+,ggcyto_GatingSet-method}
 \alias{+.ggcyto_GatingLayout}
 \alias{+,ggcyto_GatingLayout-method}
 \alias{+.ggcyto_ncdfFlowList}
+\alias{+,ggcyto_GatingLayout,ANY-method}
+\alias{+,ggcyto_GatingSet,ANY-method}
+\alias{+,ggcyto_flowSet,ANY-method}
 \title{overloaded '+' method for ggcyto}
 \usage{
 e1 + e2
