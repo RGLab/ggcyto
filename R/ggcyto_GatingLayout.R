@@ -9,6 +9,12 @@ print.ggcyto_GatingLayout <- function(x, ...){
   plot(gt)
 }
 
+#' @importFrom grid grid.draw
+#' @method grid.draw ggcyto_GatingLayout
+#' @export
+grid.draw.ggcyto_GatingLayout <- function(x){
+  grid.draw(ggcyto_arrange(x))
+}
 
 #' Arrange a list of ggplot objects into gtable
 #' 
