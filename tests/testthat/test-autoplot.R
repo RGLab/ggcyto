@@ -19,6 +19,7 @@ test_that("autoplot -- gatingset", {
   suppressWarnings(expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3")))
   suppressWarnings(expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19"))))
   
+  suppressWarnings(expect_doppelganger("autoplot-gs-bool-gate", autoplot(gs, "CD19andCD20")))
   
 })
 
