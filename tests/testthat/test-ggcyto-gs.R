@@ -3,7 +3,25 @@ context("ggcyto-GatingSet")
 # options(warn = -1)#suppress removing rows warnings from ggplot
 
 set.seed(1)#due to subsampling
-gs1 <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+gs_dir1 <- list.files(dataDir, pattern = "gs_manual",full = TRUE)
+gs1 <- load_gs(gs_dir1)
+if(get_default_backend()=="tile")
+{
+  tmp <- tempfile()
+  convert_backend(gs_dir1, tmp)
+  gs_dir1 <- tmp
+}
+gs1 <- load_gs(gs_dir1)
+
+teardown({
+  if(get_default_backend()=="tile")
+  {
+    message("clean up ", gs_dir1)
+    unlink(gs_dir1)
+  }
+})
+
+
 test_that("gs", {
   
 

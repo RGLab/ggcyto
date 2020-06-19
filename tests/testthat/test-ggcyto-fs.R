@@ -4,7 +4,8 @@ context("ggcyto-flowSet")
 
 set.seed(1)#due to subsampling
 fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
-fr <- fs[[1]]
+fs <- flowSet_to_cytoset(fs)
+fr <- fs[[1, return = "cyto"]]
 
 test_that("fs", {
 
