@@ -1,6 +1,6 @@
-pandoc: 2.3.1
-pkgdown: 1.4.1.9000
-pkgdown_sha: 134033d9d744c548c6fbe297bc0fbd1a2f498e83
+pandoc: 2.9.2.1
+pkgdown: 1.5.1
+pkgdown_sha: ~
 articles:
   Top_features_of_ggcyto: Top_features_of_ggcyto.html
   ggplot.flowSet.1d: advanced/ggplot.flowSet.1d.html
@@ -10,4 +10,5 @@ articles:
   autoplot: autoplot.html
   ggcyto.GatingSet: ggcyto.GatingSet.html
   ggcyto.flowSet: ggcyto.flowSet.html
+last_built: 2020-06-24T08:12Z
 
