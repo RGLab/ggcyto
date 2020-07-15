@@ -3,6 +3,7 @@ context("autoplot")
 # options(warn = -1)#suppress removing rows warnings from ggplot
 
 fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
+fs <- flowSet_to_cytoset(fs)
 set.seed(1)#due to subsampling
 test_that("autoplot -- flowset", {
   suppressWarnings(expect_doppelganger("autoplot-fs-1d", autoplot(fs, x = 'FSC-H')))
@@ -19,6 +20,7 @@ test_that("autoplot -- gatingset", {
   suppressWarnings(expect_doppelganger("autoplot-gs-1-gate", autoplot(gs, "CD3")))
   suppressWarnings(expect_doppelganger("autoplot-gs-2-gate", autoplot(gs, c("CD3", "CD19"))))
   
+  suppressWarnings(expect_doppelganger("autoplot-gs-bool-gate", autoplot(gs, "CD19andCD20")))
   
 })
 

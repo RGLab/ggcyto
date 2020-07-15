@@ -78,5 +78,10 @@ reference:
     contents:
       - ggcyto_par_set
       - ggcyto_par_default
+navbar:
+  title: ggcyto
+  right:
+    - icon: fas fa fa-github fa-lg
+      href: https://github.com/RGLab/ggcyto
 figures:
   fig.width: 4.5

@@ -3,7 +3,25 @@ context("ggcyto-GatingSet")
 # options(warn = -1)#suppress removing rows warnings from ggplot
 
 set.seed(1)#due to subsampling
-gs1 <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+gs_dir1 <- list.files(dataDir, pattern = "gs_manual",full = TRUE)
+gs1 <- load_gs(gs_dir1)
+if(get_default_backend()=="tile")
+{
+  tmp <- tempfile()
+  convert_backend(gs_dir1, tmp)
+  gs_dir1 <- tmp
+}
+gs1 <- load_gs(gs_dir1)
+
+teardown({
+  if(get_default_backend()=="tile")
+  {
+    message("clean up ", gs_dir1)
+    unlink(gs_dir1)
+  }
+})
+
+
 test_that("gs", {
   
 
@@ -56,5 +74,31 @@ test_that("gs", {
   suppressWarnings(expect_doppelganger("ggcyto-gs-axis_x_inverse_trans", p + axis_x_inverse_trans() + axis_y_inverse_trans()))
 
 
+})
+
+test_that("stats_null", {
+  
+  p <- autoplot(gs1, "CD4")
+  p <- p + stats_null()
+  suppressWarnings(expect_doppelganger("stats_null_1gate", p))
+  p <- p + geom_stats(type = "count")
+  suppressWarnings(expect_doppelganger("stats_null_1gate_geom_stats", p))
+  
+  p <- autoplot(gs1, c("CD4", "CD8"))
+  p <- p + stats_null()
+  suppressWarnings(expect_doppelganger("stats_null_2gates", p))
+  p <- p + geom_stats()
+  suppressWarnings(expect_doppelganger("stats_null_2gates_geom_stats", p))
+  
+})
+
+test_that("gate_null", {
+  
+  p <- autoplot(gs1, c("CD4", "CD8"))
+  p <- p + gate_null()
+  suppressWarnings(expect_doppelganger("gate_null_2gates", p))
+  p <- p + geom_gate("CD4")
+  suppressWarnings(expect_doppelganger("gate_null_2gates_geom_gate", p))
+  
 })
 # options(warn = 0)#restore default

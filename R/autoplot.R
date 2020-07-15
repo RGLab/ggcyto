@@ -127,18 +127,27 @@ autoplot.GatingSetList <- function(object, ...){
 autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, axis_inverse_trans = TRUE, ...){
   if(missing(gate))
     stop("Must specifiy 'gate'!")
+  g <- gh_pop_get_gate(object[[1]], gate[1])
+  if(is(g, "booleanFilter"))
+  {
+    #get ref gate dims
+    g <- filter_to_list(g)
+    ref <- g$refs[1]
+    g <- gh_pop_get_gate(object[[1]], ref)
+    
+  }
   if(is.null(x)){
     #determine dimensions from gate
-    g <- gh_pop_get_gate(object[[1]], gate[1])
     params <- parameters(g)
     nDims <- length(params)
     if(nDims == 1){
       x <- params
       y <- flowWorkspace:::fix_y_axis(gs = object, x = x, y = y)
-    }else{
+    }else if(nDims == 2){
       x <- params[1]
       y <- params[2]
-    }
+    }else
+      stop("invalid nDims: ", nDims)
   }
 
   mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))

@@ -116,8 +116,8 @@ geom_gate_impl.polygonGate <- function(data, mapping = NULL, fill = NA, colour =
   # #now we can saftely assign the data
   path_layer[["data"]] <- data
   # 
+  class(path_layer) <- c("geomGate", class(path_layer))
   path_layer
-  
 }
 
 
@@ -219,3 +219,24 @@ geom_gate.logical <- function(data, ...){
     , class = c("logicalGates", "ggcyto_virtual_layer")
   )
 }
+
+#' clear all the geom_gate() layer previously added
+#' 
+#' @export
+#' @examples 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' #autoplot display pop stats by default
+#' p <- autoplot(gs, "CD4")
+#' #it is easy to remove the default gate
+#' p <- p + gate_null()
+#' #and add a new one
+#' p <- p + geom_gate("CD8")
+#' p
+gate_null <- function(){
+  structure(
+    list()
+    , class = c("gateNull", "ggcyto_virtual_layer")
+  )  
+}
+

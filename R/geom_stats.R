@@ -45,5 +45,21 @@ geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", negated
   
 }
 
-
-
+#' clear all the geom_stats() layer previously added
+#' 
+#' @export
+#' @examples 
+#' dataDir <- system.file("extdata",package="flowWorkspaceData")
+#' gs <- load_gs(list.files(dataDir, pattern = "gs_manual",full = TRUE))
+#' #autoplot display pop stats by default
+#' p <- autoplot(gs, "CD4")
+#' #it is easy to remove the default stats
+#' p <- p + stats_null()
+#' #and add a new one
+#' p <- p + geom_stats(type = "count")
+stats_null <- function(){
+  structure(
+    list()
+    , class = c("statsNull", "ggcyto_virtual_layer")
+  )  
+}
