@@ -7,7 +7,10 @@
 #' @param gate a 'filterList` or character (represent as a population node in GatingSet)
 #'             if not supplied, ggcyto then tries to parse the gate from the first geom_gate layer.
 #' @param negated whether the gate needs to be negated
-#' @param adjust adjust the position of the centroid. from 0 to 1.             
+#' @param adjust adjust the position of the centroid. from 0 to 1.
+#' @param abs If TRUE, the centroid will be calculated based on the full data range rather than
+#' the particular gate. This allows the adjust parameter to start from the center of the plot as opposed
+#' to the center of the gate.
 #' @param label.padding,label.size arguments passed to geom_label layer
 #' @param digits control the stats format
 #' @param ... other arguments passed to geom_label layer            
@@ -27,11 +30,11 @@
 #' # display gate name and percent
 #' p + geom_gate(c("CD4", "CD8")) + geom_stats(type = c("gate_name", "percent"))
 geom_stats <- function(gate = NULL, ..., value = NULL, type = "percent", negated = FALSE, adjust = 0.5
-                       , label.padding = unit(0.05, "lines"), label.size = 0, digits = 3){
+                       , abs = FALSE, label.padding = unit(0.05, "lines"), label.size = 0, digits = 3){
   type <- unlist(lapply(type, function(stat_type)match.arg(stat_type, c("percent", "count", "gate_name"))))
   
   structure(
-    list(gate = gate, value = value, type = type, negated = negated, adjust = adjust, digits = digits
+    list(gate = gate, value = value, type = type, negated = negated, adjust = adjust, abs = abs, digits = digits
          , geom_label_params = list(label.padding = label.padding
                                     , label.size = label.size
                                     , ...
