@@ -126,11 +126,11 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
   }else if(location == "data"){
     gate_range <- data_range
   }else if(location == "plot"){
-    gate_range <- limits[,params]
+    gate_range <- limits[,colnames(data_range)]
   }
 
   if(location == "fixed"){
-    centroids <- setNames(adjust, params)
+    centroids <- setNames(adjust, colnames(data_range))
   }else{
     #calculate centroid
     centroids <- colMeans(gate_range)
