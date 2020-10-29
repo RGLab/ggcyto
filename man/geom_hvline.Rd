@@ -36,7 +36,7 @@ a geom_hvline layer
 This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
 }
 \details{
-The goal is to determine the line to be either vertial or horizontal based on the 1-d data provided in 
+The goal is to determine the line to be either vertial or horizontal based on the 1-d data provided in
 this layer.
 }
 \section{Aesthetics}{

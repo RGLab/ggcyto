@@ -11,6 +11,7 @@ geom_stats(
   type = "percent",
   negated = FALSE,
   adjust = 0.5,
+  location = "gate",
   label.padding = unit(0.05, "lines"),
   label.size = 0,
   digits = 3
@@ -28,7 +29,9 @@ if not supplied, ggcyto then tries to parse the gate from the first geom_gate la
 
 \item{negated}{whether the gate needs to be negated}
 
-\item{adjust}{adjust the position of the centroid. from 0 to 1.}
+\item{adjust}{see details for \code{\link{stat_position}}}
+
+\item{location}{see details for \code{\link{stat_position}}}
 
 \item{label.padding, label.size}{arguments passed to geom_label layer}
 

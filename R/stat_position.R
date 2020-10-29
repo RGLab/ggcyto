@@ -8,10 +8,44 @@
 #' @param negated logical indicating whether position needs to be moved to negative side of gate
 #' @param limits used to fix the gate range
 #' @param ... other arguments
-#' @param adjust adjust the position of the centroid. This can be a length-2 vector with an adjustment in each dimension.
-#' @param abs logical
+#' @param adjust see details
+#' @param location see details
 #' @param data_range a two-row data.frame representing the actual data range. Each column is a a range for a specific channel. First row is min, Second row is max.
-#'        
+#' @details
+#' ## Specifying location for statistical annotation
+#' 
+#' The \code{adjust} and \code{location} arguments allow for a few different ways to adjust the location of the statistical
+#' annotation for a gate on a \code{ggcyto} plot. The valid values for \code{location} are "gate" (default), "data", "plot", and "fixed".
+#' 
+#' ### Relative location
+#' 
+#' If \code{location} is not "fixed", the starting position of the annotation will be determined with respect to a rectangular window whose
+#' bounds are determined in the following way:
+#' * For \code{location = "gate"}, the window will be set by the range of the data in the gate
+#' * For \code{location = "data"}, the window will be set by the range of values in all of the data on the plot (provided by \code{data_range})
+#' * For \code{location = "plot"}, the window will be set by the axis limits of the plot (adjusted by \code{\link{ggcyto_par_set}})
+#' 
+#' This starting position can then be adjusted by passing values in a vector to the \code{adjust} parameter, where they will be
+#' interpreted as relative proportions of the window dimension, where 0.0 represents the lower bound of the dimension and 1.0 represents
+#' the upper bound. So, for a 2-D plot, \code{adjust=c(0,0)} places the annotation at the lower left corner of this window and \code{adjust=c(1,1)} places
+#' it at the upper right corner.
+#' 
+#' As another example, for a 2-D gate, if \code{location = "gate"} and \code{adjust=c(0.25, 0.75)}, the statistical annotation will be
+#' placed 1/4 of the way across the x-range of the gate and 3/4 of the way across the y-range of the gate.
+#' 
+#' ### Fixed location
+#' 
+#' If \code{location = "fixed"}, the numeric vector passed to \code{adjust} will be interpreted as values on the data scales of the plot to provide
+#' an explicit location for the annotation.
+#' 
+#' For example, if the annotation should be at the location 3000, 5000 on the plot, that could be done with \code{location="fixed"} and
+#' \code{adjust = c(3000,5000)}.
+#' 
+#' ### Default
+#' 
+#' The default behavior if no values are provided to \code{location} or \code{adjust} will be to place the annotation at
+#' the center of the range of the data in the gate.
+#' 
 #' @return a data.table of gate centroid coordinates
 #' @export
 #' @examples 
@@ -47,14 +81,12 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
 
 #' @rdname stat_position
 #' @export
- stat_position.filter  <- function(gate, negated = FALSE, adjust = 0.5, abs = FALSE, data_range = NULL, limits = NULL, ...){
+ stat_position.filter  <- function(gate, negated = FALSE, adjust = 0.5, location = "gate", data_range = NULL, limits = NULL, ...){
   
   params <- parameters(gate)
-  if(abs)#plot label whithin the boundary by default 
-  {
-    gate_range <- data_range
-  }else #specify location by absolute position of the current window
-  {
+  location <- match.arg(location, c("gate", "data", "plot", "fixed"))
+  
+  if(location == "gate"){
     df <- fortify(gate, data = data_range)
     gate_range <- apply(df, 2, range)
 
@@ -87,17 +119,24 @@ stat_position <- function(gate, ...)UseMethod("stat_position")
       })    
     }
     
+  }else if(location == "data"){
+    gate_range <- data_range
+  }else if(location == "plot"){
+    gate_range <- limits[,params]
   }
 
-  #calculate centroid
-  centroids <- colMeans(gate_range)
-  
-  # adjust the position
-  #   adjust <- rep(adjust, length=2)[1:2]
-  diffs <- apply(gate_range,2, diff)
-  not_density <- names(centroids) != "density"
-  centroids[not_density] <- centroids[not_density] + diffs[not_density] * (adjust - 0.5)
-  
+  if(location == "fixed"){
+    centroids <- setNames(adjust, params)
+  }else{
+    #calculate centroid
+    centroids <- colMeans(gate_range)
+    
+    # adjust the location
+    #   adjust <- rep(adjust, length=2)[1:2]
+    diffs <- apply(gate_range,2, diff)
+    not_density <- names(centroids) != "density"
+    centroids[not_density] <- centroids[not_density] + diffs[not_density] * (adjust - 0.5)
+  }
   
   as.data.table(t(centroids))
   

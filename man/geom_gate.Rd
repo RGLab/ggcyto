@@ -22,7 +22,7 @@ geom_gate(data, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
-or a list of these gates 
+or a list of these gates
 or filterList
 or character specifying a gated cell population in the GatingSet}
 
@@ -42,9 +42,9 @@ or character specifying a gated cell population in the GatingSet}
 a geom_gate layer
 }
 \description{
-When 'data' is a gate (or flowCore filter) or a list of gates or a filterList object. 
-When it is used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for 
-the gates to be dispatched to each panel. 
+When 'data' is a gate (or flowCore filter) or a list of gates or a filterList object.
+When it is used directly with 'ggplot', pdata of the flow data must be supplied through 'pd' argument explicitly in order for
+the gates to be dispatched to each panel.
 However It is not necessary when used with 'ggcyto' wrapper since the latter will attach pData automatically.
 }
 \details{

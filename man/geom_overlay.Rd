@@ -13,7 +13,7 @@ geom_overlay(data, ...)
 }
 \arguments{
 \item{data}{a filter (Currently only rectangleGate (1d or 2d), polygonGate, ellipsoidGate are supported.)
-or a list of these gates 
+or a list of these gates
 or filterList
 or character specifying a gated cell population in the GatingSet}
 
