@@ -16,7 +16,7 @@ ggplot object
 }
 \description{
 The orginal data format is preserved during the ggcyo constructor because they still need to be used during the plot building process.
-This function is usually called automatically in the print/plot method of ggycyto. Sometime it is useful to coerce it to ggplot explictily 
+This function is usually called automatically in the print/plot method of ggycyto. Sometime it is useful to coerce it to ggplot explictily
 by user so that it can be used as a regular ggplot object.
 }
 \examples{

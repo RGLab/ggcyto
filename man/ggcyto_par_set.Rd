@@ -14,7 +14,7 @@ existing parameter settings}
 a list of new settings for ggycto
 }
 \description{
-Use this function to modify ggcyto parameters 
+Use this function to modify ggcyto parameters
 These are the regular (or to be instantiated as) scales, labs, facet objects.
 They can be added as a single layer to the plot for the convenience.
 }
@@ -23,12 +23,12 @@ They can be added as a single layer to the plot for the convenience.
 The individual elements are:
 
 \tabular{ll}{
-  limits             \tab can be "data"(default) or "instrument" or a list of numeric limits for x and y
-                   (e.g. \code{list(x = c(0, 4000))}) \cr
-  facet             \tab the regular facet object \cr
-  hex_fill             \tab default scale_fill_gradientn for geom_hex layer \cr
-  lab              \tab labs_cyto object
-  
+limits             \tab can be "data"(default) or "instrument" or a list of numeric limits for x and y
+(e.g. \code{list(x = c(0, 4000))}) \cr
+facet             \tab the regular facet object \cr
+hex_fill             \tab default scale_fill_gradientn for geom_hex layer \cr
+lab              \tab labs_cyto object
+
 }
 }
 

@@ -109,6 +109,7 @@ add_ggcyto_gs <- function(e1, e2){
     
   }else if(is(e2, "GeomStats")){
     adjust <- e2[["adjust"]]
+    location <- e2[["location"]]
     
     #grab the nodes info from previous gate layers
     nodes.geom_gate <- e1[["nodes"]]
@@ -149,6 +150,7 @@ add_ggcyto_gs <- function(e1, e2){
                                     , type = stat_type
                                     , negated = negated
                                     , adjust = adjust
+                                    , location = location
                                     , digits = digits
                                     )
                              , e2[["geom_label_params"]]

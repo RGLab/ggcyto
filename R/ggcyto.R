@@ -365,6 +365,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
     
     negated <- e2[["negated"]]
     adjust <- e2[["adjust"]]
+    location <- e2[["location"]]
     digits <- e2[["digits"]]
     if(length(trans)>0)
     {
@@ -379,9 +380,14 @@ as.ggplot <- function(x, pre_binning = FALSE){
     for(gate in gates_parsed){
       if(length(trans)>0)
         gate <- transform(gate, translist)
-        
-      #TODO: compute the actual data range from population data
-      abs <- is(gate[[1]], "booleanFilter")#bypass stats_postion computing by set abs to true to use data_range as gate_range(as a hack for now)
+      
+      # Honor manual choice of location == "data", "plot", or "fixed"
+      if(location == "gate"){
+        #TODO: compute the actual data range from population data
+        if(is(gate[[1]], "booleanFilter"))
+          #bypass stats_postion computing to use data_range as gate_range(as a hack for now)
+          location <- "data"
+      }
         
       stats <- compute_stats(fs, gate
                              , type = stat_type
@@ -391,7 +397,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
                              , negated = negated
                              , adjust = adjust
                              , digits = digits
-                             , abs = abs)
+                             , location = location)
       
       #restore the stats dimensions to raw scale
       if(length(trans)>0)

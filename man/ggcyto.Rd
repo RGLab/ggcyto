@@ -33,8 +33,8 @@ ggcyto(data = NULL, ...)
 \item{mapping}{default list of aesthetic mappings (these can be colour,
 size, shape, line type -- see individual geom functions for more details)}
 
-\item{subset}{character that specifies the node path or node name in the case of GatingSet. 
-Default is "_parent_", which will be substituted with the actual node name 
+\item{subset}{character that specifies the node path or node name in the case of GatingSet.
+Default is "\emph{parent}", which will be substituted with the actual node name
 based on the geom_gate layer to be added later.}
 
 \item{filter}{a flowcore gate object or a function that takes a flowSet and channels as input and returns a data-dependent flowcore gate.
@@ -53,8 +53,8 @@ existing ggcyto object.
 \details{
 To invoke \code{ggcyto}:
 \itemize{
-   \item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
-  }
+\item \code{ggcyto(fs, aes(x, y, <other aesthetics>))}
+}
 }
 \examples{
 

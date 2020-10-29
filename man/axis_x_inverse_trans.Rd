@@ -16,7 +16,7 @@ axis_y_inverse_trans(...)
 a raw_scale object that inherits scale class.
 }
 \description{
-It is essentially a dummy continous scale and will be instantiated 
+It is essentially a dummy continous scale and will be instantiated
 by '+.ggcyto_GatingSet' with 'breaks` and 'lables' customized.
 }
 \examples{

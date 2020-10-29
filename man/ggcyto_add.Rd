@@ -29,7 +29,7 @@ ggcyto object
 }
 \description{
 It tries to copy pData from ggcyto object to the gate layers
-so that the gate layer does not need to have `pd` to be supplied explicitly by users.
+so that the gate layer does not need to have \code{pd} to be supplied explicitly by users.
 It also calculates population statistics when geom_stats layer is added.
 It supports addition ggcyto layers such as 'ggcyto_par' and 'labs_cyto'.
 }
