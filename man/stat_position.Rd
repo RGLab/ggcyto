@@ -13,7 +13,7 @@ stat_position(gate, ...)
   gate,
   negated = FALSE,
   adjust = 0.5,
-  position = "gate",
+  location = "gate",
   data_range = NULL,
   limits = NULL,
   ...
@@ -28,11 +28,11 @@ stat_position(gate, ...)
 
 \item{adjust}{see details}
 
+\item{location}{see details}
+
 \item{data_range}{a two-row data.frame representing the actual data range. Each column is a a range for a specific channel. First row is min, Second row is max.}
 
 \item{limits}{used to fix the gate range}
-
-\item{location}{see details}
 }
 \value{
 a data.table of gate centroid coordinates
@@ -62,6 +62,10 @@ it at the upper right corner.
 
 As another example, for a 2-D gate, if \code{location = "gate"} and \code{adjust=c(0.25, 0.75)}, the statistical annotation will be
 placed 1/4 of the way across the x-range of the gate and 3/4 of the way across the y-range of the gate.
+
+The \code{adjust} argument will also accept values less than 0.0 or greater than 1.0. This can be an easy way
+to simply move the annotation outside of a gate so it does not obstruct the view of the data within. For example, \code{location == "gate"}
+and \code{adjust=c(-0.2, 1.2)} will move the annotation outside of the upper left corner of the gate range.
 }
 
 \subsection{Fixed location}{

@@ -33,6 +33,10 @@
 #' As another example, for a 2-D gate, if \code{location = "gate"} and \code{adjust=c(0.25, 0.75)}, the statistical annotation will be
 #' placed 1/4 of the way across the x-range of the gate and 3/4 of the way across the y-range of the gate.
 #' 
+#' The \code{adjust} argument will also accept values less than 0.0 or greater than 1.0. This can be an easy way
+#' to simply move the annotation outside of a gate so it does not obstruct the view of the data within. For example, \code{location == "gate"}
+#' and \code{adjust=c(-0.2, 1.2)} will move the annotation outside of the upper left corner of the gate range.
+#' 
 #' ### Fixed location
 #' 
 #' If \code{location = "fixed"}, the numeric vector passed to \code{adjust} will be interpreted as values on the data scales of the plot to provide
