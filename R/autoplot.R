@@ -75,6 +75,17 @@ autoplot.ncdfFlowList <- function(object, ...){
 
 #' @export
 #' @rdname autoplot
+autoplot.cytoset <- function(object, ...){
+  getS3method("autoplot", "flowSet")(object, ...)
+}
+
+#' @export
+#' @rdname autoplot
+autoplot.cytoframe <- function(object, ...){
+  getS3method("autoplot", "flowFrame")(object, ...)
+}
+#' @export
+#' @rdname autoplot
 autoplot.flowFrame <- function(object, x, ...){
   
   if(missing(x)){

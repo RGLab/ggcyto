@@ -4,6 +4,8 @@
 \alias{autoplot.flowSet}
 \alias{autoplot}
 \alias{autoplot.ncdfFlowList}
+\alias{autoplot.cytoset}
+\alias{autoplot.cytoframe}
 \alias{autoplot.flowFrame}
 \alias{autoplot.GatingSetList}
 \alias{autoplot.GatingSet}
@@ -13,6 +15,10 @@
 \method{autoplot}{flowSet}(object, x, y = NULL, bins = 30, ...)
 
 \method{autoplot}{ncdfFlowList}(object, ...)
+
+\method{autoplot}{cytoset}(object, ...)
+
+\method{autoplot}{cytoframe}(object, ...)
 
 \method{autoplot}{flowFrame}(object, x, ...)
 

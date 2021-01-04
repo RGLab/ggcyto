@@ -59,7 +59,11 @@ geom_overlay.ncdfFlowList <- function(data, ...){
   geom_overlay.flowSet(data, ...)
   
 }
-
+#' @export
+geom_overlay.cytoset <- function(data, ...){
+  geom_overlay.flowSet(data, ...)
+  
+}
 #' @export
 geom_overlay.flowSet <- function(data, ...){
   

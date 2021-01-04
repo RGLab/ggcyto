@@ -40,7 +40,11 @@
   
 }
 
-
+#' @export
+#' @rdname fortify.flowSet
+fortify.cytoframe <- function(model, ...){
+  getS3method("fortify", "flowFrame")(model, ...)
+}
 
 #' @export
 #' @return data.table
@@ -93,6 +97,11 @@ fortify.flowSet <- function(model, data, ...){
 
 }
 
+#' @export
+#' @rdname fortify.flowSet
+fortify.cytoset <- function(model, ...){
+  getS3method("fortify", "flowSet")(model, ...)
+}
 #' @export
 #' @rdname fortify.flowSet
 fortify.ncdfFlowList <- function(model, ...){

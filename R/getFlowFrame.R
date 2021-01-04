@@ -21,6 +21,11 @@
 getFlowFrame <- function(x)UseMethod("getFlowFrame")
 
 #' @export
+getFlowFrame.cytoset <- function(x){
+  getS3method("getFlowFrame", "flowSet")(x)
+}
+
+#' @export
 getFlowFrame.flowSet <- function(x){
   x[[1, use.exprs = FALSE]]
 }

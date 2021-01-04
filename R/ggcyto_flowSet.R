@@ -1,3 +1,7 @@
+#' @export
+ggcyto.cytoset <- function(data, ...){
+  getS3method("ggcyto", "flowSet")(data, ...)
+}
 #' @rdname ggcyto
 #' @export
 ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
