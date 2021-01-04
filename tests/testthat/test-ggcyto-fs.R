@@ -68,7 +68,7 @@ test_that("fs", {
   
   ## ------------------------------------------------------------------------
   expect_is(p, "ggcyto_flowSet")
-  expect_is(p$data, "flowSet")
+  expect_is(p$data, "cytoset")
   
   p <- as.ggplot(p)
   expect_is(p, "gg")
