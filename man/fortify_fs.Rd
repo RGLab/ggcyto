@@ -5,6 +5,7 @@
 \alias{fortify_fs.flowSet}
 \alias{fortify_fs.default}
 \alias{fortify_fs.flowFrame}
+\alias{fortify_fs.cytoframe}
 \alias{fortify_fs.GatingSetList}
 \alias{fortify_fs.GatingSet}
 \title{Fortify a model into flowSet object}
@@ -16,6 +17,8 @@ fortify_fs(model, data, ...)
 \method{fortify_fs}{default}(model, data, ...)
 
 \method{fortify_fs}{flowFrame}(model, data, ...)
+
+\method{fortify_fs}{cytoframe}(model, data, ...)
 
 \method{fortify_fs}{GatingSetList}(model, data, ...)
 

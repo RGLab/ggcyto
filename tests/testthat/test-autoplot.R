@@ -5,6 +5,11 @@ context("autoplot")
 fs <- GvHD[subset(pData(GvHD), Patient %in%5 & Visit %in% c(5:6))[["name"]]]
 fs <- flowSet_to_cytoset(fs)
 set.seed(1)#due to subsampling
+test_that("autoplot -- cytoframe", {
+  suppressWarnings(expect_doppelganger("autoplot-fr-1d", autoplot(fs[[1]], x = 'FSC-H')))
+  suppressWarnings(expect_doppelganger("autoplot-fr-2d", autoplot(fs[[1]], x = 'FSC-H', y = 'SSC-H', bins = 128)))
+  
+})
 test_that("autoplot -- flowset", {
   suppressWarnings(expect_doppelganger("autoplot-fs-1d", autoplot(fs, x = 'FSC-H')))
   suppressWarnings(expect_doppelganger("autoplot-fs-2d", autoplot(fs, x = 'FSC-H', y = 'SSC-H', bins = 128)))
