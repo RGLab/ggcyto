@@ -35,7 +35,7 @@ Suggests:
     flowViz,
     ggridges,
     vdiffr
-License: Artistic-2.0
+License: file LICENSE
 URL: https://github.com/RGLab/ggcyto/issues
 biocViews: ImmunoOncology, FlowCytometry, CellBasedAssays, Infrastructure, Visualization
 Collate: 
