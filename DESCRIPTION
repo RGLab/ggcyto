@@ -43,6 +43,7 @@ Collate:
     'autoplot.R'
     'axis_inverse_trans.R'
     'compute_stats.R'
+    'faust_gating_plot.R'
     'fortify.R'
     'fortify_fs.R'
     'geom_gate.R'
@@ -66,5 +67,5 @@ Collate:
     'stat_position.R'
     'transform_gate.R'
     'utility.R'
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Roxygen: list(markdown=TRUE)
