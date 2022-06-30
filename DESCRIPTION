@@ -1,10 +1,10 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.19.1
+Version: 1.25.1
 Date: 2015-11-02
 Author: Mike Jiang
-Maintainer: Mike Jiang <wjiang2@fhcrc.org>,Jake Wagner <jpwagner@fhcrc.org>
+Maintainer: Mike Jiang <mike@ozette.com>
 Description: With the dedicated fortify method implemented for flowSet,
     ncdfFlowSet and GatingSet classes, both raw and gated flow cytometry data
     can be plotted directly with ggplot. ggcyto wrapper and some customed
