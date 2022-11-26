@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.27.0
+Version: 1.27.1
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <mike@ozette.com>
