@@ -87,7 +87,6 @@ data(GvHD)
 fr <- GvHD[[1]]
 p <- autoplot(fr, "FL1-H")
 p #raw scale
-p + scale_x_logicle() #flowCore logicle scale
 p + scale_x_flowJo_fasinh() # flowJo fasinh
 p + scale_x_flowJo_biexp() # flowJo biexponential
 
