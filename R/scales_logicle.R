@@ -5,6 +5,7 @@
 #' @importFrom flowWorkspace logicle_trans
 #' @return ScaleContinuous object
 #' @examples 
+#' \dontrun{
 #' data(GvHD)
 #' fr <- GvHD[[1]]
 #' p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
@@ -12,6 +13,7 @@
 #' p 
 #' #display at transformed scale
 #' p + scale_x_logicle(t = 1e4)
+#' }
 #' @export
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)

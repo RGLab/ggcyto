@@ -67,5 +67,5 @@ Collate:
     'stat_position.R'
     'transform_gate.R'
     'utility.R'
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 Roxygen: list(markdown=TRUE)

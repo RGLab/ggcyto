@@ -21,6 +21,7 @@ ScaleContinuous object
 Add a logicle scale to the x or y axes of a ggcyto plot.
 }
 \examples{
+\dontrun{
 data(GvHD)
 fr <- GvHD[[1]]
 p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
@@ -28,4 +29,5 @@ p <- ggcyto(fr, aes(x = `FL1-H`)) + geom_density()
 p 
 #display at transformed scale
 p + scale_x_logicle(t = 1e4)
+}
 }
