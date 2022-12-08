@@ -14,7 +14,7 @@
 #' p + scale_x_logicle(t = 1e4)
 #' @export
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
-  myTrans <- flowjo_biexp_trans(widthBasis = -10^(2 * w), pos=m, neg=a, maxValue = t)
+  myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
   scale_x_continuous(..., trans = myTrans)
   
 }
@@ -22,6 +22,6 @@ scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
 #' @rdname scale_x_logicle
 #' @export
 scale_y_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
-  myTrans <- flowjo_biexp_trans(widthBasis = -10^(2 * w), pos=m, neg=a, maxValue = t)
+  myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
   scale_y_continuous(..., trans = myTrans)
 }
