@@ -15,6 +15,8 @@
 #' @export
 scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
+  #see https://github.com/RGLab/ggcyto/issues/88#issuecomment-1346957390
+  myTrans$domain <- c(-1, 1) * t
   scale_x_continuous(..., trans = myTrans)
   
 }
@@ -23,5 +25,6 @@ scale_x_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
 #' @export
 scale_y_logicle <- function(..., w = 0.5, t = 262144, m = 4.5, a = 0){
   myTrans <- logicle_trans(w = w, t = t, m = m, a = a)
+  myTrans$domain <- c(-1, 1) * t
   scale_y_continuous(..., trans = myTrans)
 }
