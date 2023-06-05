@@ -140,11 +140,17 @@ geom_gate_impl.rectangleGate <- function(data, mapping = NULL, fill = NA, colour
 }
 
 
-geom_gate_impl.multiRangeGate<- function(data, mapping = NULL, fill = NA, colour = "red", nPoints = 100, ...){
-    
-  
-    geom_gate_impl(data = as(data, "rectangleGate"), mapping = mapping, fill = fill, colour = colour, nPoints = nPoints, ...)
+geom_gate_impl.multiRangeGate<- function(data, mapping = NULL, fill = NA, colour = "red", alpha= 0.5,nPoints = 100, ...){
+  # structure(
+  #   list(gate= data
+  #        , gate_params = list(fill=fill,colour=colour,alpha=alpha,...)
+  #   )
+  #   , class = c("geom.multiRangeGate", "ggcyto_virtual_layer")
+  # )
+  geom_multi_range(data=data,fill=fill,colour=colour,alpha=alpha, ...)
 }
+
+  
 
 geom_gate_impl.ellipsoidGate <- function(data, ...){
   

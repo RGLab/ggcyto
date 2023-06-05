@@ -4,16 +4,16 @@
 \alias{fortify.multiRangeGate}
 \title{Convert a multiRangeGate to a data.table useful for ggplot}
 \usage{
-\method{fortify}{multiRangeGate}(model, data = NULL, nPoints = NULL, ...)
+\method{fortify}{multiRangeGate}(model, data = NULL, ...)
 }
 \arguments{
 \item{model}{multiRangeGate}
 
 \item{data}{Not used}
 
-\item{nPoints}{not used}
-
 \item{...}{not used.}
+
+\item{nPoints}{not used}
 }
 \value{
 data.table

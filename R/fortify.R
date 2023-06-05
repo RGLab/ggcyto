@@ -163,10 +163,13 @@ fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
 #' @examples 
 #' mrq = multiRangeGate(ranges = list(min=c(100, 350), max=c(250, 400)))
 #' fortify(mrq)
-fortify.multiRangeGate<- function(model, data = NULL, nPoints = NULL, ...){
+fortify.multiRangeGate<- function(model, data = NULL, ...){
   vertices <- model@ranges
+  # Convert to 1D vector
+  channel = parameters(model)
+  vertices =unlist(mapply(function(x, y)c(x, y),vertices[["min"]], vertices[["max"]], SIMPLIFY=FALSE))
   dt <- as.data.table(vertices)
-  setnames(dt, c("xmin", "xmax"))
+  setnames(dt, channel)
   dt
 }
 
