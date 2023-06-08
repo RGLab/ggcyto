@@ -67,7 +67,28 @@ GeomMultiRange<- ggproto("GeomMultiRange", Geom,
 
   draw_panel = function(self, data, panel_params, coord, lineend = "butt", linejoin = "mitre") {
     data <- ggplot2:::check_linewidth(data, ggplot2:::snake_class(self))
-    browser()
+    
+    # determien whether x or y 
+    if("x"%in% colnames(data)){
+      axis.used <- "x"
+      axis.missing <- "y"
+    }else{
+      axis.used <- "y"
+      axis.missing <- "x"
+    }                        
+    # convert range gate to rect format, that is "xmin", "xmax", "ymin", "ymax"
+    multi_intervals=data[[axis.used]]
+    num_breaks=length(multi_intervals)
+    start=multi_intervals[seq(1, num_breaks, 2)]
+    end=multi_intervals[seq(2, num_breaks, 2)]
+    data[[axis.used]] <- NULL
+    panel_data = data[1,]
+    data = data.frame(start=start,end=end)
+    names(data) <-c(paste0(axis.used,"min"),paste0(axis.used,"max"))
+    data[[paste0(axis.missing,"min")]] <--Inf
+    data[[paste0(axis.missing,"max")]] <-Inf
+    data=cbind(data, panel_data)
+
     if (!coord$is_linear()) {
       aesthetics <- setdiff(
         names(data), c("x", "y", "xmin", "xmax", "ymin", "ymax")
@@ -84,13 +105,13 @@ GeomMultiRange<- ggproto("GeomMultiRange", Geom,
       ))
     } else {
       coords <- coord$transform(data, panel_params)
-      ggname("geom_rect", rectGrob(
+      ggplot2:::ggname("geom_rect", grid::rectGrob(
         coords$xmin, coords$ymax,
         width = coords$xmax - coords$xmin,
         height = coords$ymax - coords$ymin,
         default.units = "native",
         just = c("left", "top"),
-        gp = gpar(
+        gp = grid::gpar(
           col = coords$colour,
           fill = alpha(coords$fill, coords$alpha),
           lwd = coords$linewidth * .pt,
