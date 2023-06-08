@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_multi_range.R
 \name{geom_multi_range}
 \alias{geom_multi_range}
-\title{Vertical or horizontal line.}
+\title{Draw multi-ranges as multiple rectangles on 1D or 2D plot}
 \usage{
 geom_multi_range(
   mapping = NULL,
@@ -34,26 +34,17 @@ include aesthetics whose values you want to set, not map. See
 \item{show.legend}{should a legend be drawn? (defaults to \code{FALSE})}
 }
 \value{
-a geom_hvline layer
+a geom_rect layer
 }
 \description{
-This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
+This geom is based on the source code of ' \code{\link{geom_rect}}
 }
 \details{
 The goal is to determine the line to be either vertial or horizontal based on the data provided in
-this layer.
+this layer. Also convert input 1D intervals to geom_rect acceptable shapes
 }
 \section{Aesthetics}{
 
 \Sexpr[results=rd,stage=build]{ggplot2:::rd_aesthetics("geom", "vline")}
 }
 
-\examples{
-
-
-p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
-# vline
-p + geom_hvline(data = data.frame(wt= 3))
-# hline
-p + geom_hvline(data = data.frame(mpg= 20))
-}

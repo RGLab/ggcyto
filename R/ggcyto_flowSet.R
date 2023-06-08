@@ -235,24 +235,6 @@ add_ggcyto <- function(e1, e2, e2name){
     attr(e2.new, "is.recorded") <- TRUE
     e1 <- `+.ggcyto_flowSet`(e1, e2.new)
     return (e1)
-  }else if(is(e2, "geom.multiRangeGate")){
-    nDim <- nrow(dims)
-    gate = e2[["gate"]]
-    gateChannel = parameters(gate)    
-    dt = fortify(gate)
-    # adding dummy columns to data frame to pass aesthetic checks from ggplot
-    for (channel in chnl)
-      dt[[channel]] <- 0
-    if (match(gateChannel, chnl) == 1) {
-      thisCall <- quote(geom_rect(data = dt,xmin=dt[,xmin],xmax=dt[,xmax], ymin=-Inf, ymax=Inf))
-    } else {
-      thisCall <- quote(geom_rect(data = dt,ymin=dt[,xmin],ymax=dt[,xmax], xmin=-Inf, xmax=Inf))
-    }
-    
-    thisCall <- as.call(c(as.list(thisCall), e2[["gate_params"]]))
-    e2.new <- eval(thisCall)
-    e1 <- `+.ggcyto_flowSet`(e1, e2.new)
-    return (e1)
   }else if(is(e2, "GeomStats")){
     e1[["GeomStats"]] <- c(e1[["GeomStats"]], list(e2)) #stats needs to be compputed after limits is set at as.ggplot function
     return(e1)

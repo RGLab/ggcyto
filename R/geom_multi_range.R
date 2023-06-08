@@ -1,9 +1,9 @@
-#' Vertical or horizontal line.
+#' Draw multi-ranges as multiple rectangles on 1D or 2D plot
 #'
-#' This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
+#' This geom is based on the source code of ' \code{\link{geom_rect}}
 #'
 #' The goal is to determine the line to be either vertial or horizontal based on the data provided in 
-#' this layer. 
+#' this layer. Also convert input 1D intervals to geom_rect acceptable shapes
 #'
 #' @section Aesthetics:
 #' \Sexpr[results=rd,stage=build]{ggplot2:::rd_aesthetics("geom", "vline")}
@@ -21,15 +21,7 @@
 #' @param show.legend should a legend be drawn? (defaults to \code{FALSE})
 #' @export
 #' @importFrom rlang list2
-#' @return a geom_hvline layer
-#' @examples
-#' 
-#' 
-#' p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
-#' # vline
-#' p + geom_hvline(data = data.frame(wt= 3))
-#' # hline
-#' p + geom_hvline(data = data.frame(mpg= 20))
+#' @return a geom_rect layer
 geom_multi_range <- function(mapping = NULL, data = NULL,
                       stat = "identity", position = "identity",
                       ...,
