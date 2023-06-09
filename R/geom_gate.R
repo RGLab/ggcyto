@@ -140,6 +140,12 @@ geom_gate_impl.rectangleGate <- function(data, mapping = NULL, fill = NA, colour
 }
 
 
+geom_gate_impl.multiRangeGate<- function(data, mapping = NULL, fill = NA, colour = "red", alpha= 0.5,nPoints = 100, ...){
+  geom_multi_range(data=data,fill=fill,colour=colour,alpha=alpha, ...)
+}
+
+  
+
 geom_gate_impl.ellipsoidGate <- function(data, ...){
   
   geom_gate_impl.polygonGate(data, ...)

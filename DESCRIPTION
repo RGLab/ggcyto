@@ -13,7 +13,7 @@ Description: With the dedicated fortify method implemented for flowSet,
 VignetteBuilder: knitr
 Depends:
     methods,
-    ggplot2(>= 3.3.0),
+    ggplot2(>= 3.4.2),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
     flowWorkspace(>= 3.33.1)
@@ -48,6 +48,7 @@ Collate:
     'fortify_fs.R'
     'geom_gate.R'
     'geom_hvline.R'
+    'geom_multi_range.R'
     'geom_overlay.R'
     'geom_stats.R'
     'getFlowFrame.R'
@@ -67,5 +68,5 @@ Collate:
     'stat_position.R'
     'transform_gate.R'
     'utility.R'
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Roxygen: list(markdown=TRUE)
