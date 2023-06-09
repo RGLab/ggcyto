@@ -409,7 +409,15 @@ is.geom_gate_filterList <- function(layer){
       polygonGate(df)  
     
   }else if (nDim == 1){
-    rectangleGate(df)
+    num_breaks = nrow(df)
+    if ( num_breaks > 2) {
+      multi_intervals = df[, 1]
+      start=multi_intervals[seq(1, num_breaks, 2)]
+      end=multi_intervals[seq(2, num_breaks, 2)]
+      multiRangeGate(ranges = list(min=start, max=end))
+    } else {
+      rectangleGate(df)
+    }
   }else
     stop("invalid dimension number!")
   

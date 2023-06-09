@@ -11,9 +11,9 @@ test_that("multiRangeGate", {
   
   names(gates)<-sampleNames(fs)
   ## ------------------------------------------------------------------------
-  suppressWarnings(expect_doppelganger("ggcyto-fs-1d-multiRangeGate", autoplot(fs, "Time") + geom_gate(gates)))  
-  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multiRangeGate", autoplot(fs, "Time",  "FSC-H") + geom_gate(gates)))  
-  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multiRangeGate-flip", autoplot(fs, "FSC-H", "Time") + geom_gate(gates)))  
+  suppressWarnings(expect_doppelganger("ggcyto-fs-1d-multiRangeGate", autoplot(fs, "Time") + geom_gate(gates) + geom_stats()))  
+  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multiRangeGate", autoplot(fs, "Time",  "FSC-H") + geom_gate(gates) + geom_stats()))  
+  suppressWarnings(expect_doppelganger("ggcyto-fs-2d-multiRangeGate-flip", autoplot(fs, "FSC-H", "Time") + geom_gate(gates) + geom_stats()))  
   
 
 })

@@ -67,7 +67,7 @@ GeomMultiRange<- ggproto("GeomMultiRange", Geom,
     }else{
       axis.used <- "y"
       axis.missing <- "x"
-    }                        
+    }    
     # convert range gate to rect format, that is "xmin", "xmax", "ymin", "ymax"
     multi_intervals=data[[axis.used]]
     num_breaks=length(multi_intervals)
@@ -79,6 +79,7 @@ GeomMultiRange<- ggproto("GeomMultiRange", Geom,
     names(data) <-c(paste0(axis.used,"min"),paste0(axis.used,"max"))
     data[[paste0(axis.missing,"min")]] <--Inf
     data[[paste0(axis.missing,"max")]] <-Inf
+    rownames(panel_data) <- NULL
     data=cbind(data, panel_data)
 
     if (!coord$is_linear()) {
