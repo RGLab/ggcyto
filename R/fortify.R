@@ -141,12 +141,35 @@ fortify.GatingSet <- function(model, ...){
 #' pg <- polygonGate(filterId="nonDebris", .gate= sqrcut)
 #' fortify(pg) 
 fortify.polygonGate <- function(model, data = NULL, nPoints = NULL, ...){
-  
   vertices <- model@boundaries
   chnls <- colnames(vertices)
   new.vertices <- rbind(vertices, vertices[1,])#make sure geom_path will enclose the polygon by ending with the starting point
   dt <- as.data.table(new.vertices)
   setnames(dt, chnls)
+  dt
+}
+#' Convert a multiRangeGate to a data.table useful for ggplot
+#' 
+#' It converts the boundaries slot into a data.table
+#' 
+#' 
+#' @param model multiRangeGate
+#' @param data Not used
+#' @param nPoints not used
+#' @param ... not used.
+#' 
+#' @export
+#' @return data.table
+#' @examples 
+#' mrq = multiRangeGate(ranges = list(min=c(100, 350), max=c(250, 400)))
+#' fortify(mrq)
+fortify.multiRangeGate<- function(model, data = NULL, ...){
+  vertices <- model@ranges
+  # Convert to 1D vector
+  channel = parameters(model)
+  vertices =unlist(mapply(function(x, y)c(x, y),vertices[["min"]], vertices[["max"]], SIMPLIFY=FALSE))
+  dt <- as.data.table(vertices)
+  setnames(dt, channel)
   dt
 }
 
