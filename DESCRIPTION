@@ -1,7 +1,7 @@
 Package: ggcyto
 Type: Package
 Title: Visualize Cytometry data with ggplot
-Version: 1.27.4
+Version: 1.29.1
 Date: 2015-11-02
 Author: Mike Jiang
 Maintainer: Mike Jiang <mike@ozette.com>
@@ -16,7 +16,7 @@ Depends:
     ggplot2(>= 3.4.2),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
-    flowWorkspace(>= 3.33.1)
+    flowWorkspace(>= 4.13.1)
 Imports:
     plyr,
     scales,
