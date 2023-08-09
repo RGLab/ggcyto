@@ -9,29 +9,43 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
   
   
   fs <- data
-  #instead of using ggplot.default method to contruct the ggplot object
-  # we call the underlining s3 method directly to avoid foritying data at this stage
+  #instead of using ggplot.default method to construct the ggplot object
+  # we call the underlining s3 method directly to avoid fortifying data at this stage
   p <- ggplot.data.frame(fs, mapping, ...)
   p[["layer.history"]] <- list()
   
   if(!missing(mapping)){
     p[["layer.history"]][["mapping"]] = mapping  
     
-    dims <- mapping[grepl("[x|y]", names(mapping))]
-    dims <- sapply(dims,quo_name)
-    
-    
-    #update x , y with actual channel name
+    # dims may reference channels, markers or pData variables
+    dims <- sapply(mapping, quo_name)
+
+    # update aes mapped parameters with actual channel name
     frm <- getFlowFrame(fs)
-    dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
-    chnl <- dims.tbl[, name]
+    dims.tbl <- .ldply(
+      dims,
+      function(dim) {
+        # interactions only supported for pData variables
+        # dim refers to pData variables (exact match required)
+        if(grepl("interaction", dim) | dim %in% colnames(pData(fs))) {
+          data.frame(
+            "name" = NA,
+            "desc" = NA
+          )
+        } else {
+          getChannelMarker(frm, dim)
+        }
+      },
+      .id = "axis"
+    )
+    # drop pData mapping from dim.tbl
+    dims.tbl <- dims.tbl[!is.na(dims.tbl$name), ]
+    chnl <- unique(dims.tbl$name)
     
-    for(axis_name in names(dims))
+    for(axis_name in dims.tbl$axis)
       mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
     #update dims
     p$mapping <- mapping
-    
-    nDims <- length(dims)
     
     #attach dims to data for more efficient fortify
     attr(fs, "dims") <- dims.tbl
@@ -41,10 +55,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     p[["data"]] <- fs #update data as well
     p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
     
-    
   }else
     stop("mapping must be supplied to ggplot!")
-  
     
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()
