@@ -7,11 +7,15 @@ ggcyto.cytoset <- function(data, ...){
 ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
   #add empty layers recording
   
-  
   fs <- data
+  
   #instead of using ggplot.default method to construct the ggplot object
   # we call the underlining s3 method directly to avoid fortifying data at this stage
-  p <- ggplot.data.frame(fs, mapping, ...)
+  p <- ggplot.data.frame(
+    fs,
+    mapping[!names(mapping) %in% "order"], # order aes not passed to ggplot
+    ...
+  )
   p[["layer.history"]] <- list()
   
   if(!missing(mapping)){
@@ -25,9 +29,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     dims.tbl <- .ldply(
       dims,
       function(dim) {
-        # interactions only supported for pData variables
-        # dim refers to pData variables (exact match required)
-        if(grepl("interaction", dim) | dim %in% colnames(pData(fs))) {
+        # handle pData variables alone or interaction
+        if (grepl("interaction", dim) | dim %in% colnames(pData(fs))) {
           data.frame(
             "name" = NA,
             "desc" = NA
@@ -38,13 +41,20 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
       },
       .id = "axis"
     )
+    
     # drop pData mapping from dim.tbl
     dims.tbl <- dims.tbl[!is.na(dims.tbl$name), ]
-    chnl <- unique(dims.tbl$name)
+    chnl <- unique(dims.tbl[axis %in% c("x", "y"), name])
     
-    for(axis_name in dims.tbl$axis)
+    # prepare mapping variables - bypass order aesthetic
+    for(axis_name in dims.tbl$axis) {
       mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
-    #update dims
+    }
+    
+    # drop order from mapping
+    mapping[["order"]] <- NULL
+    
+    # update dims
     p$mapping <- mapping
     
     #attach dims to data for more efficient fortify

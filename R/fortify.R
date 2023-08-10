@@ -9,25 +9,12 @@
 #' @noRd 
 .fr2dt <- function(x, mapping = NULL, ...){
   dt <- as.data.table(exprs(x))
-  # sort values by aesthetic mapping
-  if(any(c("size", "colour", "fill") %in% mapping$axis)) {
-    cols <- c(
-      "-1" ="size",     # -1 = descending order
-      "1" = "colour",   # 1 = ascending order
-      "1" = "fill"
-    )
-    cols <- cols[
-      !is.na(
-        match(
-          cols,
-          mapping$axis
-        )
-      )
-    ]
+  # sort values by order aesthetic mapping
+  if("order" %in% mapping$axis) {
+    # variable to use for ordering
     setorderv(
-      dt, 
-      cols = mapping$name[as.integer(names(cols))],
-      order = as.integer(names(cols))
+      dt,
+      cols = mapping[axis == "order", name]
     )
   }
   return(dt)
