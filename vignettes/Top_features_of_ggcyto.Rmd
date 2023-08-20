@@ -22,7 +22,7 @@ library(ggcyto)
 dataDir <- system.file("extdata",package="flowWorkspaceData")
 ```
 
-## 1: suppoort `3` types of plot constructor 
+## 1: support `3` types of plot constructor 
 
 * represent different levels of complexity and flexibility
 * meet the needs of various plot applications
@@ -30,7 +30,7 @@ dataDir <- system.file("extdata",package="flowWorkspaceData")
 
 ### low level: `ggplot`
 
-The overloaded `fority` methods empower `ggplot`  to work with all the major Cytometry data structures right away, which allows users to do all kinds of highly customized and versitled plots.
+The overloaded `fority` methods empower `ggplot`  to work with all the major Cytometry data structures right away, which allows users to do all kinds of highly customized and versatile plots.
 
 #### `GatingSet`
 ```{r}
