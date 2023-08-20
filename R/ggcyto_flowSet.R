@@ -7,31 +7,55 @@ ggcyto.cytoset <- function(data, ...){
 ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
   #add empty layers recording
   
-  
   fs <- data
-  #instead of using ggplot.default method to contruct the ggplot object
-  # we call the underlining s3 method directly to avoid foritying data at this stage
-  p <- ggplot.data.frame(fs, mapping, ...)
+  
+  #instead of using ggplot.default method to construct the ggplot object
+  # we call the underlining s3 method directly to avoid fortifying data at this stage
+  p <- ggplot.data.frame(
+    fs,
+    mapping[!names(mapping) %in% "order"], # order aes not passed to ggplot
+    ...
+  )
   p[["layer.history"]] <- list()
   
   if(!missing(mapping)){
     p[["layer.history"]][["mapping"]] = mapping  
     
-    dims <- mapping[grepl("[x|y]", names(mapping))]
-    dims <- sapply(dims,quo_name)
-    
-    
-    #update x , y with actual channel name
+    # dims may reference channels, markers or pData variables
+    dims <- sapply(mapping, quo_name)
+
+    # update aes mapped parameters with actual channel name
     frm <- getFlowFrame(fs)
-    dims.tbl <- .ldply(dims, function(dim)getChannelMarker(frm, dim), .id = "axis")
-    chnl <- dims.tbl[, name]
+    dims.tbl <- .ldply(
+      dims,
+      function(dim) {
+        # handle pData variables alone or interaction
+        if (grepl("interaction", dim) | dim %in% colnames(pData(fs))) {
+          data.frame(
+            "name" = NA,
+            "desc" = NA
+          )
+        } else {
+          getChannelMarker(frm, dim)
+        }
+      },
+      .id = "axis"
+    )
     
-    for(axis_name in names(dims))
+    # drop pData mapping from dim.tbl
+    dims.tbl <- dims.tbl[!is.na(dims.tbl$name), ]
+    chnl <- unique(dims.tbl[axis %in% c("x", "y"), name])
+    
+    # prepare mapping variables - bypass order aesthetic
+    for(axis_name in dims.tbl$axis) {
       mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
-    #update dims
-    p$mapping <- mapping
+    }
     
-    nDims <- length(dims)
+    # drop order from mapping
+    mapping[["order"]] <- NULL
+    
+    # update dims
+    p$mapping <- mapping
     
     #attach dims to data for more efficient fortify
     attr(fs, "dims") <- dims.tbl
@@ -41,10 +65,8 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     p[["data"]] <- fs #update data as well
     p[["instrument_range"]] <- range(frm)[, chnl, drop = FALSE]
     
-    
   }else
     stop("mapping must be supplied to ggplot!")
-  
     
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()

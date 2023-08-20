@@ -7,8 +7,17 @@
 #' @import data.table
 #' @export
 #' @noRd 
-.fr2dt <- function(x, ...){
-  as.data.table(exprs(x))
+.fr2dt <- function(x, mapping = NULL, ...){
+  dt <- as.data.table(exprs(x))
+  # sort values by order aesthetic mapping
+  if("order" %in% mapping$axis) {
+    # variable to use for ordering
+    setorderv(
+      dt,
+      cols = mapping[axis == "order", name]
+    )
+  }
+  return(dt)
 }
 
 #' coerce the flowSet to a data.table
@@ -27,16 +36,16 @@
   # subset by columns if applicable
   dims <- attr(x, "dims")
   if(!is.null(dims))
-    x <- x[, dims[, name]]
+    x <- x[, unique(dims[, name])]
   
   if(!is.null(thisFilter)){
     if(is.function(thisFilter)){
-      thisFilter <- thisFilter(x, dims[, name])
+      thisFilter <- thisFilter(x, unique(dims[, name]))
     }
     x <- Subset(x, thisFilter)
   }
     
-  df.list <- .fsdply(x, .fr2dt, .id = ".rownames")
+  df.list <- .fsdply(x, .fr2dt, mapping = dims, .id = ".rownames")
   
 }
 

@@ -168,6 +168,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
   #lazy-fortifying the plot data
   #####################
   dims <- attr(x[["data"]], "dims")
+  # drop order aesthetic if present (no scale required)
+  dims <- dims[axis != "order", ]
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   

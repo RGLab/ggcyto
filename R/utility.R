@@ -11,7 +11,6 @@
     index <- seq_along(.data)
     .id <- NULL
   }
-  
 
   res <- .do_loop(index = index, .data = .data, ..., .id = .id)
   res <- rbindlist(res)
