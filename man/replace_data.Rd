@@ -39,8 +39,6 @@ p <- p + labs_cyto("channel")
 p <- p + ggcyto_par_set(limits = "instrument")
 #add another population as the overlay dots
 p <- p + geom_overlay("IgD-CD27-", col = "black", size = 1.2, alpha = 0.4)
-#hide the legend
-p <- p + guides(fill=FALSE)
 p
 
 #replace the data with gs2 and see the same visual effect

@@ -102,7 +102,7 @@ density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...)
   #plot each individual channel
   Objs <- sapply(colnames(fr), function(chnl){
       p <- autoplot(fr, chnl, ...)
-      p <- p + guides(fill=FALSE) + labs(title = NULL)
+      p <- p + labs(title = NULL)
       myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
                        , axis.text = element_text(color = gray(0.3), size = 6)
                        , axis.title.y = element_blank()
