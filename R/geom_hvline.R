@@ -2,8 +2,8 @@
 #'
 #' This geom is based on the source code of ' \code{\link{geom_hline}} and \code{\link{geom_vline}}.
 #'
-#' The goal is to determine the line to be either vertial or horizontal based on the 1-d data provided in 
-#' this layer. 
+#' The goal is to determine the line to be either vertial or horizontal based on the 1-d data provided in
+#' this layer.
 #'
 #' @section Aesthetics:
 #' \Sexpr[results=rd,stage=build]{ggplot2:::rd_aesthetics("geom", "vline")}
@@ -22,8 +22,8 @@
 #' @export
 #' @return a geom_hvline layer
 #' @examples
-#' 
-#' 
+#'
+#'
 #' p <- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point()
 #' # vline
 #' p + geom_hvline(data = data.frame(wt= 3))
@@ -43,9 +43,9 @@ geom_hvline <- function (mapping = NULL, data = NULL, position = "identity", sho
 GeomHVline <- ggproto("hvline", Geom,
                     draw_panel = function(data, panel_scales, coord) {
                       ranges <- coord$range(panel_scales)
-                      
-                      
-                      # determien whether x or y 
+
+
+                      # determien whether x or y
                       if("x"%in% colnames(data)){
                         axis.used <- "x"
                         axis.missing <- "y"
@@ -54,40 +54,40 @@ GeomHVline <- ggproto("hvline", Geom,
                         axis.missing <- "x"
                       }
                       #fill values for the missing axis
-                      thisRange <- ranges[[axis.missing]]  
+                      thisRange <- ranges[[axis.missing]]
                       data[[axis.missing]]    <- thisRange[1]
                       data[[paste0(axis.missing, "end")]] <- thisRange[2]
                       #fill values for the used axis
                       data[[paste0(axis.used, "end")]] <- data[[axis.used]] #<- data[[paste0(axis.used, "intercept")]]
-                      
+
                       #remove Inf lines
-                      data <- data[!is.infinite(data[,axis.used]), ] 
-                      
+                      data <- data[!is.infinite(data[,axis.used]), ]
+
                       GeomSegment$draw_panel(unique(data), panel_scales, coord)
                     },
-                    
+
                     default_aes = aes(colour = "black", size = 0.5, linetype = 1, alpha = NA)
                     # ,required_aes = "yintercept"
-                    
+
                     ,draw_key = draw_key_path
 )
 
 #' override the original Layer$compute_aesthetics method so that it could make it for the layer
 #' that contains 1d data but uses the 2d aes
-#' 
+#'
 #' This is the hook invoked by ggplot_build at early stage of plotting.
 #' We need to match the 1d gate definition with the mapping
 #' stored in the original aes (from 'plot$mapping') so that the line can be determined as either horizontal or vetical
-#' 
+#'
 #' And so far this is the best place where we can look up the original mapping and store the axis information.
-#' Idealy it could have been be done at `map_statistic` step. Unfortunetly, the data would have already been generalized at that point and 
-#' thus it won't be able to do the matching otherwise.  
-#' 
+#' Idealy it could have been be done at `map_statistic` step. Unfortunetly, the data would have already been generalized at that point and
+#' thus it won't be able to do the matching otherwise.
+#'
 #' It would be nice if we could also hack to associate pData from plot$data here. Unforutntely the data
 #' is already facetted before this step and there is no way to access the facetted plot$data in order to
 #' reassign the 'panel' info for layer data.
 #' @importFrom plyr eval.quoted compact empty
-#' @noRd 
+#' @noRd
 .my_compute_aesthetics = function(self, data, plot) {
   # For annotation geoms, it is useful to be able to ignore the default aes
   if (self$inherit.aes) {
@@ -95,28 +95,32 @@ GeomHVline <- ggproto("hvline", Geom,
   } else {
     aesthetics <- self$mapping
   }
-  
+
   # Drop aesthetics that are set or calculated
   set <- names(aesthetics) %in% names(self$aes_params)
   calculated <- ggplot2:::is_calculated_aes(aesthetics)
   aesthetics <- aesthetics[!set & !calculated]
-  
+
   # Override grouping if set in layer
   if (!is.null(self$geom_params$group)) {
     aesthetics[["group"]] <- self$aes_params$group
   }
-  
-  ggplot2:::scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)
-  #the two lines of hack for hvline:  
-  # rm the missing axis from mapping aes so that 
-  # it won't fail the following aesthetics evaluation 
+
+  plot$scales$add_defaults(
+    data,
+    plot$plot_env
+  )
+
+  #the two lines of hack for hvline:
+  # rm the missing axis from mapping aes so that
+  # it won't fail the following aesthetics evaluation
   aes_matched <-  sapply(aesthetics, quo_name) %in% colnames(data)
   aesthetics <- aesthetics[aes_matched]
-  
+
   # Evaluate and check aesthetics
   aesthetics <- compact(aesthetics)
   evaled <- lapply(aesthetics, rlang::eval_tidy, data = data)
-  
+
   n <- nrow(data)
   if (n == 0) {
     # No data, so look at longest evaluated aesthetic
@@ -127,7 +131,7 @@ GeomHVline <- ggproto("hvline", Geom,
     }
   }
   ggplot2:::check_aesthetics(evaled, n)
-  
+
   # Set special group and panel vars
   if (empty(data) && n > 0) {
     evaled$PANEL <- 1
