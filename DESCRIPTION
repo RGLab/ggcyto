@@ -13,7 +13,7 @@ Description: With the dedicated fortify method implemented for flowSet,
 VignetteBuilder: knitr
 Depends:
     methods,
-    ggplot2(>= 3.4.2),
+    ggplot2(>= 3.5.0),
     flowCore(>= 1.41.5),
     ncdfFlow(>= 2.17.1),
     flowWorkspace(>= 4.3.1)
