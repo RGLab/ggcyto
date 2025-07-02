@@ -58,9 +58,9 @@ GeomMultiRange<- ggproto("GeomMultiRange", Geom,
 
 
   draw_panel = function(self, data, panel_params, coord, lineend = "butt", linejoin = "mitre") {
-    data <- ggplot2:::check_linewidth(data, ggplot2:::snake_class(self))
     
     # determien whether x or y 
+    data$linewidth <- data$linewidth %||% data$size
     if("x"%in% colnames(data)){
       axis.used <- "x"
       axis.missing <- "y"
