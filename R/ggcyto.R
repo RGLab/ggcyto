@@ -117,7 +117,7 @@ print.ggcyto <- function(x, ...) {
     
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
     x <- as.ggplot(x) 
-    ggplot2:::print.ggplot(x)
+    NextMethod()
 }
 
 #' @rdname print.ggcyto
