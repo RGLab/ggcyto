@@ -357,9 +357,9 @@ add_ggcyto <- function(e1, e2, e2name){
     
   }
   
-  ggplot2:::`+.gg`(e1, e2)
   
   
+  add_gg(e1, e2)
 }
 
 # Checking if a layer is geom_gate layer for a filterList

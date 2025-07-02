@@ -89,3 +89,12 @@
 marginalFilter <- function(fs, dims, ...){
   boundaryFilter(x = dims, ...)
 }
+
+add_gg <- function(e1, e2, ...) {
+  f <- get0("add_gg", asNamespace("ggplot2"))
+  if (is.function(f)) {
+    f(e1, e2, ...)
+  } else {
+    ggplot2:::`.gg`(e1, e2, ...)
+  }
+}

@@ -256,8 +256,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
       #add new one if not present 
       new.scale <- ggplot2:::make_scale("continuous", this_aes)
       
-      x <- ggplot2:::`+.gg`(x, new.scale)      
       
+      x <-add_gg(x, new.scale)
     }
     ind <- which(x$scales$find(this_aes))
     #apply lazy limits setting
@@ -429,7 +429,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
         stats_mapping <- defaults(stats_mapping, aes(y = density))
       e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
       
-      x <- ggplot2:::`+.gg`(x, e2.new)      
+      x <- add_gg(x, e2.new)
     }
   }
   
