@@ -49,7 +49,7 @@ ggcyto_arrange <- function(x, ...){
     p$data[, name:= popName]
 
     for(i in seq_along(p$layers)){
-      if(!ggplot2:::is.waive(p$layers[[i]][["data"]])){
+      if(!inherits(p$layers[[i]][["data"]], "waiver")){
 
         p$layers[[i]][["data"]][, name:= popName]
       }
