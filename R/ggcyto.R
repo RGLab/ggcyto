@@ -117,7 +117,7 @@ print.ggcyto <- function(x, ...) {
     
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
     x <- as.ggplot(x) 
-    ggplot2:::print.ggplot(x)
+    NextMethod()
 }
 
 #' @rdname print.ggcyto
@@ -256,8 +256,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
       #add new one if not present 
       new.scale <- ggplot2:::make_scale("continuous", this_aes)
       
-      x <- ggplot2:::`+.gg`(x, new.scale)      
       
+      x <- gg_add(x, new.scale)
     }
     ind <- which(x$scales$find(this_aes))
     #apply lazy limits setting
@@ -429,7 +429,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
         stats_mapping <- defaults(stats_mapping, aes(y = density))
       e2.new$mapping <- defaults(e2.new$mapping, stats_mapping)  
       
-      x <- ggplot2:::`+.gg`(x, e2.new)      
+      x <- gg_add(x, e2.new)
     }
   }
   
