@@ -169,7 +169,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
   #####################
   dims <- attr(x[["data"]], "dims")
   # drop order aesthetic if present (no scale required)
-  dims <- dims[axis != "order", ]
+  # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
+  dims <- dims[dims$axis != "order", ]
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
@@ -207,10 +208,10 @@ as.ggplot <- function(x, pre_binning = FALSE){
           transformed_range <- data_range
           for(col in c("x","y")){
             if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-              transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+              transformed_range[, dims[dims$axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[dims$axis==col, name]])
             }
           }
-          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[dims$axis==i, name]])))
           e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
           x$layers[[i]] <- e2
         }
@@ -249,7 +250,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
   trans <- list()
   for(this_aes in aes_names)
   {
-    dim <- dims[axis == this_aes, name]
+    dim <- dims[dims$axis == this_aes, name]
     # set limits
     if(!x$scales$has_scale(this_aes))
     {
@@ -315,10 +316,10 @@ as.ggplot <- function(x, pre_binning = FALSE){
         transformed_range <- data_range
         for(col in c("x","y")){
           if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+            transformed_range[, dims[dims$axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[dims$axis==col, name]])
           }
         }
-        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(transformed_range[,dims[dims$axis==i, name]])))
         e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
         x$layers[[i]] <- e2
       }

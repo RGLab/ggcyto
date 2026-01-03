@@ -44,11 +44,12 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     
     # drop pData mapping from dim.tbl
     dims.tbl <- dims.tbl[!is.na(dims.tbl$name), ]
-    chnl <- unique(dims.tbl[axis %in% c("x", "y"), name])
-    
+    # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
+    chnl <- unique(dims.tbl[dims.tbl$axis %in% c("x", "y"), name])
+
     # prepare mapping variables - bypass order aesthetic
     for(axis_name in dims.tbl$axis) {
-      mapping[[axis_name]] <- as.symbol(dims.tbl[axis == axis_name, name])
+      mapping[[axis_name]] <- as.symbol(dims.tbl[dims.tbl$axis == axis_name, name])
     }
     
     # drop order from mapping
@@ -293,8 +294,9 @@ add_ggcyto <- function(e1, e2, e2name){
               this_limits <- list()
               if(e2.new == "instrument")
               {
+                # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
                 for(aes_name in dims[, axis])
-                  this_limits[[aes_name]] <- instrument_range[, dims[axis == aes_name, name]]    
+                  this_limits[[aes_name]] <- instrument_range[, dims[dims$axis == aes_name, name]]
               }else if(e2.new == "data")
               {
                 # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
@@ -318,10 +320,11 @@ add_ggcyto <- function(e1, e2, e2name){
     return(e1)
   }else if(inherits(e2, "labs_cyto")){
     # instantiated it to a concrete labs object
-    
-    lab_txt <- list()    
+
+    lab_txt <- list()
+    # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
     for(axis_name in dims[, axis]){
-      thisDim  <- dims[axis == axis_name, ]
+      thisDim  <- dims[dims$axis == axis_name, ]
       marker <- thisDim[, desc]
       chnl <- thisDim[, name]
       lab_txt[[axis_name]] <- switch(e2[["labels"]]
