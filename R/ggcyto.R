@@ -180,11 +180,11 @@ as.ggplot <- function(x, pre_binning = FALSE){
   chnls <- dims[, name]
   
   instrument_range <- x[["instrument_range"]]
-  dtype <- class(x[["data"]])
   gs <- fs <- NULL
   #data needs to be fortified here if geom_gate was not added
-  if(dtype != "data.table"){
-    if(dtype %in% c("GatingSet", "GatingSetList")){#check if it is currently gs
+  # Use inherits() instead of class() comparison for ggplot2 v4 S7 compatibility
+  if(!inherits(x[["data"]], "data.table")){
+    if(inherits(x[["data"]], c("GatingSet", "GatingSetList"))){#check if it is currently gs
       gs <- x[["data"]]
       fs <- fortify_fs(gs)
       
