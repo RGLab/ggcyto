@@ -113,17 +113,21 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' @export
 #' @method print ggcyto
 print.ggcyto <- function(x, ...) {
-  
-    
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
-    x <- as.ggplot(x) 
-    NextMethod()
+    x <- as.ggplot(x)
+    # Explicitly call ggplot2's print method instead of NextMethod()
+    # NextMethod() fails with ggplot2 v4's S7 system
+    ggplot2:::print.ggplot(x, ...)
 }
 
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
-plot.ggcyto <- print.ggcyto
+plot.ggcyto <- function(x, ...) {
+    x <- ggplot2:::plot_clone(x)
+    x <- as.ggplot(x)
+    ggplot2:::plot.ggplot(x, ...)
+}
 
 #--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
 #' @export
