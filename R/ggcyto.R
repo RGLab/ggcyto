@@ -434,5 +434,6 @@ as.ggplot <- function(x, pre_binning = FALSE){
   }
   
   #strip the ggcyto class attributes
+  class(x) <- class(x)[-(1:2)]
   asS3(x)
 }
