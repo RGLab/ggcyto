@@ -112,21 +112,22 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' 
 #' @export
 #' @method print ggcyto
+#' @importFrom grid grid.newpage grid.draw
 print.ggcyto <- function(x, ...) {
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
     x <- as.ggplot(x)
-    # Explicitly call ggplot2's print method instead of NextMethod()
-    # NextMethod() fails with ggplot2 v4's S7 system
-    ggplot2:::print.ggplot(x, ...)
+    # Use ggplotGrob + grid.draw instead of print.ggplot
+    # ggplot2 v4's S7 system removed print.ggplot
+    grid::grid.newpage()
+    grid::grid.draw(ggplot2::ggplotGrob(x))
+    invisible(x)
 }
 
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
 plot.ggcyto <- function(x, ...) {
-    x <- ggplot2:::plot_clone(x)
-    x <- as.ggplot(x)
-    ggplot2:::plot.ggplot(x, ...)
+    print.ggcyto(x, ...)
 }
 
 #--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
