@@ -3,11 +3,33 @@ ggcyto.cytoset <- function(data, ...){
   getS3method("ggcyto", "flowSet")(data, ...)
 }
 #' @rdname ggcyto
+#' @param pData Optional data.frame to use in place of the flowSet/GatingSet pData during plotting. Must have the same sample names (rownames) as the original pData. Columns can have different classes (e.g., factors with custom levels) to control plotting order. The original pData is not modified.
 #' @export
-ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, ...){
+ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4, pData = NULL, ...){
   #add empty layers recording
   
   fs <- data
+  
+  # If pData is supplied, validate and store in plot object
+  # Don't replace pData(fs) directly as it converts factors to characters
+  if (!is.null(pData)) {
+    pd <- pData(fs)
+    
+    # Validate that rownames match
+    if (!identical(sort(rownames(pData)), sort(rownames(pd)))) {
+      stop("Supplied pData rownames must match the sample names in the flowSet")
+    }
+    
+    # Validate that columns exist (allow additional columns in supplied pData)
+    missing_cols <- setdiff(colnames(pd), colnames(pData))
+    if (length(missing_cols) > 0) {
+      warning("Some columns from original pData are missing in supplied pData: ",
+              paste(missing_cols, collapse = ", "))
+    }
+    
+    # Reorder supplied pData to match sample order in flowSet
+    pData <- pData[rownames(pd), , drop = FALSE]
+  }
   
   #instead of using ggplot.default method to construct the ggplot object
   # we call the underlining s3 method directly to avoid fortifying data at this stage
@@ -23,7 +45,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     
     # dims may reference channels, markers or pData variables
     dims <- sapply(mapping, quo_name)
-
+    
     # update aes mapped parameters with actual channel name
     frm <- getFlowFrame(fs)
     dims.tbl <- .ldply(
@@ -67,7 +89,7 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     
   }else
     stop("mapping must be supplied to ggplot!")
-    
+  
   #init axis inversed labels and breaks
   p[["axis_inverse_trans"]] <- list()
   # prepend the ggcyto class attribute
@@ -77,6 +99,9 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
   p[["ggcyto_pars"]] <- list()
   
   p[["GeomStats"]] <- list()
+  
+  # Store pData in the plot object
+  p[["pData"]] <- pData
   
   p <- p + ggcyto_par_default()
   # the counts at legend could be reflecting the subsampled data and we want to hide this from user to avoid confusion
@@ -154,13 +179,13 @@ is.ggcyto_flowSet <- function(x){
 #' p + theme(strip.text = element_text(size = 14))
 #' @export
 `+.ggcyto_flowSet` <- function(e1, e2){
-    # Get the name of what was passed in as e2, and pass along so that it
-    # can be displayed in error messages
-    e2name <- deparse(substitute(e2))
-      
-    if      (is.ggcyto_par(e1))  add_par(e1, e2, e2name)
-    else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
-    
+  # Get the name of what was passed in as e2, and pass along so that it
+  # can be displayed in error messages
+  e2name <- deparse(substitute(e2))
+  
+  if      (is.ggcyto_par(e1))  add_par(e1, e2, e2name)
+  else if (is.ggcyto_flowSet(e1)) add_ggcyto(e1, e2, e2name)
+  
 }
 
 #' @export
@@ -172,7 +197,7 @@ add_ggcyto <- function(e1, e2, e2name){
   fs <- e1[["data"]]
   dims <- attr(fs, "dims")
   chnl <- dims[, name]
-
+  
   is.recorded <- attr(e2, "is.recorded")
   if(is.null(is.recorded))
     is.recorded <- FALSE
@@ -188,7 +213,8 @@ add_ggcyto <- function(e1, e2, e2name){
   }else if(is.ggproto(e2)){
     layer_data <- e2$data  
     if(!is.null(layer_data)){
-      pd <- .pd2dt(pData(fs))
+      # Get pData from plot object
+      pd <- .pd2dt(pData(fs), pData = e1[["pData"]])
     }
     
     if(is(layer_data, "filterList")){
@@ -275,7 +301,7 @@ add_ggcyto <- function(e1, e2, e2name){
     e1[["GeomStats"]] <- NULL
     return(e1)
   }else if (is.ggcyto_par(e2)) {
-      
+    
     for(element in names(e2)){
       #skip hex_fill for 1d plot
       
@@ -284,35 +310,35 @@ add_ggcyto <- function(e1, e2, e2name){
       e2.new <- e2[[element]]
       #apply instrument range to limits
       if(element == "limits" ){
-            instrument_range <- e1[["instrument_range"]]
-            if(is.list(e2.new))
-            {
-              this_limits <- e2.new
-            }else if(is.character(e2.new))
-            {
-              this_limits <- list()
-              if(e2.new == "instrument")
-              {
-                for(aes_name in dims[, axis])
-                  this_limits[[aes_name]] <- instrument_range[, dims[axis == aes_name, name]]    
-              }else if(e2.new == "data")
-              {
-                # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
-                e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
-                next
-              }else
-                stop("invalid 'limits' setting!")
-            
-            }
-            #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
-            #so that it won't be applied later on
-            e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
-            e2.new <- coord_cartesian(xlim = this_limits[["x"]], ylim = this_limits[["y"]])
+        instrument_range <- e1[["instrument_range"]]
+        if(is.list(e2.new))
+        {
+          this_limits <- e2.new
+        }else if(is.character(e2.new))
+        {
+          this_limits <- list()
+          if(e2.new == "instrument")
+          {
+            for(aes_name in dims[, axis])
+              this_limits[[aes_name]] <- instrument_range[, dims[axis == aes_name, name]]    
+          }else if(e2.new == "data")
+          {
+            # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
+            e1$ggcyto_pars <- add_par(e1$ggcyto_pars, e2, deparse(substitute(e2)))
+            next
+          }else
+            stop("invalid 'limits' setting!")
+          
+        }
+        #clear the lazy element (i.e. limits = "data") for non-lazy limits setting
+        #so that it won't be applied later on
+        e1$ggcyto_pars <- modifyList(e1$ggcyto_pars, list(limits = NULL))
+        e2.new <- coord_cartesian(xlim = this_limits[["x"]], ylim = this_limits[["y"]])
       }
       attr(e2.new, "is.recorded") <- TRUE
       e1 <- e1 + e2.new
     }
-      
+    
     
     
     return(e1)
@@ -325,18 +351,18 @@ add_ggcyto <- function(e1, e2, e2name){
       marker <- thisDim[, desc]
       chnl <- thisDim[, name]
       lab_txt[[axis_name]] <- switch(e2[["labels"]]
-                                  , "marker" = ifelse(is.na(marker), chnl, marker)
-                                  , "channel" = chnl
-                                  , "both" = paste0(chnl, ifelse(is.na(marker), "", paste0(" ", marker)))
-                                  )
-                        
+                                     , "marker" = ifelse(is.na(marker), chnl, marker)
+                                     , "channel" = chnl
+                                     , "both" = paste0(chnl, ifelse(is.na(marker), "", paste0(" ", marker)))
+      )
+      
     }
     e2 <- labs(!!!lab_txt)
     
   }else if(is.theme(e2)){
     #have to take care of theme object since it inherits gg class and will
     #cause the dispatch conflicts due to the special rule of groupGeneric
-   ggplot_add(e2, e1)
+    ggplot_add(e2, e1)
   }else if(is(e2, "logicalGates")){
     
     if(is(fs, "GatingSet")){
@@ -425,8 +451,8 @@ is.geom_gate_filterList <- function(layer){
     verts <- sapply(markers, function(marker)unique(df[[marker]]), simplify = FALSE)
     if(all(sapply(verts, length) == 2))
     {
-     
-     rectangleGate(verts)
+      
+      rectangleGate(verts)
     }else
       polygonGate(df)  
     

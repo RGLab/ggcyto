@@ -4,7 +4,14 @@
 \alias{compute_stats}
 \title{compute the statistics of the cell population defined by gates}
 \usage{
-compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
+compute_stats(
+  fs = NULL,
+  gates,
+  type = "percent",
+  value = NULL,
+  pData = NULL,
+  ...
+)
 }
 \arguments{
 \item{fs}{flowSet. can be NULL when precaculated 'value' is provided}
@@ -14,6 +21,8 @@ compute_stats(fs = NULL, gates, type = "percent", value = NULL, ...)
 \item{type}{a vector of strings to specify the stats types. can be any or multiple values of "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet).}
 
 \item{value}{the pre-calculated stats value. when supplied, the stats computing is skipped.}
+
+\item{pData}{Optional custom pData to use instead of pData(fs) to control the plot order.}
 
 \item{...}{other arguments passed to stat_position function}
 }

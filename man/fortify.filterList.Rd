@@ -4,7 +4,7 @@
 \alias{fortify.filterList}
 \title{Convert a filterList to a data.table useful for ggplot}
 \usage{
-\method{fortify}{filterList}(model, data = NULL, nPoints = NULL, ...)
+\method{fortify}{filterList}(model, data = NULL, nPoints = NULL, pData = NULL, ...)
 }
 \arguments{
 \item{model}{filterList}
@@ -12,6 +12,8 @@
 \item{data}{not used}
 
 \item{nPoints}{not used}
+
+\item{pData}{Optional custom pData to use}
 
 \item{...}{not used.}
 }

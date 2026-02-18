@@ -12,7 +12,7 @@
 \alias{autoplot.GatingHierarchy}
 \title{Plot cytometry data in one or two dimension with the ggcyto package.}
 \usage{
-\method{autoplot}{flowSet}(object, x, y = NULL, bins = 30, ...)
+\method{autoplot}{flowSet}(object, x, y = NULL, bins = 30, pData = NULL, ...)
 
 \method{autoplot}{ncdfFlowList}(object, ...)
 
@@ -31,6 +31,7 @@
   y = "SSC-A",
   bins = 30,
   axis_inverse_trans = TRUE,
+  pData = NULL,
   ...
 )
 
@@ -56,6 +57,8 @@
 \item{y}{define the y dimension of the plot. Default is NULL, which means 1d densityplot.}
 
 \item{bins}{passed to geom_hex}
+
+\item{pData}{Optional data.frame to use in place of the flowSet/GatingSet pData during plotting. Must have the same sample names (rownames) as the original pData. Columns can have different classes (e.g., factors with custom levels) to control plotting order. The original pData is not modified.}
 
 \item{...}{other arguments passed to ggplot}
 

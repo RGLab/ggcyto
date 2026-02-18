@@ -23,7 +23,14 @@ ggcyto(data = NULL, ...)
 
 \method{ggcyto}{GatingHierarchy}(data, ...)
 
-\method{ggcyto}{flowSet}(data, mapping, filter = NULL, max_nrow_to_plot = 50000, ...)
+\method{ggcyto}{flowSet}(
+  data,
+  mapping,
+  filter = NULL,
+  max_nrow_to_plot = 50000,
+  pData = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{The data source. A core cytometry data structure. (flowSet, flowFrame, ncdfFlowSet, GatingSet or GatingHierarchy)}
@@ -41,6 +48,8 @@ based on the geom_gate layer to be added later.}
 The gate is used to filter the flow data before it is plotted.}
 
 \item{max_nrow_to_plot}{the maximum number of cells to be plotted. When the actual data exceeds it, The subsampling process will be triggered to speed up plotting. Default is 5e4. To turn off the subsampling, simply set it to a large enough number or Inf.}
+
+\item{pData}{Optional data.frame to use in place of the flowSet/GatingSet pData during plotting. Must have the same sample names (rownames) as the original pData. Columns can have different classes (e.g., factors with custom levels) to control plotting order. The original pData is not modified.}
 }
 \value{
 ggcyto object

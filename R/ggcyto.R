@@ -23,6 +23,7 @@
 #' @param subset character that specifies the node path or node name in the case of GatingSet. 
 #'               Default is "_parent_", which will be substituted with the actual node name 
 #'               based on the geom_gate layer to be added later.
+#' @param pData Optional data.frame to use in place of the flowSet/GatingSet pData during plotting. Must have the same sample names (rownames) as the original pData. Columns can have different classes (e.g., factors with custom levels) to control plotting order in faceted plots. The original pData is not modified.
 #' @param ... other arguments passed to specific methods
 #' @return ggcyto object 
 #' @examples
@@ -114,10 +115,10 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' @method print ggcyto
 print.ggcyto <- function(x, ...) {
   
-    
-    x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
-    x <- as.ggplot(x) 
-    NextMethod()
+  
+  x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
+  x <- as.ggplot(x) 
+  NextMethod()
 }
 
 #' @rdname print.ggcyto
@@ -163,7 +164,7 @@ setMethod("show", "ggcyto", show.ggcyto)
 #' @importFrom hexbin hexbin hcell2xy
 #' @export
 as.ggplot <- function(x, pre_binning = FALSE){
-
+  
   #####################
   #lazy-fortifying the plot data
   #####################
@@ -184,7 +185,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
       
     }else
       fs <- x[["data"]]
-    x[["data"]] <- fortify(fs)
+    # Get pData from plot object
+    x[["data"]] <- fortify(fs, pData = x[["pData"]])
     data_range <- apply(x[["data"]][, chnls, with = FALSE], 2, range)
     rownames(data_range) <- c("min", "max")  
   }else
@@ -220,15 +222,15 @@ as.ggplot <- function(x, pre_binning = FALSE){
           pd <- pData(fs)
           df <- x[["data"]]
           cols <- c(".rownames", colnames(pd))
-  
+          
           df <- df[, {
-  
+            
             binned <- hexbin::hexbin(.SD, xbins = e2$stat_params[["bins"]])
             sd <- hexbin::hcell2xy(binned)
             names(sd) <- colnames(.SD)
             data.table(data.frame(sd,hex_cell_id = binned@cell, count=binned@count, check.names = FALSE))
           }, by = cols]
-  
+          
           x[["data"]] <- df
           e2 <- geom_hex(stat="identity",aes(fill=count))
           x$layers[[i]] <- e2
@@ -269,7 +271,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
       
     }else if(!is.null(par_limits))
       stop("How did you end up here?")
-        
+    
     stats_limits[[dim]] <- x$coordinates[["limits"]][[this_aes]]
     #update breaks and labels
     thisBreaks <- breaks[[this_aes]]
@@ -333,8 +335,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
     #parse the gate from the each gate layer if it is not present in the current geom_stats layer
     if(is.null(gate))
     {
-      
-      pd <- .pd2dt(pData(fs))
+      # Get pData from plot object
+      pd <- .pd2dt(pData(fs), pData = x[["pData"]])
       gates_parsed <- lapply(x$layers, function(layer){
         
         if(is.geom_gate_filterList(layer))#restore filter from fortified data.frame
@@ -357,7 +359,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
     value <- e2[["value"]]
     stat_type <- e2[["type"]]
     
-
+    
     #add default density range
     #In order to ensure the stats visiblity
     #try to put it closer to zero because we don't know the actual density range
@@ -390,7 +392,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
           #bypass stats_postion computing to use data_range as gate_range(as a hack for now)
           location <- "data"
       }
-        
+      
+      # Get pData from plot object
       stats <- compute_stats(fs, gate
                              , type = stat_type
                              , value = value
@@ -399,7 +402,8 @@ as.ggplot <- function(x, pre_binning = FALSE){
                              , negated = negated
                              , adjust = adjust
                              , digits = digits
-                             , location = location)
+                             , location = location
+                             , pData = x[["pData"]])
       
       #restore the stats dimensions to raw scale
       if(length(trans)>0)
@@ -412,7 +416,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
         }  
       }
       
-        
+      
       # instantiate the new stats layer
       thisCall <- quote(geom_label(data = stats))
       # copy all the other parameters
