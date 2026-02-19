@@ -9,6 +9,7 @@
 #' @param gates a list of filters
 #' @param type a vector of strings to specify the stats types. can be any or multiple values of "percent", "count", "gate_name", or "MFI" (MFI is currently not supported yet). 
 #' @param value the pre-calculated stats value. when supplied, the stats computing is skipped.
+#' @param pData Optional custom pData to use instead of pData(fs) to control the plot order.
 #' @param ... other arguments passed to stat_position function
 #' @return
 #' a data.table that contains percent and centroid locations as well as pData
@@ -21,7 +22,7 @@
 #' rect.gates <- sapply(sampleNames(fs), function(sn)rect.g)
 #' compute_stats(fs, rect.gates)
 #' compute_stats(fs, rect.gates, type = c("gate_name", "percent"))
-compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...){
+compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, pData = NULL, ...){
   
   if(is.null(fs)&&(is.null(value)))
     stop("fs must be provided when 'value' is not supplied!")
@@ -46,12 +47,17 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
   stats <- Reduce(function(x,y){
     val <- paste(x[, value], y[, value], sep = "\n")
     x[, value := val]
-    }, x = stats.list)
+  }, x = stats.list)
   
   centroids <- stat_position(gates, ...)
   
   stats <- merge(centroids, stats, by = ".rownames") # merge stats with centroid
-  merge(stats, .pd2dt(pData(fs)), by = ".rownames") # merge with pdata
+  
+  # Get pData and use data.table join to preserve factor levels
+  pd <- .pd2dt(pData(fs), pData = pData)
+  setkeyv(pd, ".rownames")
+  setkeyv(stats, ".rownames")
+  pd[stats, on = ".rownames"]
 }
 
 .stat_gate_name <- function(fs, gates, value = NULL, ...){
@@ -76,14 +82,14 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
       if(negated)
         p = 1 - p
       p
-      }, simplify = FALSE)
+    }, simplify = FALSE)
   }
   sn <- names(value)
   value <- unlist(value)
   #format the calculated stats values
   value <- paste(format(value *100,digits=digits),"%",sep="")
   stats <- data.table(value = value, .rownames = sn) 
-    
+  
   stats
 }
 
@@ -99,12 +105,12 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
       if(negated)
         ind <- !ind
       sum(ind)
-      }, simplify = FALSE)
+    }, simplify = FALSE)
   }
   sn <- names(value)
   value <- unlist(value)
   stats <- data.table(value = value, .rownames = sn) 
-    
+  
   stats
 }
 
@@ -115,5 +121,5 @@ compute_stats <- function(fs = NULL, gates, type = "percent", value = NULL, ...)
 .stat_MFI <- function(fs, gates, digits = 3, negated = FALSE, ...){
   stop("MFI not supported yet!")
   fs_sub <- Subset(fs, gates)
-     
+  
 }

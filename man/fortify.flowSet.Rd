@@ -15,7 +15,7 @@
 
 \method{fortify}{flowFrame}(model, data, ...)
 
-\method{fortify}{flowSet}(model, data, ...)
+\method{fortify}{flowSet}(model, data, pData = NULL, ...)
 
 \method{fortify}{cytoset}(model, ...)
 
@@ -23,7 +23,7 @@
 
 \method{fortify}{GatingSetList}(model, ...)
 
-\method{fortify}{GatingSet}(model, ...)
+\method{fortify}{GatingSet}(model, pData = NULL, ...)
 }
 \arguments{
 \item{model}{flowFrame, flowSet or GatingSet}
@@ -31,10 +31,10 @@
 \item{...}{not used.}
 
 \item{data}{not used.}
+
+\item{pData}{Optional custom pData to use instead of pData(model)}
 }
 \value{
-data.table
-
 data.table
 
 data.table

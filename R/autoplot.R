@@ -9,6 +9,7 @@
 #' @param y define the y dimension of the plot. Default is NULL, which means 1d densityplot.
 #' @param bins passed to geom_hex
 #' @param axis_inverse_trans logical flag indicating whether to add \link{axis_x_inverse_trans} and axis_x_inverse_trans layers.
+#' @param pData Optional data.frame to use in place of the flowSet/GatingSet pData during plotting. Must have the same sample names (rownames) as the original pData. Columns can have different classes (e.g., factors with custom levels) to control plotting order. The original pData is not modified.
 #' @param ... other arguments passed to ggplot
 #'
 #' @rdname autoplot
@@ -44,26 +45,26 @@
 #' #autoplot(gh , strip.text = "gate")
 #' @export
 #' @export autoplot
-autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
-
+autoplot.flowSet <- function(object, x, y = NULL, bins = 30, pData = NULL, ...){
+  
   # check the dimensions
   if(missing(x))
     stop("'x' must be supplied to ggplot!")
   if(is.null(y)){
-    p <- ggcyto(object, aes_q(x = as.symbol(x)), ...)  #aes_string doesn't play well with special character (e.g. '-')
+    p <- ggcyto(object, aes_q(x = as.symbol(x)), pData = pData, ...)  #aes_string doesn't play well with special character (e.g. '-')
     p <- p + geom_density(fill = "black")
   }else{
-    p <- ggcyto(object, aes_q(x = as.symbol(x), y = as.symbol(y)), ...)
+    p <- ggcyto(object, aes_q(x = as.symbol(x), y = as.symbol(y)), pData = pData, ...)
     p <- p + geom_hex(bins = bins)
-
+    
   }
-
+  
   # apply boundary filter to remove outliers
-#   if(margin){
-#     g <- boundaryFilter(x = dims, tol = 1e-5)
-#     object <- Subset(object, g)
-#   }
-
+  #   if(margin){
+  #     g <- boundaryFilter(x = dims, tol = 1e-5)
+  #     object <- Subset(object, g)
+  #   }
+  
   p
 }
 
@@ -94,33 +95,33 @@ autoplot.flowFrame <- function(object, x, ...){
     object <- fortify_fs(object)
     autoplot(object, x = x, ...)
   }
-    
+  
 }
 
 density_fr_all <- function(fr, strip.text = c("both", "channel", "marker"), ...){
   
   #plot each individual channel
   Objs <- sapply(colnames(fr), function(chnl){
-      p <- autoplot(fr, chnl, ...)
-      p <- p + labs(title = NULL)
-      myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
-                       , axis.text = element_text(color = gray(0.3), size = 6)
-                       , axis.title.y = element_blank()
-                       , strip.text = element_blank()
-                       , plot.margin = unit(c(0,0,0,0), "cm")
-                       , panel.spacing = unit(0, "cm")
-      )
-      p <- p + myTheme
-      attr(p$data, "strip.text") <- chnl
-      p
-    }, simplify = FALSE)
+    p <- autoplot(fr, chnl, ...)
+    p <- p + labs(title = NULL)
+    myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
+                     , axis.text = element_text(color = gray(0.3), size = 6)
+                     , axis.title.y = element_blank()
+                     , strip.text = element_blank()
+                     , plot.margin = unit(c(0,0,0,0), "cm")
+                     , panel.spacing = unit(0, "cm")
+    )
+    p <- p + myTheme
+    attr(p$data, "strip.text") <- chnl
+    p
+  }, simplify = FALSE)
   
   
   #convert it to a special class to dispatch the dedicated print method
   Objs <- as(Objs, "ggcyto_GatingLayout")
   Objs@arrange.main <- identifier(fr)
-
-
+  
+  
   Objs
   
   
@@ -135,7 +136,7 @@ autoplot.GatingSetList <- function(object, ...){
 #' @param gate the gate to be plotted
 #' @export
 #' @rdname autoplot
-autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, axis_inverse_trans = TRUE, ...){
+autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, axis_inverse_trans = TRUE, pData = NULL, ...){
   if(missing(gate))
     stop("Must specifiy 'gate'!")
   g <- gh_pop_get_gate(object[[1]], gate[1])
@@ -160,15 +161,15 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
     }else
       stop("invalid nDims: ", nDims)
   }
-
+  
   mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))
-
-  p <- ggcyto(object, mapping, ...) + geom_hex(bins = bins) + geom_gate(gate) + geom_stats()
+  
+  p <- ggcyto(object, mapping, pData = pData, ...) + geom_hex(bins = bins) + geom_gate(gate) + geom_stats()
   p <- p + ggcyto_par_set(limits = "instrument")
   if(axis_inverse_trans)
     p <- p + axis_x_inverse_trans() + axis_y_inverse_trans()
   p
-
+  
 }
 
 #' @param bool whether to plot boolean gates
@@ -182,11 +183,11 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
 #' @export
 #' @rdname autoplot
 autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
-                         , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
-                         , projections = list()
-                         , strip.text = c("parent", "gate")
-                         , path = "auto"
-                         , ...){
+                                     , arrange.main = sampleNames(object), arrange=TRUE, merge=TRUE
+                                     , projections = list()
+                                     , strip.text = c("parent", "gate")
+                                     , path = "auto"
+                                     , ...){
   strip.text <- match.arg(strip.text)
   if(missing(gate)){
     gate <- gs_get_pop_paths(object, path = path)
@@ -194,35 +195,35 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
   }else if (is.numeric(gate)){
     gate <- gs_get_pop_paths(object, path = path)[gate]
   }
-
+  
   #match given axis to channel names
   fr <- gh_pop_get_data(object, use.exprs = FALSE)
   projections <- lapply(projections, function(thisPrj){
     sapply(thisPrj, function(thisAxis)getChannelMarker(fr, thisAxis)[["name"]])
   })
-
-
+  
+  
   plotList <- flowWorkspace:::.mergeGates(object, gate, bool, merge, projections = projections)
   Objs <- lapply(plotList,function(plotObjs){
-
+    
     if(is.list(plotObjs)){
       gate <- plotObjs[["popIds"]]
       parent <- plotObjs[["parentId"]]
       myPrj <- projections[[as.character(gate[1])]]
-
+      
     }else{
       gate <- plotObjs
       parent <- gs_pop_get_parent(object, gate, path = path)
       myPrj <- projections[[as.character(gate)]]
     }
-
-
+    
+    
     if(is.null(myPrj)){
       p <- autoplot.GatingSet(object, gate, y = y, ...)
     }else{
       p <- autoplot.GatingSet(object, gate, x = myPrj[["x"]], y = myPrj[["y"]], ...)
     }
-
+    
     p <- p + labs(title = NULL)
     myTheme <- theme(axis.title = element_text(color = gray(0.3), size = 8)
                      , axis.text = element_text(color = gray(0.3), size = 6)
@@ -232,26 +233,26 @@ autoplot.GatingHierarchy <- function(object, gate, y = "SSC-A", bool=FALSE
                      , legend.position = 'none'
     )
     p <- p + myTheme
-
+    
     #rename sample name with parent or current pop name in order to display it in strip
-
+    
     if(strip.text == "parent"){
       popName <- parent
     }else{
       popName <- paste(gate, collapse = "|")
     }
     attr(p$data, "strip.text") <- popName
-
+    
     p
-
+    
   })
-
+  
   if(arrange){
     #convert it to a special class to dispatch the dedicated print method
     Objs <- as(Objs, "ggcyto_GatingLayout")
     Objs@arrange.main <- arrange.main
   }
-
+  
   Objs
-
+  
 }
