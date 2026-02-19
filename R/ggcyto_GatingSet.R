@@ -202,7 +202,8 @@ setMethod("+", c("ggcyto_GatingSet"), `+.ggcyto_GatingSet`)
     
     isMatched<-lapply(cids,function(cid){
       g<-gh_pop_get_gate(gs[[1]],cid)
-      if(class(g)!="booleanFilter") 
+      # Use inherits() instead of class() for ggplot2 v4 S7 compatibility
+      if(!inherits(g, "booleanFilter")) 
       {
         prj<-parameters(g)
         if(length(prj)==1)#1d gate

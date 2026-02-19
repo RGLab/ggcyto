@@ -12,9 +12,10 @@
   # sort values by order aesthetic mapping
   if("order" %in% mapping$axis) {
     # variable to use for ordering
+    # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
     setorderv(
       dt,
-      cols = mapping[axis == "order", name]
+      cols = mapping[mapping$axis == "order", name]
     )
   }
   return(dt)

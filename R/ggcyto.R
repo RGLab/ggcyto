@@ -112,18 +112,23 @@ ggcyto.default <- function(data = NULL, mapping = aes(), ...) {
 #' 
 #' @export
 #' @method print ggcyto
+#' @importFrom grid grid.newpage grid.draw
 print.ggcyto <- function(x, ...) {
-  
-    
     x <- ggplot2:::plot_clone(x) #clone plot to avoid tampering original x due to ther referenceClass x$scales
-    x <- as.ggplot(x) 
-    NextMethod()
+    x <- as.ggplot(x)
+    # Use ggplotGrob + grid.draw instead of print.ggplot
+    # ggplot2 v4's S7 system removed print.ggplot
+    grid::grid.newpage()
+    grid::grid.draw(ggplot2::ggplotGrob(x))
+    invisible(x)
 }
 
 #' @rdname print.ggcyto
 #' @method plot ggcyto
 #' @export
-plot.ggcyto <- print.ggcyto
+plot.ggcyto <- function(x, ...) {
+    print.ggcyto(x, ...)
+}
 
 #--------These S4 methods exsits for plotting ggcyto object automatically in R console---------------#
 #' @export
@@ -169,16 +174,17 @@ as.ggplot <- function(x, pre_binning = FALSE){
   #####################
   dims <- attr(x[["data"]], "dims")
   # drop order aesthetic if present (no scale required)
-  dims <- dims[axis != "order", ]
+  # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
+  dims <- dims[dims$axis != "order", ]
   aes_names <- dims[, axis]
   chnls <- dims[, name]
   
   instrument_range <- x[["instrument_range"]]
-  dtype <- class(x[["data"]])
   gs <- fs <- NULL
   #data needs to be fortified here if geom_gate was not added
-  if(dtype != "data.table"){
-    if(dtype %in% c("GatingSet", "GatingSetList")){#check if it is currently gs
+  # Use inherits() instead of class() comparison for ggplot2 v4 S7 compatibility
+  if(!inherits(x[["data"]], "data.table")){
+    if(inherits(x[["data"]], c("GatingSet", "GatingSetList"))){#check if it is currently gs
       gs <- x[["data"]]
       fs <- fortify_fs(gs)
       
@@ -207,10 +213,10 @@ as.ggplot <- function(x, pre_binning = FALSE){
           transformed_range <- data_range
           for(col in c("x","y")){
             if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-              transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+              transformed_range[, dims[dims$axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[dims$axis==col, name]])
             }
           }
-          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+          dummy_scales <- sapply(c("x", "y"), function(i) scale_x_continuous(limits = as.vector(transformed_range[,dims[dims$axis==i, name]])))
           e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(e2$stat_params[["bins"]], dummy_scales)
           x$layers[[i]] <- e2
         }
@@ -249,7 +255,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
   trans <- list()
   for(this_aes in aes_names)
   {
-    dim <- dims[axis == this_aes, name]
+    dim <- dims[dims$axis == this_aes, name]
     # set limits
     if(!x$scales$has_scale(this_aes))
     {
@@ -315,10 +321,10 @@ as.ggplot <- function(x, pre_binning = FALSE){
         transformed_range <- data_range
         for(col in c("x","y")){
           if(!is.null(x$scales$get_scales(col)$secondary.axis)){
-            transformed_range[, dims[axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[axis==col, name]]) 
+            transformed_range[, dims[dims$axis==col, name]] <- x$scales$get_scales(col)$transform(transformed_range[,dims[dims$axis==col, name]])
           }
         }
-        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(transformed_range[,dims[axis==i, name]])))
+        dummy_scales <- sapply(c("x", "y"), function(i)scale_x_continuous(limits = as.vector(transformed_range[,dims[dims$axis==i, name]])))
         e2$stat_params[["binwidth"]] <- ggplot2:::hex_binwidth(bins, dummy_scales)
         x$layers[[i]] <- e2
       }
