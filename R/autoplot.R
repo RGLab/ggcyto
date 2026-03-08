@@ -50,10 +50,10 @@ autoplot.flowSet <- function(object, x, y = NULL, bins = 30, ...){
   if(missing(x))
     stop("'x' must be supplied to ggplot!")
   if(is.null(y)){
-    p <- ggcyto(object, aes_q(x = as.symbol(x)), ...)  #aes_string doesn't play well with special character (e.g. '-')
+    p <- ggcyto(object, aes(x = !!sym(x)), ...)
     p <- p + geom_density(fill = "black")
   }else{
-    p <- ggcyto(object, aes_q(x = as.symbol(x), y = as.symbol(y)), ...)
+    p <- ggcyto(object, aes(x = !!sym(x), y = !!sym(y)), ...)
     p <- p + geom_hex(bins = bins)
 
   }
@@ -161,7 +161,7 @@ autoplot.GatingSet <- function(object, gate, x = NULL,  y = "SSC-A", bins = 30, 
       stop("invalid nDims: ", nDims)
   }
 
-  mapping <- aes_q(x = as.symbol(x), y = as.symbol(y))
+  mapping <- aes(x = !!sym(x), y = !!sym(y))
 
   p <- ggcyto(object, mapping, ...) + geom_hex(bins = bins) + geom_gate(gate) + geom_stats()
   p <- p + ggcyto_par_set(limits = "instrument")

@@ -13,7 +13,7 @@
 #' @aliases ggcyto.default ggcyto.flowSet ggcyto.GatingHierarchy ggcyto.GatingSet
 #' ggcyto.GatingSetList
 #' @import methods ggplot2 flowCore ncdfFlow flowWorkspace
-#' @importFrom rlang quo_name
+#' @importFrom rlang quo_name sym
 #' @param data The data source. A core cytometry data structure. (flowSet, flowFrame, ncdfFlowSet, GatingSet or GatingHierarchy)
 #' @param mapping default list of aesthetic mappings (these can be colour,
 #'   size, shape, line type -- see individual geom functions for more details)
@@ -40,10 +40,10 @@
 #' # 2d scatter plot
 #' p <- ggcyto(fs, aes(x = `FSC-H`, y =  `SSC-H`))
 #' p + geom_hex(bins = 128)
-#' # do it programatically through aes_string and variables
-#' col1 <- "`FSC-H`" #note that the dimension names with special characters needs to be quoted by backticks
-#' col2 <- "`SSC-H`"
-#' ggcyto(fs, aes_string(col1,col2)) + geom_hex()
+#' # do it programatically with tidy evaluation
+#' col1 <- "FSC-H"
+#' col2 <- "SSC-H"
+#' ggcyto(fs, aes(x = !!sym(col1), y = !!sym(col2))) + geom_hex()
 #' 
 #' ## More flowSet examples
 #' fs <- GvHD[subset(pData(GvHD), Patient %in%5:7 & Visit %in% c(5:6))[["name"]]]
@@ -427,7 +427,7 @@ as.ggplot <- function(x, pre_binning = FALSE){
       e2.new <- eval(thisCall)
       attr(e2.new, "is.recorded") <- TRUE
       # update aes
-      stats_mapping <- aes_string(label = "value")
+      stats_mapping <- aes(label = !!sym("value"))
       #add y aes for 1d density plot
       dims <- x$mapping[grepl("[x|y]", names(x$mapping))]
       dims <- sapply(dims, quo_name)
