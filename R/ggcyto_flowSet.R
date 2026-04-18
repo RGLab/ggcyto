@@ -45,11 +45,11 @@ ggcyto.flowSet <- function(data, mapping, filter = NULL, max_nrow_to_plot = 5e4,
     # drop pData mapping from dim.tbl
     dims.tbl <- dims.tbl[!is.na(dims.tbl$name), ]
     # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
-    chnl <- unique(dims.tbl[dims.tbl$axis %in% c("x", "y"), name])
+    chnl <- unique(dims.tbl$name[dims.tbl$axis %in% c("x", "y")])
 
     # prepare mapping variables - bypass order aesthetic
     for(axis_name in dims.tbl$axis) {
-      mapping[[axis_name]] <- as.symbol(dims.tbl[dims.tbl$axis == axis_name, name])
+      mapping[[axis_name]] <- as.symbol(dims.tbl$name[dims.tbl$axis == axis_name])
     }
     
     # drop order from mapping
@@ -172,7 +172,7 @@ setMethod("+", c("ggcyto_flowSet"), `+.ggcyto_flowSet`)
 add_ggcyto <- function(e1, e2, e2name){
   fs <- e1[["data"]]
   dims <- attr(fs, "dims")
-  chnl <- dims[, name]
+  chnl <- dims$name
 
   is.recorded <- attr(e2, "is.recorded")
   if(is.null(is.recorded))
@@ -295,8 +295,8 @@ add_ggcyto <- function(e1, e2, e2name){
               if(e2.new == "instrument")
               {
                 # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
-                for(aes_name in dims[, axis])
-                  this_limits[[aes_name]] <- instrument_range[, dims[dims$axis == aes_name, name]]
+                for(aes_name in dims$axis)
+                  this_limits[[aes_name]] <- instrument_range[, dims$name[dims$axis == aes_name]]
               }else if(e2.new == "data")
               {
                 # store the ggcyto pars for the lazy-eval elements for we may not have the final version of data yet at this stage
@@ -323,10 +323,10 @@ add_ggcyto <- function(e1, e2, e2name){
 
     lab_txt <- list()
     # Use explicit column reference to avoid conflicts with ggplot2 v4 S7 objects
-    for(axis_name in dims[, axis]){
+    for(axis_name in dims$axis){
       thisDim  <- dims[dims$axis == axis_name, ]
-      marker <- thisDim[, desc]
-      chnl <- thisDim[, name]
+      marker <- thisDim$desc
+      chnl <- thisDim$name
       lab_txt[[axis_name]] <- switch(e2[["labels"]]
                                   , "marker" = ifelse(is.na(marker), chnl, marker)
                                   , "channel" = chnl

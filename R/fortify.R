@@ -37,11 +37,11 @@
   # subset by columns if applicable
   dims <- attr(x, "dims")
   if(!is.null(dims))
-    x <- x[, unique(dims[, name])]
+    x <- x[, unique(dims$name)]
   
   if(!is.null(thisFilter)){
     if(is.function(thisFilter)){
-      thisFilter <- thisFilter(x, unique(dims[, name]))
+      thisFilter <- thisFilter(x, unique(dims$name))
     }
     x <- Subset(x, thisFilter)
   }
