@@ -12,12 +12,12 @@
 \alias{rescale_gate.rectangleGate}
 \title{rescale methods for gates}
 \usage{
-transform(`_data`, ...)
+transform(x, ...)
 
 rescale_gate(gate, trans, param)
 }
 \arguments{
-\item{_data}{the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.}
+\item{x}{the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.}
 
 \item{...}{trans the transformation function or transformList object
 param the parameter/dimension to be transformed. When trans is transformList object, param is not needed since it is derived from transformList.}

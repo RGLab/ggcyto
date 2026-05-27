@@ -24,7 +24,8 @@ Imports:
     data.table,
     RColorBrewer,
     gridExtra,
-    rlang
+    rlang,
+    BiocGenerics (>= 0.59.5)
 Suggests:
     testthat,
     flowWorkspaceData,
