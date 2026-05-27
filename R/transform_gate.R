@@ -6,45 +6,47 @@
 #' @aliases transform transform,filter-method transform,filterList-method
 #' rescale_gate rescale_gate.polygonGate rescale_gate.ellipsoidGate
 #' rescale_gate.quadGate rescale_gate.rectangleGate
-#' @usage transform(`_data`, ...)
-#' @param _data the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
+#' @usage transform(x, ...)
+#' @param x the filter or filterList object. Currently support polygonGate, ellipsoidGate, rectangleGate and quadGate.
 #' @param ...
 #'      trans the transformation function or transformList object
 #'      param the parameter/dimension to be transformed. When trans is transformList object, param is not needed since it is derived from transformList.
 #' @return the transformed filter/filterList object
 #' @export
-setMethod("transform", signature = c("filter"), function(`_data`, ...){
-  .transform.filter(`_data`, ...)
+#' @importFrom BiocGenerics transform
+setMethod("transform", signature = c("filter"), function(x, ...){
+  .transform.filter(x, ...)
 })
 
 #' @export
-setMethod("transform", signature = c("filterList"), function(`_data`, ...){
-  res <- lapply(`_data`, function(g){transform(g, ...)})
+#' @importFrom BiocGenerics transform
+setMethod("transform", signature = c("filterList"), function(x, ...){
+  res <- lapply(x, function(g){transform(g, ...)})
   filterList(res)
 })
 
 # can't have this since it clobbers transform.data.frame S3 method
 # # @export
 # # @rdname transform-gate
-# setMethod("transform", signature = c("list"), function(`_data`, ...){
-#   res <- lapply(`_data`, function(g){
+# setMethod("transform", signature = c("list"), function(x, ...){
+#   res <- lapply(x, function(g){
 #     transform(g, ...)
 #   })
 #   res
 # })
 
-.transform.filter <- function(`_data`, trans, ...){
+.transform.filter <- function(x, trans, ...){
   if(is(trans, "transformList"))
   {
-    dims <- parameters(`_data`)
+    dims <- parameters(x)
     for(p in names(trans@transforms))
     {
       if(p %in% dims)
-        `_data` <- rescale_gate(`_data`, trans@transforms[[p]]@f, p)
+        x <- rescale_gate(x, trans@transforms[[p]]@f, p)
     }
-    `_data`
+    x
   }else if(is(trans, "function"))
-    rescale_gate(`_data`, trans, ...)
+    rescale_gate(x, trans, ...)
   else
     stop("unsupported `trans` type!")
 }
